@@ -34,6 +34,7 @@
     "@types/node": "^12.7.2",
     "@types/react": "^16.9.1",
     "@types/react-dom": "^16.8.5",
+    "@types/react-native": "^0.60.5",
     "@types/react-native-web": "npm:@types/react-native",
     "typescript": "^3.5.3"
   }

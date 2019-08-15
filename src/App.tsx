@@ -1,26 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Text, View, StyleSheet } from 'react-native';
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+// react-native-web is aliased to react-native automatically by create-react-app
+
+export default class App extends React.Component {
+
+    render() {
+
+        return (
+            <View style={styles.container}>
+                <Text style={styles.text}>
+                    Hello world
+                </Text>
+            </View>
+        )
+    }
 }
 
-export default App;
+const styles = StyleSheet.create({
+    container: {
+    },
+    text: {
+        fontSize: 40,
+    }
+})
