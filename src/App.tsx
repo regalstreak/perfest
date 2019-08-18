@@ -1,26 +1,31 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
+
+import WebRoutesGenerator from "./library/utils/WebRoutesWrapper/WebRoutesGenerator";
+
+import Home from "./screens/home/Home";
+import Auth from "./screens/auth/Auth";
 
 // react-native-web is aliased to react-native automatically by create-react-app
 
-export default class App extends React.Component {
 
-    render() {
-
-        return (
-            <View style={styles.container}>
-                <Text style={styles.text}>
-                    Hello world
-                </Text>
-            </View>
-        )
+const routeMap = {
+    Home: {
+        component: Home,
+        path: '/',
+        exact: true
+    },
+    Auth: {
+        component: Auth,
+        path: '/auth'
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-    },
-    text: {
-        fontSize: 40,
-    }
-})
+export default () => {
+    return (
+        <View >
+            {WebRoutesGenerator({ routeMap })}
+        </View>
+    )
+}
+
