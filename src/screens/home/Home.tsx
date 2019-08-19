@@ -9,6 +9,12 @@ interface IHomeProps {
 
 export default (props: IHomeProps) => {
 
+    let auth = true;
+
+    if(auth) {
+        props.navigation.navigate('Auth');
+    }
+
     return (
         <View style={styles.container}>
             <Text>Hello Home</Text>
