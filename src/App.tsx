@@ -1,5 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import Reducer from './store/reducer';
 
 import WebRoutesGenerator from "./library/utils/WebRoutesWrapper/WebRoutesGenerator";
 
@@ -10,6 +13,7 @@ import Login from "./screens/auth/Login";
 
 // react-native-web is aliased to react-native automatically by create-react-app
 
+const store = createStore(Reducer);
 
 const routeMap = {
     Home: {
@@ -33,9 +37,11 @@ const routeMap = {
 
 export default () => {
     return (
-        <View style={{ flex: 1 }} >
-            {WebRoutesGenerator({ routeMap })}
-        </View>
+        <Provider store={store}>
+            <View style={{ flex: 1 }} >
+                {WebRoutesGenerator({ routeMap })}
+            </View>
+        </Provider>
     )
 }
 

@@ -3,14 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/jwt-decode": "^2.2.1",
+    "jwt-decode": "^2.2.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-native-responsive-screen": "^1.2.2",
     "react-native-web": "^0.11.6",
     "react-navigation": "^3.11.1",
+    "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.1",
     "react-router-modal": "^1.5.2",
-    "react-scripts": "3.1.1"
+    "react-scripts": "3.1.1",
+    "redux": "^4.0.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -40,7 +44,9 @@
     "@types/react-dom": "^16.8.5",
     "@types/react-native": "^0.60.5",
     "@types/react-native-web": "npm:@types/react-native",
+    "@types/react-redux": "^7.1.2",
     "@types/react-router-dom": "^4.3.4",
+    "@types/redux": "^3.6.0",
     "prop-types": "^15.7.2",
     "typescript": "^3.5.3"
   }

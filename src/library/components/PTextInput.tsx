@@ -8,6 +8,7 @@ interface IPTextInputProps {
     placeholder: string;
     type?: 'default' | 'numeric' | 'email-address';
     password?: boolean;
+    getText: (text: string) => void;
 }
 
 const PTextInput: React.FC<IPTextInputProps> = (props) => {
@@ -71,7 +72,10 @@ const PTextInput: React.FC<IPTextInputProps> = (props) => {
                 style={[styles.textInput, outlineStyle]}
                 value={text}
                 keyboardType={props.type}
-                onChangeText={(input) => setText(input)}
+                onChangeText={(input) => {
+                    setText(input);
+                    props.getText(input);
+                }}
                 secureTextEntry={props.password}
             />
             <TouchableWithoutFeedback onFocus={_handleFocus}>
