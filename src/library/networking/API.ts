@@ -1,24 +1,13 @@
-const BASE_URL = 'http://localhost:3001';
+import constants from './constants';
+import { validateSignup } from '../utils/utils';
 
-const validateSignup = (email: string, phone: string, password: string) => {
-	if (!email && !phone) {
-		// handle error
-		return false;
-	} else if (!password) {
-		// handle error
-		return false;
-	}
-	return true;
-}
 
 export const onSubmitSignup = (email: string, phone: string, password: string) => {
 	if (validateSignup(email, phone, password)) {
 		// Change url
-		fetch(BASE_URL + "/auth/createanonymous", {
+		fetch(constants.BASE_URL + "/auth/createanonymous", {
 			method: 'POST',
-			headers: {
-				"Content-Type": "application/json;charset=UTF-8"
-			},
+			headers: constants.defaultHeaders,
 			body: JSON.stringify({ phone, email, password })
 		})
 			.then(res => res.json())
