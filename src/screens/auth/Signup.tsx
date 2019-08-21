@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, KeyboardAvoidingView, ScrollView, Button } from 'react-native';
 import PTextInput from '../../library/components/PTextInput';
-import { onSubmitSignup } from '../../library/networking/API';
+import { onSubmitSignup } from '../../library/networking/API/authAPI';
 
 interface ISignupProps {
 
