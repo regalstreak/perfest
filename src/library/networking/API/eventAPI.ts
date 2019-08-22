@@ -1,9 +1,31 @@
 import constants from '../constants';
+import { BooleanApiType } from '../BooleanApi'
+
+// Check _id type
+interface FullEventType {
+	_id: string,
+	name: string,
+	description: string,
+	date: Date,
+	cost: {
+		cost_1: number,
+		cost_2?: number,
+		cost_4?: number
+	},
+	image: string,
+	venue: string,
+}
+
+interface GetAllEventsType {
+	success: boolean,
+	eventList: FullEventType[],
+	error?: string
+}
 
 export const getAllEvents = () => {
 	fetch(constants.BASE_URL + "/event/list")
 		.then(res => res.json())
-		.then(res => {
+		.then((res: GetAllEventsType) => {
 			if (res.success) {
 				// Handle success
 				console.log('success');
@@ -18,10 +40,16 @@ export const getAllEvents = () => {
 		});
 }
 
+interface GetEventType {
+	success: boolean,
+	event: FullEventType,
+	error?: string
+}
+
 export const getEvent = (eventId: string) => {
 	fetch(constants.BASE_URL + "/event/" + eventId)
 		.then(res => res.json())
-		.then(res => {
+		.then((res: GetEventType) => {
 			if (res.success) {
 				// Handle success
 				console.log('success');
@@ -56,7 +84,7 @@ export const addEvent = (event: EventType, token: string) => {
 		body: JSON.stringify({ token, event })
 	})
 		.then(res => res.json())
-		.then(res => {
+		.then((res: BooleanApiType) => {
 			if (res.success) {
 				// Handle success
 				console.log('event added successfully');
@@ -71,21 +99,6 @@ export const addEvent = (event: EventType, token: string) => {
 		});
 }
 
-// Check _id type
-interface FullEventType {
-	_id: string,
-	name: string,
-	description: string,
-	date: Date,
-	cost: {
-		cost_1: number,
-		cost_2?: number,
-		cost_4?: number
-	},
-	image: string,
-	venue: string,
-}
-
 export const editEvent = (event: FullEventType, token: string) => {
 	fetch(constants.BASE_URL + "/event/add", {
 		method: 'POST',
@@ -93,7 +106,7 @@ export const editEvent = (event: FullEventType, token: string) => {
 		body: JSON.stringify({ token, event })
 	})
 		.then(res => res.json())
-		.then(res => {
+		.then((res: BooleanApiType) => {
 			if (res.success) {
 				// Handle success
 				console.log('event edited successfully');

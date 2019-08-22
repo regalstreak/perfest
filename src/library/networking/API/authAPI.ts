@@ -1,6 +1,11 @@
 import constants from '../constants';
 import { validateSignup, validateLogin } from '../../utils/utils';
 
+interface SignupType {
+	success: boolean,
+	error?: string
+}
+
 export const onSubmitSignup = (email: string, phone: string, password: string) => {
 	if (validateSignup(email, phone, password)) {
 		fetch(constants.BASE_URL + "/auth/createanonymous", {
@@ -9,7 +14,7 @@ export const onSubmitSignup = (email: string, phone: string, password: string) =
 			body: JSON.stringify({ phone, email, password })
 		})
 			.then(res => res.json())
-			.then(res => {
+			.then((res: SignupType) => {
 				if (res.success) {
 					// Handle success
 					console.log('success');
@@ -25,6 +30,12 @@ export const onSubmitSignup = (email: string, phone: string, password: string) =
 	}
 }
 
+interface LoginType {
+	success: boolean,
+	token: string,
+	error?: string
+}
+
 export const onSubmitLogin = (email: string, phone: string, password: string) => {
 	if (validateSignup(email, phone, password)) {
 		fetch(constants.BASE_URL + "/auth/login", {
@@ -33,7 +44,7 @@ export const onSubmitLogin = (email: string, phone: string, password: string) =>
 			body: JSON.stringify({ phone, email, password })
 		})
 			.then(res => res.json())
-			.then(res => {
+			.then((res: LoginType) => {
 				if (res.success) {
 					// Handle successful login
 					console.log('login successful');

@@ -1,4 +1,5 @@
 import constants from '../constants';
+import { BooleanApiType } from '../BooleanApi';
 
 export const assignEvent = (eventId: string, volunteerId: string, token: string) => {
 	fetch(constants.BASE_URL + "/volunteer/assignEvent", {
@@ -7,7 +8,7 @@ export const assignEvent = (eventId: string, volunteerId: string, token: string)
 		body: JSON.stringify({ eventId, volunteerId, token })
 	})
 		.then(res => res.json())
-		.then(res => {
+		.then((res: BooleanApiType) => {
 			if (res.success) {
 				// Handle success
 				console.log('Successful');
@@ -29,7 +30,7 @@ export const unassignEvent = (eventId: string, volunteerId: string, token: strin
 		body: JSON.stringify({ eventId, volunteerId, token })
 	})
 		.then(res => res.json())
-		.then(res => {
+		.then((res: BooleanApiType) => {
 			if (res.success) {
 				// Handle success
 				console.log('Successful');

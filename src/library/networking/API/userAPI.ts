@@ -1,4 +1,19 @@
 import constants from '../constants';
+import { BooleanApiType } from '../BooleanApi';
+
+interface LogType {
+	vname: string,
+	price: number,
+	ename: string
+}
+
+interface GetLogsType {
+	success: boolean,
+	logList: LogType[],
+	totalSold: number,
+	totalCollected: number,
+	error?: string
+}
 
 export const getLogs = (page: number, token: string) => {
 	fetch(constants.BASE_URL + "/ticket/invalidate", {
@@ -7,7 +22,7 @@ export const getLogs = (page: number, token: string) => {
 		body: JSON.stringify({ page, token })
 	})
 		.then(res => res.json())
-		.then(res => {
+		.then((res: GetLogsType) => {
 			if (res.success) {
 				return res;
 			} else {
@@ -20,6 +35,19 @@ export const getLogs = (page: number, token: string) => {
 			console.log('error');
 		});
 }
+interface UserType {
+	_id: string,
+	name: string,
+	contact: string,
+	college: string
+}
+
+
+interface GetUserVolListType {
+	success: true,
+	list: UserType[],
+	error?: string,
+}
 
 export const getUserVolList = (type: string, token: string) => {
 	fetch(constants.BASE_URL + "/user/list", {
@@ -28,7 +56,7 @@ export const getUserVolList = (type: string, token: string) => {
 		body: JSON.stringify({ type, token })
 	})
 		.then(res => res.json())
-		.then(res => {
+		.then((res: GetUserVolListType) => {
 			if (res.success) {
 				return res;
 			} else {
@@ -49,7 +77,7 @@ export const upgradeUser = (token: string) => {
 		body: JSON.stringify({ token })
 	})
 		.then(res => res.json())
-		.then(res => {
+		.then((res: BooleanApiType) => {
 			if (res.success) {
 				return res;
 			} else {
@@ -61,6 +89,29 @@ export const upgradeUser = (token: string) => {
 			// Handle error
 			console.log('error');
 		});
+}
+
+interface EventType {
+	_id: string,
+	name: string,
+	description: string,
+	date: Date,
+	cost: {
+		cost_1: number,
+		cost_2?: number,
+		cost_4?: number
+	},
+	image: string,
+	venue: string,
+}
+
+interface GetAllTicketsType {
+	success: boolean,
+	ticketList: {
+		valid: boolean,
+		event: EventType
+	},
+	error?: string
 }
 
 export const getAllTickets = (token: string) => {
@@ -70,7 +121,7 @@ export const getAllTickets = (token: string) => {
 		body: JSON.stringify({ token })
 	})
 		.then(res => res.json())
-		.then(res => {
+		.then((res: GetAllTicketsType) => {
 			if (res.success) {
 				return res;
 			} else {
@@ -84,6 +135,22 @@ export const getAllTickets = (token: string) => {
 		});
 }
 
+interface TicketType {
+	valid: boolean,
+	event: EventType,
+	price: number,
+	paid: number,
+	balance: number,
+	participantNo: number,
+	date: Date
+}
+
+interface GetTicketByIdType {
+	success: boolean,
+	ticket: TicketType,
+	error: string
+}
+
 export const getTicketById = (userId: string, token: string) => {
 	fetch(constants.BASE_URL + "/user/getTicketById", {
 		method: 'POST',
@@ -91,7 +158,7 @@ export const getTicketById = (userId: string, token: string) => {
 		body: JSON.stringify({ userId, token })
 	})
 		.then(res => res.json())
-		.then(res => {
+		.then((res: GetAllTicketsType) => {
 			if (res.success) {
 				return res;
 			} else {
@@ -130,7 +197,7 @@ export const updateUserProfile = (data: UserType, token: string) => {
 		body: JSON.stringify({ data, token })
 	})
 		.then(res => res.json())
-		.then(res => {
+		.then((res: BooleanApiType) => {
 			if (res.success) {
 				return res;
 			} else {
