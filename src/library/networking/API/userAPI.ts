@@ -1,5 +1,5 @@
 import constants from '../constants';
-import { BooleanApiType } from '../BooleanApi';
+import { BasicApiType } from '../../interfaces/BasicApi';
 
 interface LogType {
 	vname: string,
@@ -7,12 +7,10 @@ interface LogType {
 	ename: string
 }
 
-interface GetLogsType {
-	success: boolean,
+interface GetLogsType extends BasicApiType {
 	logList: LogType[],
 	totalSold: number,
-	totalCollected: number,
-	error?: string
+	totalCollected: number
 }
 
 export const getLogs = (page: number, token: string) => {
@@ -43,10 +41,8 @@ interface UserType {
 }
 
 
-interface GetUserVolListType {
-	success: true,
-	list: UserType[],
-	error?: string,
+interface GetUserVolListType extends BasicApiType {
+	list: UserType[]
 }
 
 export const getUserVolList = (type: string, token: string) => {
@@ -77,7 +73,7 @@ export const upgradeUser = (token: string) => {
 		body: JSON.stringify({ token })
 	})
 		.then(res => res.json())
-		.then((res: BooleanApiType) => {
+		.then((res: BasicApiType) => {
 			if (res.success) {
 				return res;
 			} else {
@@ -105,13 +101,11 @@ interface EventType {
 	venue: string,
 }
 
-interface GetAllTicketsType {
-	success: boolean,
+interface GetAllTicketsType extends BasicApiType {
 	ticketList: {
 		valid: boolean,
 		event: EventType
-	},
-	error?: string
+	}
 }
 
 export const getAllTickets = (token: string) => {
@@ -145,10 +139,8 @@ interface TicketType {
 	date: Date
 }
 
-interface GetTicketByIdType {
-	success: boolean,
+interface GetTicketByIdType extends BasicApiType {
 	ticket: TicketType,
-	error: string
 }
 
 export const getTicketById = (userId: string, token: string) => {
@@ -197,7 +189,7 @@ export const updateUserProfile = (data: UserType, token: string) => {
 		body: JSON.stringify({ data, token })
 	})
 		.then(res => res.json())
-		.then((res: BooleanApiType) => {
+		.then((res: BasicApiType) => {
 			if (res.success) {
 				return res;
 			} else {

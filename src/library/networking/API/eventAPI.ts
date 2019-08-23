@@ -1,5 +1,5 @@
 import constants from '../constants';
-import { BooleanApiType } from '../BooleanApi'
+import { BasicApiType } from '../../interfaces/BasicApi'
 
 // Check _id type
 interface FullEventType {
@@ -16,10 +16,8 @@ interface FullEventType {
 	venue: string,
 }
 
-interface GetAllEventsType {
-	success: boolean,
-	eventList: FullEventType[],
-	error?: string
+interface GetAllEventsType extends BasicApiType {
+	eventList: FullEventType[]
 }
 
 export const getAllEvents = () => {
@@ -40,10 +38,8 @@ export const getAllEvents = () => {
 		});
 }
 
-interface GetEventType {
-	success: boolean,
+interface GetEventType extends BasicApiType {
 	event: FullEventType,
-	error?: string
 }
 
 export const getEvent = (eventId: string) => {
@@ -84,7 +80,7 @@ export const addEvent = (event: EventType, token: string) => {
 		body: JSON.stringify({ token, event })
 	})
 		.then(res => res.json())
-		.then((res: BooleanApiType) => {
+		.then((res: BasicApiType) => {
 			if (res.success) {
 				// Handle success
 				console.log('event added successfully');
@@ -106,7 +102,7 @@ export const editEvent = (event: FullEventType, token: string) => {
 		body: JSON.stringify({ token, event })
 	})
 		.then(res => res.json())
-		.then((res: BooleanApiType) => {
+		.then((res: BasicApiType) => {
 			if (res.success) {
 				// Handle success
 				console.log('event edited successfully');

@@ -1,9 +1,13 @@
+import { string } from "prop-types";
+
 interface AddTokenAction {
 	type: string,
-	token: string
+	token: string,
+	userId: string,
+	userType: string
 }
 
-interface DeleteTokenAction{
+interface DeleteTokenAction {
 	type: string
 }
 

@@ -1,5 +1,5 @@
 import constants from '../constants';
-import { BooleanApiType } from '../BooleanApi';
+import { BasicApiType } from '../../interfaces/BasicApi';
 
 export const invalidateTicket = (ticketId: string, token: string) => {
 	fetch(constants.BASE_URL + "/ticket/invalidate", {
@@ -8,7 +8,7 @@ export const invalidateTicket = (ticketId: string, token: string) => {
 		body: JSON.stringify({ token, ticketId })
 	})
 		.then(res => res.json())
-		.then((res: BooleanApiType) => {
+		.then((res: BasicApiType) => {
 			if (res.success) {
 				// Handle success
 				console.log('event edited successfully');

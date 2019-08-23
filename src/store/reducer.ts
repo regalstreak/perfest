@@ -66,8 +66,8 @@ const RootReducer = (state: InitState = initState, action: ActionTypes) => {
 			setToken(action.token);
 			return {
 				token: action.token,
-				userType: jwt_decode<TokenType>(action.token).type,
-				userId: jwt_decode<TokenType>(action.token).userId
+				userType: action.userType,
+				userId: action.userId
 			}
 		case DELETE_TOKEN:
 			deleteToken();
@@ -77,6 +77,7 @@ const RootReducer = (state: InitState = initState, action: ActionTypes) => {
 				userId: ''
 			}
 		default:
+			console.log('def');
 			return state
 	}
 }

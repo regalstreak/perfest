@@ -1,63 +1,34 @@
 import constants from '../constants';
-import { validateSignup, validateLogin } from '../../utils/utils';
+import { BasicApiType } from '../../interfaces/BasicApi';
 
-interface SignupType {
-	success: boolean,
-	error?: string
-}
-
-export const onSubmitSignup = (email: string, phone: string, password: string) => {
-	if (validateSignup(email, phone, password)) {
-		fetch(constants.BASE_URL + "/auth/createanonymous", {
+export const onSubmitSignup = async (email: string, phone: string, password: string) => {
+	try {
+		let res = await fetch(constants.BASE_URL + "/auth/createanonymous", {
 			method: 'POST',
 			headers: constants.defaultHeaders,
 			body: JSON.stringify({ phone, email, password })
 		})
-			.then(res => res.json())
-			.then((res: SignupType) => {
-				if (res.success) {
-					// Handle success
-					console.log('success');
-				} else {
-					// Handle error
-					console.log('error');
-				}
-			})
-			.catch(err => {
-				// Handle error
-				console.log('error');
-			});
+		let response: BasicApiType = await res.json();
+		return response;
+	} catch (err) {
+		return { success: false, error: err };
 	}
 }
 
-interface LoginType {
-	success: boolean,
-	token: string,
-	error?: string
+interface LoginType extends BasicApiType {
+	token: string
 }
 
-export const onSubmitLogin = (email: string, phone: string, password: string) => {
-	if (validateSignup(email, phone, password)) {
-		fetch(constants.BASE_URL + "/auth/login", {
+export const onSubmitLogin = async (email: string, phone: string, password: string) => {
+	try {
+		let res = await fetch(constants.BASE_URL + "/auth/login", {
 			method: 'POST',
 			headers: constants.defaultHeaders,
 			body: JSON.stringify({ phone, email, password })
 		})
-			.then(res => res.json())
-			.then((res: LoginType) => {
-				if (res.success) {
-					// Handle successful login
-					console.log('login successful');
-					// return res.token
-				} else {
-					// Handle error
-					console.log('error');
-				}
-			})
-			.catch(err => {
-				// Handle error
-				console.log('error');
-			});
+		let response: LoginType = await res.json();
+		return response;
+	} catch (err) {
+		return { success: false, token: '', error: err };
 	}
-	return '';
 }

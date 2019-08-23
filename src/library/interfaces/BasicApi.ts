@@ -1,4 +1,4 @@
-export interface BooleanApiType {
+export interface BasicApiType {
 	success: boolean,
 	error?: string
 }
