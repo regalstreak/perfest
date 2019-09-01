@@ -1,7 +1,8 @@
 import { ActionTypes } from '../library/interfaces/ActionTypes';
 import { ADD_TOKEN, DELETE_TOKEN } from './actions';
-import { AsyncStorage } from 'react-native-web';
+import { AsyncStorage } from 'react-native';
 import jwt_decode from 'jwt-decode';
+
 
 interface InitState {
 	token: string,

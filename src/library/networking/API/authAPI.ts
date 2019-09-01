@@ -19,15 +19,16 @@ interface LoginType extends BasicApiType {
 	token: string
 }
 
-export const onSubmitLogin = async (email: string, phone: string, password: string) => {
+export const onSubmitLogin = async (email: string, password: string, ) => {
 	try {
 		let res = await fetch(constants.BASE_URL + "/auth/login", {
 			method: 'POST',
 			headers: constants.defaultHeaders,
-			body: JSON.stringify({ phone, email, password })
+			body: JSON.stringify({ email, password })
 		})
 		let response: LoginType = await res.json();
 		return response;
+
 	} catch (err) {
 		return { success: false, token: '', error: err };
 	}

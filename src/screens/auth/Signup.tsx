@@ -39,13 +39,13 @@ const Signup: React.FC<ISignupProps> = (props) => {
                     setEmail(text);
                 }}
             />
-            <PTextInput
+            {/* <PTextInput
                 type='numeric'
                 placeholder="Phone"
                 getText={(text: string) => {
                     setPhone(text);
                 }}
-            />
+            /> */}
             <PTextInput
                 password
                 placeholder="Password"

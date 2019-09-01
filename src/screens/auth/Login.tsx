@@ -30,7 +30,7 @@ interface ILoginProps {
 const submitLogin = async (addToken: (token: string, userId: string, userType: string) => { type: string, token: string, userId: string, userType: string },
     email: string, phone: string, password: string) => {
     if (validateLogin(email, phone, password)) {
-        let res = await onSubmitLogin(email, phone, password);
+        let res = await onSubmitLogin(email, password);
         if (res.success) {
             let token = res.token;
             let userType = jwt_decode<TokenType>(token).type;
@@ -67,13 +67,13 @@ const Login = (props: ILoginProps) => {
                     setEmail(text);
                 }}
             />
-            <PTextInput
+            {/* <PTextInput
                 type='numeric'
                 placeholder="Phone"
                 getText={(text: string) => {
                     setPhone(text);
                 }}
-            />
+            /> */}
             <PTextInput
                 password
                 placeholder="Password"
