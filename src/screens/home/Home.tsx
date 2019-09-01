@@ -7,6 +7,7 @@ import { NavigationScreenProp } from 'react-navigation';
 import PBottomNav from '../../library/components/PBottomNav';
 import { getUserType } from '../../library/utils/utils';
 import { useRtype } from '../../library/hooks/authHooks';
+import PEvent from '../../library/components/PEvent';
 
 interface IHomeProps {
     navigation: NavigationScreenProp<any, any>,
@@ -16,7 +17,7 @@ interface IHomeProps {
 const Home = (props: IHomeProps) => {
 
     const userType = useRtype();
-
+    let abc = ['av', 'as', 'as', 'as']
     return (
         <View style={styles.container}>
             <Text>Hello Home</Text>
@@ -27,6 +28,15 @@ const Home = (props: IHomeProps) => {
             <Text>
                 type: {userType}
             </Text>
+
+            <View>
+                {
+
+                    abc.map(item => (
+                        <PEvent></PEvent>
+                    ))
+                }
+            </View>
 
             <PBottomNav></PBottomNav>
         </View>

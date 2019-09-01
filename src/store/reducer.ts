@@ -78,7 +78,6 @@ const RootReducer = (state: InitState = initState, action: ActionTypes) => {
 				userId: ''
 			}
 		default:
-			console.log('def');
 			return state
 	}
 }
