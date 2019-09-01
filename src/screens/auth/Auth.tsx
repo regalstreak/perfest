@@ -1,5 +1,4 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
 
 import { NavigationScreenProp } from 'react-navigation';
 
@@ -9,16 +8,15 @@ interface IAuthProps {
 
 export default (props: IAuthProps) => {
 
-    props.navigation.navigate('Signup');
-    return (
-        <View style={styles.container}>
-            <Text>Hello Auth</Text>
-        </View>
-    )
+    // if( user is logged in) {
+    //     props.navigation.navigate('Home');
+    // } else {
+    //     props.navigation.navigate('Login');
+    // }
+
+    props.navigation.navigate('Login');
+
+    return null;
+
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    }
-})

@@ -9,6 +9,8 @@ import { ADD_TOKEN } from '../../store/actions';
 import { ReducerState } from '../../store/reducer';
 import jwt_decode from 'jwt-decode';
 import { validateLogin } from '../../library/utils/utils';
+import { NavigationScreenProp } from 'react-navigation';
+
 
 interface TokenType {
     type: string,
@@ -24,11 +26,12 @@ interface ILoginProps {
     }
     token: string,
     userType: string,
-    userId: string
+    userId: string,
+    navigation: NavigationScreenProp<any, any>;
 }
 
 const submitLogin = async (addToken: (token: string, userId: string, userType: string) => { type: string, token: string, userId: string, userType: string },
-    email: string, phone: string, password: string) => {
+    email: string, phone: string, password: string, navigation: NavigationScreenProp<any,any>) => {
     if (validateLogin(email, phone, password)) {
         let res = await onSubmitLogin(email, password);
         if (res.success) {
@@ -37,6 +40,7 @@ const submitLogin = async (addToken: (token: string, userId: string, userType: s
             let userId = jwt_decode<TokenType>(token).userId;
             addToken(token, userId, userType);
             // Handle success
+            navigation.navigate('Home')
         } else {
             // Handle error
             console.log(res.error);
@@ -51,12 +55,7 @@ const Login = (props: ILoginProps) => {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
-    // For testing
-    setTimeout(() => {
-        console.log(props.token);
-        console.log(props.userType);
-        console.log(props.userId);
-    }, 2000);
+
     return (
         <KeyboardAvoidingView style={styles.container} enabled >
             <Text>Login</Text>
@@ -83,7 +82,7 @@ const Login = (props: ILoginProps) => {
             />
             <PButton
                 text={'Login'}
-                onPress={() => submitLogin(props.addToken, email, phone, password)}
+                onPress={() => submitLogin(props.addToken, email, phone, password, props.navigation)}
             />
         </KeyboardAvoidingView>
     )
@@ -102,7 +101,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
         addToken: (token: string, userId: string, userType: string) => dispatch({ type: ADD_TOKEN, token, userId, userType })
     }
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
