@@ -1,30 +1,38 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { colors } from '../res/colors';
-
+import { NavigationScreenProp } from 'react-navigation';
 
 interface IPEventProps {
-
+    navigation: NavigationScreenProp<any, any>;
 }
 
-export default (props: IPEventProps) => {
+
+const PEvent = (props: IPEventProps) => {
     return (
-        <View style={styles.container}>
-            <View style={styles.image}>
-            </View>
-            <View style={styles.rest}>
-                <View style={styles.titleContainer}>
-                    <Text style={styles.title}>Highway to heaven</Text>
+        <TouchableHighlight
+            onPress={() => props.navigation.navigate('EventDetails', {
+                name: 'Abcabc'
+            })}
+        >
+            <View style={styles.container}>
+                <View style={styles.image}>
                 </View>
-                <View style={styles.venueTimeContainer}>
-                    <Text style={styles.venueTime}>Room: 512</Text>
-                    <Text style={styles.venueTime}>8th Oct</Text>
+                <View style={styles.rest}>
+                    <View style={styles.titleContainer}>
+                        <Text style={styles.title}>Highway to heaven</Text>
+                    </View>
+                    <View style={styles.venueTimeContainer}>
+                        <Text style={styles.venueTime}>Room: 512</Text>
+                        <Text style={styles.venueTime}>8th Oct</Text>
+                    </View>
                 </View>
             </View>
-        </View>
+        </TouchableHighlight>
     )
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -61,3 +69,5 @@ const styles = StyleSheet.create({
         fontSize: hp(2.4)
     },
 })
+
+export default PEvent;

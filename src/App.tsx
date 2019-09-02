@@ -11,6 +11,7 @@ import Home from "./screens/home/Home";
 import Auth from "./screens/auth/Auth";
 import Signup from "./screens/auth/Signup";
 import Login from "./screens/auth/Login";
+import PEventDetails from './library/components/PEventDetails';
 
 // react-native-web is aliased to react-native automatically by create-react-app
 
@@ -33,6 +34,10 @@ const routeMap = {
     Signup: {
         component: Signup,
         path: '/signup'
+    },
+    EventDetails: {
+        component: PEventDetails,
+        path: '/event/:name'
     },
 }
 

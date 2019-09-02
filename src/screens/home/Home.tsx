@@ -33,7 +33,7 @@ const Home = (props: IHomeProps) => {
                 {
 
                     abc.map(item => (
-                        <PEvent></PEvent>
+                        <PEvent navigation={props.navigation}></PEvent>
                     ))
                 }
             </View>
