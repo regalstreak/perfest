@@ -13,6 +13,7 @@ export default (props: IProfileProps) => {
             <Text>Profile</Text>
             <PBottomNav
                 navigation={props.navigation}
+                index={3}
             ></PBottomNav>
         </View>
     )

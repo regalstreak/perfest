@@ -2,3 +2,4 @@
 // declare module '@react-navigation/web'
 
 declare module 'react-router-modal'
+declare module 'react-native-vector-icons/dist/Feather'

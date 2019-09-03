@@ -38,6 +38,7 @@ const Home = (props: IHomeProps) => {
 
             <PBottomNav
                 navigation={props.navigation}
+                index={0}
             ></PBottomNav>
         </View>
     )

@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ViewStyle, StyleProp, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { INavigation } from '../interfaces/Navigation';
+import FeatherIcon from 'react-native-vector-icons/dist/Feather';
+import { colors } from '../res/colors';
+
 
 interface IPBottomNavProps extends INavigation {
     style?: StyleProp<ViewStyle>,
     pressCallback?: (index: number) => any,
     items?: Array<Iitem>,
+    index: number,
 }
 
 interface Iitem {
@@ -24,7 +28,7 @@ const volunteerNavBar = [
     {
         component: 'Events',
         title: 'Events',
-        icon: 'events',
+        icon: 'align-justify',
     },
     {
         component: 'Notifications',
@@ -34,32 +38,65 @@ const volunteerNavBar = [
     {
         component: 'Profile',
         title: 'Profile',
-        icon: 'person',
+        icon: 'user',
     },
 ]
 
-
 const PBottomNav = (props: IPBottomNavProps) => {
 
-    // const [currentIndex, setCurrentIndex] = useState<number>(0);
+    const [currentIndex, setCurrentIndex] = useState<number>(props.index);
 
     return (
         <View style={[styles.container, props.style]}>
 
             <View style={styles.items}>
                 {
-                    volunteerNavBar.map((item: Iitem, index: number) => (
-                        <TouchableOpacity
-                            onPress={() => {
-                                props.navigation.navigate(volunteerNavBar[index].component)
-                            }}
-                            key={item.title}
-                            style={styles.itemView}>
-                            <Text style={styles.itemText}>
-                                {item.title}
-                            </Text>
-                        </TouchableOpacity>
-                    ))
+                    volunteerNavBar.map((item: Iitem, index: number) => {
+                        if (props.index === index) {
+                            return (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        props.navigation.navigate(volunteerNavBar[index].component)
+                                        setCurrentIndex(index);
+                                    }}
+                                    key={item.title}
+                                    style={styles.itemView}
+                                >
+                                    <View>
+                                        <FeatherIcon
+                                            name={volunteerNavBar[index].icon}
+                                            size={24}
+                                            color={colors.perfestPrimary} />
+                                        <Text style={{ ...styles.itemText, color: colors.perfestPrimary }}>
+                                            {item.title}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            )
+                        } else {
+                            return (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        props.navigation.navigate(volunteerNavBar[index].component)
+                                        setCurrentIndex(index);
+                                    }}
+                                    key={item.title}
+                                    style={styles.itemView}
+                                >
+                                    <View>
+                                        <FeatherIcon
+                                            name={volunteerNavBar[index].icon}
+                                            size={24}
+                                            color={colors.perfestGrey}
+                                        />
+                                        <Text style={{ ...styles.itemText, color: colors.perfestGrey }}>
+                                            {item.title}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            )
+                        }
+                    })
                 }
             </View>
 
@@ -88,9 +125,10 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        textAlign: 'center'
     },
     itemText: {
-        textAlign: 'center'
+        fontSize: 12,
     }
 })
 

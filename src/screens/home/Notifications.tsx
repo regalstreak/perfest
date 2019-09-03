@@ -14,6 +14,7 @@ export default (props: INotificationsProps) => {
 
             <PBottomNav
                 navigation={props.navigation}
+                index={2}
             ></PBottomNav>
         </View>
     )

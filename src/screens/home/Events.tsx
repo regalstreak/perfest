@@ -28,6 +28,7 @@ export default (props: IEventsProps) => {
 
             <PBottomNav
                 navigation={props.navigation}
+                index={1}
             ></PBottomNav>
 
         </View>
