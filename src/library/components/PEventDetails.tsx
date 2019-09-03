@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
+import { INavigation } from '../interfaces/Navigation';
 
 
-interface IPEventDetailsProps {
-    navigation: NavigationScreenProp<any, any>;
+interface IPEventDetailsProps extends INavigation {
 }
 
 export default (props: IPEventDetailsProps) => {

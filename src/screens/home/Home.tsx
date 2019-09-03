@@ -1,47 +1,50 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { ReducerState } from '../../store/reducer';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 
-import { NavigationScreenProp } from 'react-navigation';
-import PBottomNav from '../../library/components/PBottomNav';
+import { ReducerState } from '../../store/reducer';
 import { getUserType } from '../../library/utils/utils';
 import { useRtype } from '../../library/hooks/authHooks';
-import PEvent from '../../library/components/PEvent';
 
-interface IHomeProps {
-    navigation: NavigationScreenProp<any, any>,
+import PBottomNav from '../../library/components/PBottomNav';
+import { INavigation } from '../../library/interfaces/Navigation';
+import PButton from '../../library/components/PButton';
+
+interface IHomeProps extends INavigation {
     userType: string;
 }
 
+
+
 const Home = (props: IHomeProps) => {
 
+
     const userType = useRtype();
-    let abc = ['av', 'as', 'as', 'as']
+
+
     return (
         <View style={styles.container}>
-            <Text>Hello Home</Text>
-            <TouchableOpacity onPress={() => { props.navigation.navigate('Auth') }}>
-                <Text>Touch for auth</Text>
-            </TouchableOpacity>
+            <Text>Home</Text>
+            <PButton
+                onPress={() => { props.navigation.navigate('Login') }}
+                text='Touch for auth'
+            />
 
             <Text>
-                type: {userType}
+                Your user type: {userType}
             </Text>
 
-            <View>
-                {
 
-                    abc.map(item => (
-                        <PEvent navigation={props.navigation}></PEvent>
-                    ))
-                }
-            </View>
 
-            <PBottomNav></PBottomNav>
+
+            <PBottomNav
+                navigation={props.navigation}
+            ></PBottomNav>
         </View>
     )
 }
+
+
 
 const styles = StyleSheet.create({
     container: {

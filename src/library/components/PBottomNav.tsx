@@ -1,46 +1,64 @@
-import React from 'react';
-import { View, Text, StyleSheet, ViewStyle, StyleProp } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ViewStyle, StyleProp, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { INavigation } from '../interfaces/Navigation';
 
-
-interface IPBottomNavProps {
+interface IPBottomNavProps extends INavigation {
     style?: StyleProp<ViewStyle>,
+    pressCallback?: (index: number) => any,
+    items?: Array<Iitem>,
 }
 
+interface Iitem {
+    title: string;
+    icon: string;
+    component: string;
+}
 
-const ourProps: any = [
+const volunteerNavBar = [
     {
-        title: 'abc',
+        component: 'Home',
+        title: 'Home',
+        icon: 'home',
     },
     {
-        title: 'bcd',
+        component: 'Events',
+        title: 'Events',
+        icon: 'events',
     },
     {
-        title: 'cde',
+        component: 'Notifications',
+        title: 'Notifs',
+        icon: 'bell',
     },
     {
-        title: 'cdes',
+        component: 'Profile',
+        title: 'Profile',
+        icon: 'person',
     },
 ]
 
-interface Iitem {
-    component?: string;
-    title?: string;
-    icon?: string;
-}
 
-export default (props: IPBottomNavProps) => {
+const PBottomNav = (props: IPBottomNavProps) => {
+
+    // const [currentIndex, setCurrentIndex] = useState<number>(0);
+
     return (
         <View style={[styles.container, props.style]}>
 
             <View style={styles.items}>
                 {
-                    ourProps.map((item: Iitem) => (
-                        <View key={item.title} style={styles.itemView}>
+                    volunteerNavBar.map((item: Iitem, index: number) => (
+                        <TouchableOpacity
+                            onPress={() => {
+                                props.navigation.navigate(volunteerNavBar[index].component)
+                            }}
+                            key={item.title}
+                            style={styles.itemView}>
                             <Text style={styles.itemText}>
                                 {item.title}
                             </Text>
-                        </View>
+                        </TouchableOpacity>
                     ))
                 }
             </View>
@@ -58,20 +76,22 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 16,
         position: 'absolute',
-        bottom: 0
-
+        bottom: 0,
+        backgroundColor: 'white'
     },
     items: {
         flexDirection: 'row',
         flex: 1,
         justifyContent: 'space-between',
-        alignItems: 'center'
     },
     itemView: {
-        backgroundColor: 'red',
-        alignItems: 'center'
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     itemText: {
-        color: 'blue'
+        textAlign: 'center'
     }
 })
+
+export default PBottomNav;

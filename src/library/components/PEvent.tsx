@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { colors } from '../res/colors';
 import { NavigationScreenProp } from 'react-navigation';
@@ -11,7 +11,7 @@ interface IPEventProps {
 
 const PEvent = (props: IPEventProps) => {
     return (
-        <TouchableHighlight
+        <TouchableOpacity
             onPress={() => props.navigation.navigate('EventDetails', {
                 name: 'Abcabc'
             })}
@@ -29,7 +29,7 @@ const PEvent = (props: IPEventProps) => {
                     </View>
                 </View>
             </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
     )
 }
 

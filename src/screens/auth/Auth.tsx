@@ -14,7 +14,7 @@ export default (props: IAuthProps) => {
     //     props.navigation.navigate('Login');
     // }
 
-    props.navigation.navigate('Login');
+    // props.navigation.navigate('Login');
 
     return null;
 
