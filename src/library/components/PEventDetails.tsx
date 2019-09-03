@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { NavigationScreenProp } from 'react-navigation';
 import { INavigation } from '../interfaces/Navigation';
 
 

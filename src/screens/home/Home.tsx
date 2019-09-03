@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
 import { ReducerState } from '../../store/reducer';
-import { getUserType } from '../../library/utils/utils';
 import { useRtype } from '../../library/hooks/authHooks';
 
 import PBottomNav from '../../library/components/PBottomNav';

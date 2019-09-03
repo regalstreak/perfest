@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import PTextInput from '../../library/components/PTextInput';
 import PButton from '../../library/components/PButton';
 import { onSubmitLogin } from '../../library/networking/API/authAPI';
@@ -31,7 +31,7 @@ interface ILoginProps {
 }
 
 const submitLogin = async (addToken: (token: string, userId: string, userType: string) => { type: string, token: string, userId: string, userType: string },
-    email: string, phone: string, password: string, navigation: NavigationScreenProp<any,any>) => {
+    email: string, phone: string, password: string, navigation: NavigationScreenProp<any, any>) => {
     if (validateLogin(email, phone, password)) {
         let res = await onSubmitLogin(email, password);
         if (res.success) {
@@ -54,6 +54,7 @@ const submitLogin = async (addToken: (token: string, userId: string, userType: s
 const Login = (props: ILoginProps) => {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
+    // eslint-disable-next-line
     const [phone, setPhone] = useState('');
 
     return (

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { NavigationScreenProp } from 'react-navigation';
 
 interface IAuthProps {

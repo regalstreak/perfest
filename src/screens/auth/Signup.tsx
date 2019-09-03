@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, KeyboardAvoidingView, ScrollView, Button } from 'react-native';
+import { Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import PTextInput from '../../library/components/PTextInput';
 import { onSubmitSignup } from '../../library/networking/API/authAPI';
 import PButton from '../../library/components/PButton';
 import { validateSignup } from '../../library/utils/utils';
 
 interface ISignupProps {
-
 }
 
 const submitSignup = async (email: string, phone: string, password: string) => {
@@ -28,6 +27,7 @@ const submitSignup = async (email: string, phone: string, password: string) => {
 const Signup: React.FC<ISignupProps> = (props) => {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
+    // eslint-disable-next-line
     const [phone, setPhone] = useState('');
     return (
         <KeyboardAvoidingView style={styles.container} enabled >
