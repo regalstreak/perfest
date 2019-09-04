@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, ViewStyle, StyleProp, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { INavigation } from '../interfaces/Navigation';
@@ -44,7 +44,8 @@ const volunteerNavBar = [
 
 const PBottomNav = (props: IPBottomNavProps) => {
 
-    const [currentIndex, setCurrentIndex] = useState<number>(props.index);
+    let primaryTextStyle = { color: colors.perfestPrimary }
+    let secondaryTextStyle = { color: colors.perfestGrey }
 
     return (
         <View style={[styles.container, props.style]}>
@@ -57,17 +58,16 @@ const PBottomNav = (props: IPBottomNavProps) => {
                                 <TouchableOpacity
                                     onPress={() => {
                                         props.navigation.navigate(volunteerNavBar[index].component)
-                                        setCurrentIndex(index);
                                     }}
                                     key={item.title}
                                     style={styles.itemView}
                                 >
-                                    <View>
+                                    <View style={styles.textIconContainer}>
                                         <FeatherIcon
                                             name={volunteerNavBar[index].icon}
                                             size={24}
                                             color={colors.perfestPrimary} />
-                                        <Text style={{ ...styles.itemText, color: colors.perfestPrimary }}>
+                                        <Text style={[styles.itemText, primaryTextStyle]}>
                                             {item.title}
                                         </Text>
                                     </View>
@@ -78,18 +78,17 @@ const PBottomNav = (props: IPBottomNavProps) => {
                                 <TouchableOpacity
                                     onPress={() => {
                                         props.navigation.navigate(volunteerNavBar[index].component)
-                                        setCurrentIndex(index);
                                     }}
                                     key={item.title}
                                     style={styles.itemView}
                                 >
-                                    <View>
+                                    <View style={styles.textIconContainer}>
                                         <FeatherIcon
                                             name={volunteerNavBar[index].icon}
                                             size={24}
                                             color={colors.perfestGrey}
                                         />
-                                        <Text style={{ ...styles.itemText, color: colors.perfestGrey }}>
+                                        <Text style={[styles.itemText, secondaryTextStyle]}>
                                             {item.title}
                                         </Text>
                                     </View>
@@ -114,21 +113,24 @@ const styles = StyleSheet.create({
         shadowRadius: 16,
         position: 'absolute',
         bottom: 0,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
     },
     items: {
         flexDirection: 'row',
         flex: 1,
         justifyContent: 'space-between',
     },
+    textIconContainer: {
+        alignItems: 'center',
+    },
     itemView: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        textAlign: 'center'
     },
     itemText: {
         fontSize: 12,
+        marginTop: 4,
     }
 })
 
