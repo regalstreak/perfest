@@ -62,27 +62,33 @@ export default (props: IPSearchDropdownProps) => {
     }
 
     return (
-        <TouchableWithoutFeedback>
+        <View
+        >
 
             <View style={[styles.container, props.style]}>
                 <PTextInput
                     placeholder={props.placeholder}
                     onFocus={_handleFocus}
-                    onBlur={_handleBlur}
+                    // onBlur={_handleBlur}
                     onChangeText={(input) => {
                         setText(input);
                         _onChangeText(input);
                     }}
                     value={text}
+                    suffixIcon='x'
+                    suffixIconOnPress={() => {
+                        setIsFocused(false)
+                        setText('');
+                    }}
                     noDirty
 
                 ></PTextInput>
 
                 {isFocused ? (
-                    <View >
+                    <View>
                         <FlatList
                             style={styles.flatList}
-                            keyboardShouldPersistTaps={'handled'}
+                            keyboardShouldPersistTaps={'never'}
                             data={searched}
                             renderItem={_renderItem}
                             keyExtractor={(item, index) => index.toString()}
@@ -91,7 +97,7 @@ export default (props: IPSearchDropdownProps) => {
                 ) : (null)
                 }
             </View>
-        </TouchableWithoutFeedback>
+        </View>
     )
 }
 

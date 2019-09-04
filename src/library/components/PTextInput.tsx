@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { View, StyleSheet, TextInput, Animated, TouchableWithoutFeedback, StyleProp, ViewStyle } from 'react-native';
+import { View, StyleSheet, TextInput, Animated, TouchableWithoutFeedback, StyleProp, ViewStyle, Text, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import FeatherIcon from 'react-native-vector-icons/dist/Feather';
 
 import { colors } from '../res/colors';
 
@@ -14,6 +15,8 @@ export interface IPTextInputProps {
     onBlur?: () => void;
     value?: string;
     noDirty?: true;
+    suffixIcon?: string;
+    suffixIconOnPress?: () => void;
 }
 
 const PTextInput: React.FC<IPTextInputProps> = (props) => {
@@ -97,6 +100,7 @@ const PTextInput: React.FC<IPTextInputProps> = (props) => {
                     }
                 }}
                 secureTextEntry={props.password}
+
             />
             <TouchableWithoutFeedback onFocus={_handleFocus}>
                 <Animated.View style={[styles.placeholder, placeHolderTopStyle]}>
@@ -108,6 +112,27 @@ const PTextInput: React.FC<IPTextInputProps> = (props) => {
                     </Animated.Text>
                 </Animated.View>
             </TouchableWithoutFeedback>
+
+            {
+                props.suffixIcon ?
+
+                    (
+                        <TouchableOpacity
+                            onPress={() => {
+                                if (props.suffixIconOnPress) {
+                                    props.suffixIconOnPress();
+                                }
+                            }}
+                            style={styles.buttonSuffix}
+                        >
+                            <FeatherIcon
+                                name={props.suffixIcon}
+                                size={22}
+                                color={colors.perfestGrey} />
+                        </TouchableOpacity>
+                    )
+                    : null
+            }
         </View>
     )
 }
@@ -134,6 +159,13 @@ const styles = StyleSheet.create({
         left: hp(1),
         paddingHorizontal: 6,
     },
+    buttonSuffix: {
+        position: 'absolute',
+        right: hp(1),
+        paddingHorizontal: 6,
+        top: hp(1.8),
+        opacity: 0.5,
+    }
 })
 
 export default PTextInput;
