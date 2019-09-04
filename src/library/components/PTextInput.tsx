@@ -1,14 +1,18 @@
 import React, { useState, useRef } from 'react';
-import { View, StyleSheet, TextInput, Animated, TouchableWithoutFeedback } from 'react-native';
+import { View, StyleSheet, TextInput, Animated, TouchableWithoutFeedback, StyleProp, ViewStyle } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 import { colors } from '../res/colors';
 
-interface IPTextInputProps {
+export interface IPTextInputProps {
     placeholder: string;
     type?: 'default' | 'numeric' | 'email-address';
     password?: boolean;
-    getText: (text: string) => void;
+    onChangeText?: (text: string) => void;
+    style?: StyleProp<ViewStyle>;
+    onFocus?: () => void;
+    onBlur?: () => void;
+    value?: string;
 }
 
 const PTextInput: React.FC<IPTextInputProps> = (props) => {
@@ -45,6 +49,10 @@ const PTextInput: React.FC<IPTextInputProps> = (props) => {
 
         setOutline(colors.perfestPrimary);
         setOutlineWidth(2);
+
+        if (props.onFocus) {
+            props.onFocus();
+        }
     }
 
     const _handleBlur = () => {
@@ -61,26 +69,35 @@ const PTextInput: React.FC<IPTextInputProps> = (props) => {
 
         setOutline(colors.perfestGrey);
         setOutlineWidth(1);
+
+        if (props.onBlur) {
+            props.onBlur();
+        }
     }
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, props.style]}>
             <TextInput
                 ref={textInputRef}
                 onFocus={_handleFocus}
                 onBlur={_handleBlur}
                 style={[styles.textInput, outlineStyle]}
-                value={text}
+                value={props.value ? props.value : text}
                 keyboardType={props.type}
                 onChangeText={(input) => {
                     setText(input);
-                    props.getText(input);
+                    if (props.onChangeText) {
+                        props.onChangeText(input);
+                    }
                 }}
                 secureTextEntry={props.password}
             />
             <TouchableWithoutFeedback onFocus={_handleFocus}>
                 <Animated.View style={[styles.placeholder, placeHolderTopStyle]}>
-                    <Animated.Text style={{ fontSize: placeholderFontSize, color: outline }}>
+                    <Animated.Text
+                        style={{ fontSize: placeholderFontSize, color: outline }}
+                        selectable={false}
+                    >
                         {props.placeholder}
                     </Animated.Text>
                 </Animated.View>
@@ -96,7 +113,6 @@ PTextInput.defaultProps = {
 
 const styles = StyleSheet.create({
     container: {
-        margin: hp(3),
     },
     textInput: {
         height: hp(7),
@@ -105,7 +121,6 @@ const styles = StyleSheet.create({
         paddingVertical: hp(1),
         paddingHorizontal: hp(2),
         borderRadius: 4,
-
     },
     placeholder: {
         position: 'absolute',

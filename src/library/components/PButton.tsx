@@ -1,17 +1,22 @@
 import React from 'react';
-import { Text, StyleSheet, TouchableHighlight } from 'react-native';
+import { Text, StyleSheet, TouchableHighlight, StyleProp, ViewStyle } from 'react-native';
 import { colors } from '../res/colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 interface IPButtonProps {
-    text: string;
-    onPress?: () => void;
+    text: string,
+    onPress?: () => void,
+    style?: StyleProp<ViewStyle>,
 }
 
 export default (props: IPButtonProps) => {
 
     return (
-        <TouchableHighlight onPress={props.onPress} underlayColor={'#4561d1'} style={styles.container}>
+        <TouchableHighlight
+            onPress={props.onPress}
+            underlayColor={'#4561d1'}
+            style={[styles.container, props.style]}
+        >
             <Text style={styles.text}>{props.text}</Text>
         </TouchableHighlight>
     )

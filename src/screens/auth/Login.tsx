@@ -63,21 +63,21 @@ const Login = (props: ILoginProps) => {
             <PTextInput
                 type='email-address'
                 placeholder="Email"
-                getText={(text: string) => {
+                onChangeText={(text: string) => {
                     setEmail(text);
                 }}
             />
             {/* <PTextInput
                 type='numeric'
                 placeholder="Phone"
-                getText={(text: string) => {
+                onChangeText={(text: string) => {
                     setPhone(text);
                 }}
             /> */}
             <PTextInput
                 password
                 placeholder="Password"
-                getText={(text: string) => {
+                onChangeText={(text: string) => {
                     setPassword(text);
                 }}
             />

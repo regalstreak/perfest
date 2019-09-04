@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
 import { ReducerState } from '../../store/reducer';
@@ -7,34 +7,45 @@ import { useRtype } from '../../library/hooks/authHooks';
 
 import PBottomNav from '../../library/components/PBottomNav';
 import { INavigation } from '../../library/interfaces/Navigation';
-import PButton from '../../library/components/PButton';
+
+import HomeAdmin from './admin/HomeAdmin';
+import HomeVol from './volunteer/HomeVol';
+import HomeUser from './user/HomeUser';
+import HomeAnon from './anon/HomeAnon';
+
 
 interface IHomeProps extends INavigation {
     userType: string;
 }
 
-
-
 const Home = (props: IHomeProps) => {
-
 
     const userType = useRtype();
 
+    // set home category
+    let HomeCategory: any;
+    switch (userType) {
+        case 'admin': {
+            HomeCategory = HomeAdmin;
+            break;
+        }
+        case 'volunteer': {
+            HomeCategory = HomeVol;
+            break;
+        }
+        case 'user': {
+            HomeCategory = HomeUser;
+            break;
+        }
+        default: {
+            HomeCategory = HomeAnon;
+        }
+    }
 
     return (
         <View style={styles.container}>
-            <Text>Home</Text>
-            <PButton
-                onPress={() => { props.navigation.navigate('Login') }}
-                text='Touch for auth'
-            />
 
-            <Text>
-                Your user type: {userType}
-            </Text>
-
-
-
+            <HomeCategory />
 
             <PBottomNav
                 navigation={props.navigation}
@@ -43,7 +54,6 @@ const Home = (props: IHomeProps) => {
         </View>
     )
 }
-
 
 
 const styles = StyleSheet.create({
