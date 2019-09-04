@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, StyleProp, ViewStyle } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, StyleProp, ViewStyle, TouchableWithoutFeedback } from 'react-native';
 import PTextInput, { IPTextInputProps } from './PTextInput';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { colors } from '../res/colors';
@@ -22,7 +22,8 @@ export default (props: IPSearchDropdownProps) => {
     ]
     const [searched, setSearched] = useState<Array<string>>(data)
 
-    const _renderItem = ({ item }: any) => (
+
+    const _renderItem = ({ item }: { item: string }) => (
         <TouchableOpacity
             onPress={() => {
                 setText(item);
@@ -45,7 +46,6 @@ export default (props: IPSearchDropdownProps) => {
     }
 
     const _onChangeText = (input: string) => {
-        setText(input);
         if (data.length > 0) {
             setIsFocused(true);
 
@@ -62,31 +62,36 @@ export default (props: IPSearchDropdownProps) => {
     }
 
     return (
-        <View style={[styles.container, props.style]}>
-            <PTextInput
-                placeholder={props.placeholder}
-                onFocus={_handleFocus}
-                onBlur={_handleBlur}
-                onChangeText={(input) => {
-                    _onChangeText(input);
-                }}
-                value={text}
+        <TouchableWithoutFeedback>
 
-            ></PTextInput>
+            <View style={[styles.container, props.style]}>
+                <PTextInput
+                    placeholder={props.placeholder}
+                    onFocus={_handleFocus}
+                    onBlur={_handleBlur}
+                    onChangeText={(input) => {
+                        setText(input);
+                        _onChangeText(input);
+                    }}
+                    value={text}
+                    noDirty
 
-            {isFocused ? (
-                <View >
-                    <FlatList
-                        style={styles.flatList}
-                        keyboardShouldPersistTaps={'handled'}
-                        data={searched}
-                        renderItem={_renderItem}
-                        keyExtractor={(item, index) => index.toString()}
-                    />
-                </View>
-            ) : (null)
-            }
-        </View>
+                ></PTextInput>
+
+                {isFocused ? (
+                    <View >
+                        <FlatList
+                            style={styles.flatList}
+                            keyboardShouldPersistTaps={'handled'}
+                            data={searched}
+                            renderItem={_renderItem}
+                            keyExtractor={(item, index) => index.toString()}
+                        />
+                    </View>
+                ) : (null)
+                }
+            </View>
+        </TouchableWithoutFeedback>
     )
 }
 

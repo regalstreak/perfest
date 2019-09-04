@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, KeyboardAvoidingView, ScrollView,  } from 'react-native';
 
 import PTextInput from '../../../library/components/PTextInput';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -12,15 +12,17 @@ interface IHomeVolProps {
 
 export default (props: IHomeVolProps) => {
     return (
-        <View style={styles.container}>
+
+            
+        <ScrollView style={styles.container}>
             <Text>HomeVol</Text>
-            <View style={styles.issueTicketContainer}>
+            <KeyboardAvoidingView style={styles.issueTicketContainer} enabled>
                 <PTextInput style={styles.issueTicketTextViews} placeholder="Email"></PTextInput>
                 <PTextInput style={styles.issueTicketTextViews} placeholder="Paid"></PTextInput>
                 <PSearchDropdown style={styles.issueTicketTextViews} placeholder='Events'></PSearchDropdown>
                 <PButton style={styles.issueTicketTextViews} text='Issue Ticket'></PButton>
-            </View>
-        </View>
+            </KeyboardAvoidingView>
+        </ScrollView>
     )
 }
 

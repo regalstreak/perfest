@@ -13,6 +13,7 @@ export interface IPTextInputProps {
     onFocus?: () => void;
     onBlur?: () => void;
     value?: string;
+    noDirty?: true;
 }
 
 const PTextInput: React.FC<IPTextInputProps> = (props) => {
@@ -56,12 +57,17 @@ const PTextInput: React.FC<IPTextInputProps> = (props) => {
     }
 
     const _handleBlur = () => {
-        placeholderVal.setValue(1);
-        if (text.length === 0) {
-            Animated.timing(placeholderVal, {
-                toValue: 0,
-                duration: 100,
-            }).start();
+
+        if (!props.noDirty) {
+            placeholderVal.setValue(1);
+
+            let checkTextCondition = props.value ? props.value.length : text.length;
+            if (checkTextCondition === 0) {
+                Animated.timing(placeholderVal, {
+                    toValue: 0,
+                    duration: 100,
+                }).start();
+            }
         }
         if (textInputRef.current) {
             textInputRef.current.blur();
