@@ -3,7 +3,7 @@ import { BasicApiType } from '../../interfaces/BasicApi';
 
 export const onSubmitSignup = async (email: string, phone: string, password: string) => {
 	try {
-		let res = await fetch(constants.BASE_URL + "/auth/createanonymous", {
+		let res = await fetch(constants.BASE_URL + "/auth/createUser", {
 			method: 'POST',
 			headers: constants.defaultHeaders,
 			body: JSON.stringify({ phone, email, password })

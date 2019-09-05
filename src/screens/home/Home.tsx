@@ -1,9 +1,8 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { connect } from 'react-redux';
 
+import { connect } from 'react-redux';
 import { ReducerState } from '../../store/reducer';
-import { useRtype } from '../../library/hooks/authHooks';
 
 import PBottomNav from '../../library/components/PBottomNav';
 import { INavigation } from '../../library/interfaces/Navigation';
@@ -20,7 +19,7 @@ interface IHomeProps extends INavigation {
 
 const Home = (props: IHomeProps) => {
 
-    const userType = useRtype();
+    const { userType } = props;
 
     // set home category
     let HomeCategory: any;
@@ -65,9 +64,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state: ReducerState) => {
     return {
-        token: state.token,
         userType: state.userType,
-        userId: state.userId
     }
 }
 
