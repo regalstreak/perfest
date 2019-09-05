@@ -24,7 +24,9 @@ interface ILoginProps {
         userId: string;
         userType: string;
     }
-    token: string;
+    token: string,
+    userType: string,
+    userId: string,
     navigation: NavigationScreenProp<any, any>;
 }
 
@@ -50,10 +52,6 @@ const submitLogin = async (addToken: (token: string, userId: string, userType: s
 }
 
 const Login = (props: ILoginProps) => {
-    if(props.token){
-        // user already logged in as token is stored
-        // redirect to homepage
-    }
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     // eslint-disable-next-line
@@ -93,7 +91,9 @@ const Login = (props: ILoginProps) => {
 
 const mapStateToProps = (state: ReducerState) => {
     return {
-        token: state.token
+        token: state.token,
+        userType: state.userType,
+        userId: state.userId
     }
 }
 
