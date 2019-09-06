@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, StyleProp, ViewStyle, TouchableWithoutFeedback } from 'react-native';
 import PTextInput, { IPTextInputProps } from './PTextInput';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -19,9 +19,15 @@ export default (props: IPSearchDropdownProps) => {
 
     const [isFocused, setIsFocused] = useState<boolean>(false)
     const [text, setText] = useState<string>('')
-    let { data } = props;
-    let dataList = data.map(({ name }) => name);
+
+    let dataList = props.data.map(({ name }) => name);
+
     const [searched, setSearched] = useState<Array<string>>(dataList)
+
+    useEffect(() => {
+        dataList = props.data.map(({ name }) => name);
+        setSearched(dataList)
+    }, [props.data])
 
     const _renderItem = ({ item }: { item: string }) => (
         <TouchableOpacity
@@ -49,10 +55,10 @@ export default (props: IPSearchDropdownProps) => {
     }
 
     const _onChangeText = (input: string) => {
-        if (data.length > 0) {
+        if (props.data.length > 0) {
             setIsFocused(true);
 
-            let found = data.filter(({ name }) => {
+            let found = props.data.filter(({ name }) => {
                 return name.toLowerCase().includes(input.toLowerCase());
             });
 
