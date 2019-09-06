@@ -71,8 +71,6 @@ const HomeVol = (props: IHomeVolProps) => {
     }, []);
     return (
         <ScrollView style={styles.container}>
-            <Text>HomeVol</Text>
-            <Text>{price}</Text>
             <KeyboardAvoidingView style={styles.issueTicketContainer} enabled>
                 <PTextInput
                     style={styles.issueTicketTextViews}
@@ -81,13 +79,7 @@ const HomeVol = (props: IHomeVolProps) => {
                         setEmail(text);
                     }}
                 />
-                <PTextInput
-                    style={styles.issueTicketTextViews}
-                    placeholder="Paid"
-                    onChangeText={(text: string) => {
-                        setPaid(parseInt(text));
-                    }}
-                />
+
                 <PSearchDropdown
                     style={styles.issueTicketTextViews}
                     placeholder='Events'
@@ -112,6 +104,8 @@ const HomeVol = (props: IHomeVolProps) => {
                         { name: '2', meta: '2' },
                         { name: '4', meta: '4' }
                     ]}
+                    default='1'
+                    editable={false}
                     onChangeSelection={(text: string) => {
                         setParticipantNo(parseInt(text));
                         let event = eventData.find(event => {
@@ -124,6 +118,16 @@ const HomeVol = (props: IHomeVolProps) => {
                             setPrice(0);
                         }
                     }}
+                />
+                <PTextInput
+                    style={styles.issueTicketTextViews}
+                    placeholder="To be paid"
+                    onChangeText={(text: string) => {
+                        setPaid(parseInt(text));
+                    }}
+                    value={price}
+                    editable={false}
+                    default={'0'}
                 />
                 <PButton
                     style={styles.issueTicketTextViews}

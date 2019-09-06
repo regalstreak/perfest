@@ -18,7 +18,7 @@ interface IPSearchDropdownProps extends IPTextInputProps {
 export default (props: IPSearchDropdownProps) => {
 
     const [isFocused, setIsFocused] = useState<boolean>(false)
-    const [text, setText] = useState<string>('')
+    const [text, setText] = useState<string>(props.default ? props.default : '')
 
     let dataList = props.data.map(({ name }) => name);
 
@@ -86,9 +86,11 @@ export default (props: IPSearchDropdownProps) => {
                     suffixIcon='x'
                     suffixIconOnPress={() => {
                         setIsFocused(false)
-                        setText('');
+                        setText(' ');
                     }}
+                    default={props.default}
                     noDirty
+                    editable={props.editable}
                 ></PTextInput>
 
                 {isFocused ? (

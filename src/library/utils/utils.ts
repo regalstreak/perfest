@@ -1,7 +1,5 @@
 import jwt_decode from 'jwt-decode';
 import { AsyncStorage } from 'react-native';
-import { number } from 'prop-types';
-
 
 export const validateSignup = (email: string, phone: string, password: string) => {
 	if (!email && !phone) {
@@ -39,8 +37,10 @@ export const getUserType = async () => {
 }
 
 export const validateTicketIssue = (email: string, event_id: string, price: number, paid: number, participantNo: number) => {
-	if(!email || !event_id || !price || !number || !paid || !participantNo){
+	if (email && event_id && price && paid && participantNo) {
+		
+		return true;
+	} else {
 		return false;
 	}
-	return true;
 }

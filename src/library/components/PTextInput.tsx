@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, TextInput, Animated, TouchableWithoutFeedback, StyleProp, ViewStyle, Text, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import FeatherIcon from 'react-native-vector-icons/dist/Feather';
@@ -13,19 +13,21 @@ export interface IPTextInputProps {
     style?: StyleProp<ViewStyle>;
     onFocus?: () => void;
     onBlur?: () => void;
-    value?: string;
+    value?: string | number;
     noDirty?: true;
     suffixIcon?: string;
     suffixIconOnPress?: () => void;
+    default?: string;
+    editable?: boolean;
 }
 
 const PTextInput: React.FC<IPTextInputProps> = (props) => {
 
     // hooks
-    const [placeholderVal] = useState(new Animated.Value(0));
+    const [placeholderVal] = useState(props.default ? new Animated.Value(1) : new Animated.Value(0));
     const [outline, setOutline] = useState(colors.perfestGrey);
     const [outlineWidth, setOutlineWidth] = useState(1);
-    const [text, setText] = useState('');
+    const [text, setText] = useState(props.default ? props.default : '');
     const textInputRef = useRef<TextInput>(null);
 
     // animations
@@ -64,7 +66,7 @@ const PTextInput: React.FC<IPTextInputProps> = (props) => {
         if (!props.noDirty) {
             placeholderVal.setValue(1);
 
-            let checkTextCondition = props.value ? props.value.length : text.length;
+            let checkTextCondition = props.value ? props.value.toString().length : text.length;
             if (checkTextCondition === 0) {
                 Animated.timing(placeholderVal, {
                     toValue: 0,
@@ -91,7 +93,7 @@ const PTextInput: React.FC<IPTextInputProps> = (props) => {
                 onFocus={_handleFocus}
                 onBlur={_handleBlur}
                 style={[styles.textInput, outlineStyle]}
-                value={props.value ? props.value : text}
+                value={props.value ? props.value.toString() : text}
                 keyboardType={props.type}
                 onChangeText={(input) => {
                     setText(input);
@@ -100,7 +102,7 @@ const PTextInput: React.FC<IPTextInputProps> = (props) => {
                     }
                 }}
                 secureTextEntry={props.password}
-
+                editable={props.editable}
             />
             <TouchableWithoutFeedback onFocus={_handleFocus}>
                 <Animated.View style={[styles.placeholder, placeHolderTopStyle]}>
