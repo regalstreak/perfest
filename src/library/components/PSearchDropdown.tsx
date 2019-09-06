@@ -4,28 +4,31 @@ import PTextInput, { IPTextInputProps } from './PTextInput';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { colors } from '../res/colors';
 
+interface DataType {
+    name: string;
+    meta: any;
+}
+
 interface IPSearchDropdownProps extends IPTextInputProps {
-    style?: StyleProp<ViewStyle>,
+    style?: StyleProp<ViewStyle>;
+    data: DataType[];
+    onChangeSelection?: (text: string) => void;
 }
 
 export default (props: IPSearchDropdownProps) => {
 
     const [isFocused, setIsFocused] = useState<boolean>(false)
-    const [text, setText] = useState<string>()
-    let data = [
-        'Highway to heaven',
-        'Counter Strike 1.6',
-        'PUBG Single',
-        'Counter Strike Global Offensive',
-        'Lazers',
-        'PUBG Tourney'
-    ]
-    const [searched, setSearched] = useState<Array<string>>(data)
-
+    const [text, setText] = useState<string>('')
+    let { data } = props;
+    let dataList = data.map(({ name }) => name);
+    const [searched, setSearched] = useState<Array<string>>(dataList)
 
     const _renderItem = ({ item }: { item: string }) => (
         <TouchableOpacity
             onPress={() => {
+                if (props.onChangeSelection) {
+                    props.onChangeSelection(item);
+                }
                 setText(item);
                 setIsFocused(false);
             }}
@@ -49,22 +52,21 @@ export default (props: IPSearchDropdownProps) => {
         if (data.length > 0) {
             setIsFocused(true);
 
-            let found = data.filter((element) => {
-                return element.toLowerCase().includes(input.toLowerCase());
+            let found = data.filter(({ name }) => {
+                return name.toLowerCase().includes(input.toLowerCase());
             });
 
             if (found.length === 0) {
                 setIsFocused(false);
             }
 
-            setSearched(found);
+            let foundList = found.map(({ name }) => name);
+            setSearched(foundList);
         }
     }
 
     return (
-        <View
-        >
-
+        <View>
             <View style={[styles.container, props.style]}>
                 <PTextInput
                     placeholder={props.placeholder}
@@ -81,7 +83,6 @@ export default (props: IPSearchDropdownProps) => {
                         setText('');
                     }}
                     noDirty
-
                 ></PTextInput>
 
                 {isFocused ? (

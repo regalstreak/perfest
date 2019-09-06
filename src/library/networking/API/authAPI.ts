@@ -28,7 +28,6 @@ export const onSubmitLogin = async (email: string, password: string, ) => {
 		})
 		let response: LoginType = await res.json();
 		return response;
-
 	} catch (err) {
 		return { success: false, token: '', error: err };
 	}

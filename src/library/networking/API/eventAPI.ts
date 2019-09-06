@@ -38,6 +38,29 @@ export const getAllEvents = () => {
 		});
 }
 
+interface EventsDropdownType {
+	'_id': string;
+	name: string;
+	cost_1: number;
+	cost_2: number;
+	cost_4: number;
+}
+
+interface GetAllEventsDropdownType extends BasicApiType {
+	eventList: EventsDropdownType[];
+}
+
+export const getAllEventsDropdown = async () => {
+	try {
+		let res = await fetch(constants.BASE_URL + '/event/dropdownList');
+		let response: GetAllEventsDropdownType = await res.json();
+		return response;
+	} catch (err) {
+		const eventList = [{ _id: '', name: 'Loading...', cost_1: 0, cost_2: 0, cost_4: 0 }];
+		return { success: false, eventList, error: err };
+	}
+}
+
 interface GetEventType extends BasicApiType {
 	event: FullEventType,
 }
