@@ -38,7 +38,7 @@ interface EventType {
 
 const HomeVol = (props: IHomeVolProps) => {
     const [email, setEmail] = useState('');
-    const [paid, setPaid] = useState(0);
+    // const [paid, setPaid] = useState(0);
     const [eventId, setEventId] = useState('');
     const [price, setPrice] = useState(0);
     const [participantNo, setParticipantNo] = useState(1);
@@ -49,6 +49,9 @@ const HomeVol = (props: IHomeVolProps) => {
     const [eventData, setEventData] = useState<EventType[]>(defaultData);
 
     useEffect(() => {
+
+        let isMounted = true;
+
         getAllEventsDropdown()
             .then(res => {
                 if (res.success) {
@@ -64,12 +67,21 @@ const HomeVol = (props: IHomeVolProps) => {
                             }
                         }
                     });
-                    setEventData(newEventData);
+                    if (isMounted) {
+                        setEventData(newEventData);
+                    }
                 } else {
                     console.log(res.error);
                 }
             })
             .catch(console.log)
+
+
+        return () => {
+            // cleanup
+            isMounted = false;
+        }
+
     }, []);
     return (
         <ScrollView style={styles.container}>

@@ -19,8 +19,8 @@ export default (props: IEventsProps) => {
 
             <ScrollView>
                 {
-                    abc.map(item => (
-                        <PEvent navigation={props.navigation}></PEvent>
+                    abc.map((item, index) => (
+                        <PEvent key={index} navigation={props.navigation}></PEvent>
                     ))
                 }
             </ScrollView>

@@ -4,16 +4,16 @@ import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { colors } from '../res/colors';
 import { NavigationScreenProp } from 'react-navigation';
 
-interface IPEventProps {
+interface IPTicketProps {
     navigation: NavigationScreenProp<any, any>;
 }
 
 
-const PEvent = (props: IPEventProps) => {
+const PTicket = (props: IPTicketProps) => {
     return (
         <TouchableOpacity
-            onPress={() => props.navigation.navigate('EventDetails', {
-                name: 'Abcabc'
+            onPress={() => props.navigation.navigate('TicketDetails', {
+                ticketId: 'Abcabc'
             })}
             style={styles.container}
         >
@@ -21,7 +21,7 @@ const PEvent = (props: IPEventProps) => {
             </View>
             <View style={styles.rest}>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.title}>Highway to heaven</Text>
+                    <Text style={styles.title}>Highway to heayasdasdasydven</Text>
                 </View>
                 <View style={styles.venueTimeContainer}>
                     <Text style={styles.venueTime}>Room: 512</Text>
@@ -41,13 +41,13 @@ const styles = StyleSheet.create({
         marginVertical: hp(1.8)
     },
     image: {
-        height: hp(18),
-        width: hp(18),
+        height: hp(14),
+        width: hp(14),
         backgroundColor: colors.perfestPrimary,
-        borderRadius: 26,
+        borderRadius: 24,
     },
     rest: {
-        height: hp(15),
+        height: hp(11),
         flex: 1,
         marginHorizontal: 24,
         justifyContent: 'space-between',
@@ -62,11 +62,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     title: {
-        fontSize: hp(3.8),
+        fontSize: hp(2.6),
     },
     venueTime: {
-        fontSize: hp(2.4)
+        fontSize: hp(1.9)
     },
 })
 
-export default PEvent;
+export default PTicket;

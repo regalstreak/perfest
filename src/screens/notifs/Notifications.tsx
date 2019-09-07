@@ -10,7 +10,10 @@ interface INotificationsProps extends INavigation {
 export default (props: INotificationsProps) => {
     return (
         <View style={styles.container}>
-            <Text>Notifications</Text>
+
+            <View style={styles.container}>
+                <Text>Notifications</Text>
+            </View>
 
             <PBottomNav
                 navigation={props.navigation}

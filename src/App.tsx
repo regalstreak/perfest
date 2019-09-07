@@ -12,12 +12,12 @@ import Signup from "./screens/auth/Signup";
 import Login from "./screens/auth/Login";
 
 import Home from "./screens/home/Home";
-import Events from "./screens/home/Events";
-import Profile from "./screens/home/Profile";
-import Notifications from "./screens/home/Notifications";
-
+import Events from "./screens/events/Events";
+import Profile from "./screens/profile/Profile";
+import Notifications from "./screens/notifs/Notifications";
 
 import PEventDetails from './library/components/PEventDetails';
+import PTicketDetails from './library/components/PTicketDetails';
 
 // react-native-web is aliased to react-native automatically by create-react-app
 
@@ -55,6 +55,10 @@ const routeMap = {
         component: PEventDetails,
         path: '/event/:name'
     },
+    TicketDetails: {
+        component: PTicketDetails,
+        path: '/t/:ticketId'
+    }
 }
 
 interface TokenType {
