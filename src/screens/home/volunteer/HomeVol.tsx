@@ -17,8 +17,8 @@ interface IHomeVolProps {
 }
 
 const onSubmit = async (email: string, event_id: string, price: number, paid: number, participantNo: number, token: string) => {
-    if (validateTicketIssue(email, event_id, price, paid, participantNo)) {
-        let res = await issueTicket(email, event_id, price, paid, participantNo, token)
+    if (validateTicketIssue(email, event_id, price, price, participantNo)) {
+        let res = await issueTicket(email, event_id, price, price, participantNo, token)
         if (res.success) {
             // Succesfully issued ticket
             console.log('Succesfully issued ticket');
@@ -124,9 +124,6 @@ const HomeVol = (props: IHomeVolProps) => {
                 <PTextInput
                     style={styles.issueTicketTextViews}
                     placeholder="Paid"
-                    onChangeText={(text: string) => {
-                        setPaid(parseInt(text));
-                    }}
                     value={price}
                     editable={false}
                     default={'0'}
@@ -134,7 +131,7 @@ const HomeVol = (props: IHomeVolProps) => {
                 <PButton
                     style={styles.issueTicketTextViews}
                     text='Issue Ticket'
-                    onPress={() => onSubmit(email, eventId, price, paid, participantNo, token)}
+                    onPress={() => onSubmit(email, eventId, price, price, participantNo, token)}
                 />
             </KeyboardAvoidingView>
         </ScrollView>
