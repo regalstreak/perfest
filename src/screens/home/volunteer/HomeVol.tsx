@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, StyleSheet, KeyboardAvoidingView, ScrollView, } from 'react-native';
+import { StyleSheet, KeyboardAvoidingView, ScrollView, } from 'react-native';
 
 import PTextInput from '../../../library/components/PTextInput';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';

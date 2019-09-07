@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, StyleProp, ViewStyle, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, StyleProp, ViewStyle } from 'react-native';
 import PTextInput, { IPTextInputProps } from './PTextInput';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { colors } from '../res/colors';
@@ -20,12 +20,12 @@ export default (props: IPSearchDropdownProps) => {
     const [isFocused, setIsFocused] = useState<boolean>(false)
     const [text, setText] = useState<string>(props.default ? props.default : '')
 
-    let dataList = props.data.map(({ name }) => name);
+    let dataListInitial = props.data.map(({ name }) => name);
 
-    const [searched, setSearched] = useState<Array<string>>(dataList)
+    const [searched, setSearched] = useState<Array<string>>(dataListInitial)
 
     useEffect(() => {
-        dataList = props.data.map(({ name }) => name);
+        let dataList = props.data.map(({ name }) => name);
         setSearched(dataList)
     }, [props.data])
 
@@ -63,7 +63,7 @@ export default (props: IPSearchDropdownProps) => {
             });
 
             if (found.length === 0) {
-                setIsFocused(false);
+                _handleBlur();
             }
 
             let foundList = found.map(({ name }) => name);

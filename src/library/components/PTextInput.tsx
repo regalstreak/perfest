@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, TextInput, Animated, TouchableWithoutFeedback, StyleProp, ViewStyle, Text, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, StyleSheet, TextInput, Animated, TouchableWithoutFeedback, StyleProp, ViewStyle, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import FeatherIcon from 'react-native-vector-icons/dist/Feather';
 

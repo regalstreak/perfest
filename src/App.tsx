@@ -82,7 +82,7 @@ const App = (props: IAppProps) => {
                 }
             })
             .catch(console.log);
-    }, []);
+    });
     return (
         <View style={{ flex: 1 }} >
             {WebRoutesGenerator({ routeMap })}
