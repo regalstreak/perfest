@@ -34,7 +34,7 @@ export default (props: IPSearchDropdownProps) => {
             onPress={() => {
                 if (props.onChangeSelection) {
                     props.onChangeSelection(item);
-                }
+                } 
                 setText(item);
                 setIsFocused(false);
             }}

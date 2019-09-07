@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, KeyboardAvoidingView, ScrollView, } from 'react-native';
+import { StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native';
 
 import PTextInput from '../../../library/components/PTextInput';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -44,8 +44,10 @@ const HomeVol = (props: IHomeVolProps) => {
     const [participantNo, setParticipantNo] = useState(1);
     const [eventName, setEventName] = useState('');
     const { token } = props;
+
     let defaultData = [{ name: 'Loading...', meta: { _id: '', cost_1: 0, cost_2: 0, cost_4: 0 } }];
     const [eventData, setEventData] = useState<EventType[]>(defaultData);
+
     useEffect(() => {
         getAllEventsDropdown()
             .then(res => {
@@ -90,8 +92,8 @@ const HomeVol = (props: IHomeVolProps) => {
                         });
                         if (event) {
                             setEventId(event.meta._id);
-                            let price = event.meta[`cost_${participantNo.toString()}`];
-                            setPrice(price);
+                            let priceLocal = event.meta[`cost_${participantNo.toString()}`];
+                            setPrice(priceLocal);
                         }
                         setEventName(text);
                     }}
@@ -112,8 +114,8 @@ const HomeVol = (props: IHomeVolProps) => {
                             return event.name === eventName
                         });
                         if (event) {
-                            let price = event.meta[`cost_${participantNo.toString()}`];
-                            setPrice(price);
+                            let priceLocal = event.meta[`cost_${parseInt(text).toString()}`];
+                            setPrice(priceLocal);
                         } else {
                             setPrice(0);
                         }
@@ -121,7 +123,7 @@ const HomeVol = (props: IHomeVolProps) => {
                 />
                 <PTextInput
                     style={styles.issueTicketTextViews}
-                    placeholder="To be paid"
+                    placeholder="Paid"
                     onChangeText={(text: string) => {
                         setPaid(parseInt(text));
                     }}
