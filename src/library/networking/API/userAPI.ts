@@ -4,7 +4,8 @@ import { BasicApiType } from '../../interfaces/BasicApi';
 interface LogType {
 	vname: string,
 	price: number,
-	ename: string
+	ename: string,
+	date: Date,
 }
 
 interface GetLogsType extends BasicApiType {
