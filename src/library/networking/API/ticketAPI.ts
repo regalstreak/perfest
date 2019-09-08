@@ -56,6 +56,7 @@ interface TicketDetailsType {
 
 interface GetDetailsFromTicketUrl extends BasicApiType {
 	userType: boolean;
+	userId: string;
 	eventDetails: EventDetailsType;
 	ticketDetials: TicketDetailsType
 }

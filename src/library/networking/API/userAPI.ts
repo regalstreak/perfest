@@ -24,16 +24,16 @@ export const getLogs = async (page: number, token: string) => {
 		let response: GetLogsType = await res.json();
 		return response;
 	} catch (err) {
-		return { success: false, logList: [{vname: '', price: 0, ename: ''}], totalSold: 0, totalCollected: 0,error: err };
+		return { success: false, logList: [{ vname: '', price: 0, ename: '' }], totalSold: 0, totalCollected: 0, error: err };
 	}
 }
+
 interface UserType {
 	_id: string,
 	name: string,
 	contact: string,
 	college: string
 }
-
 
 interface GetUserVolListType extends BasicApiType {
 	list: UserType[]
@@ -144,7 +144,7 @@ export const getTicketById = (userId: string, token: string) => {
 		body: JSON.stringify({ userId, token })
 	})
 		.then(res => res.json())
-		.then((res: GetAllTicketsType) => {
+		.then((res: GetTicketByIdType) => {
 			if (res.success) {
 				return res;
 			} else {
@@ -176,23 +176,51 @@ interface UserType {
 	}
 }
 
-export const updateUserProfile = (data: UserType, token: string) => {
-	fetch(constants.BASE_URL + "/user/upddateProfile", {
-		method: 'POST',
-		headers: constants.defaultHeaders,
-		body: JSON.stringify({ data, token })
-	})
-		.then(res => res.json())
-		.then((res: BasicApiType) => {
-			if (res.success) {
-				return res;
-			} else {
-				// Handle error
-				console.log('error');
-			}
-		})
-		.catch(err => {
-			// Handle error
-			console.log('error');
+export const updateUserProfile = async (data: UserType) => {
+	try {
+		let res = await fetch(constants.BASE_URL + "/user/updateProfile", {
+			method: 'POST',
+			headers: constants.defaultHeaders,
+			body: JSON.stringify({ data })
 		});
+		let response: BasicApiType = await res.json();
+		return response;
+	} catch (err) {
+		return { success: false, error: err };
+	}
+}
+
+interface AnonymousUserType {
+	"_id": string,
+	"college": {
+		"name": null,
+		"department": null,
+		"year": null
+	},
+	"name": null,
+	"password": null,
+	"type": boolean,
+	"csi_member": boolean,
+	"tickets": string[] | [],
+	"contact": {
+		"email": string
+	}
+}
+
+interface GetAnonymousUserDetailsType extends BasicApiType {
+	user: AnonymousUserType;
+}
+
+export const getAnonymousUserDetails = async (userId: string) => {
+	try {
+		let res = await fetch(constants.BASE_URL + "/user/getAnonymousUserDetails", {
+			method: 'POST',
+			headers: constants.defaultHeaders,
+			body: JSON.stringify({ userId })
+		});
+		let response: GetAnonymousUserDetailsType = await res.json();
+		return response;
+	} catch (err) {
+		return { success: false, user: { _id: '', college: { name: null, department: null, year: null }, name: null, password: null, type: false, csi_member: false, tickets: [], contact: { email: '' } }, error: err };
+	}
 }
