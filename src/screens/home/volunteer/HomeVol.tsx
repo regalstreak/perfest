@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { StyleSheet, KeyboardAvoidingView, ScrollView, Text, View, FlatList } from 'react-native';
 
 import PTextInput from '../../../library/components/PTextInput';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -11,6 +11,7 @@ import { getAllEventsDropdown } from '../../../library/networking/API/eventAPI';
 
 import { connect } from 'react-redux';
 import { ReducerState } from '../../../store/reducer';
+import { getLogs } from '../../../library/networking/API/userAPI';
 
 interface IHomeVolProps {
     token: string;
@@ -36,6 +37,12 @@ interface EventType {
     meta: any;
 }
 
+interface LogType {
+    vname: string,
+    price: number,
+    ename: string
+}
+
 const HomeVol = (props: IHomeVolProps) => {
     const [email, setEmail] = useState('');
     // const [paid, setPaid] = useState(0);
@@ -46,6 +53,11 @@ const HomeVol = (props: IHomeVolProps) => {
     const { token } = props;
 
     let defaultData = [{ name: 'Loading...', meta: { _id: '', cost_1: 0, cost_2: 0, cost_4: 0 } }];
+    let [logsData, setLogData] = useState<LogType[]>([
+        { vname: '', price: 0, ename: '' }
+    ]);
+    let [totalSold, setTotalSold] = useState(0);
+    let [totalCollected, setTotalCollected] = useState(0);
     const [eventData, setEventData] = useState<EventType[]>(defaultData);
 
     useEffect(() => {
@@ -75,6 +87,34 @@ const HomeVol = (props: IHomeVolProps) => {
                 }
             })
             .catch(console.log)
+
+
+        return () => {
+            // cleanup
+            isMounted = false;
+        }
+
+    }, []);
+
+    useEffect(() => {
+
+        let isMounted = true;
+
+        // Make page number dynamic
+        getLogs(1, token)
+            .then(res => {
+                if (res.success) {
+                    if (isMounted) {
+                        setTotalSold(res.totalSold);
+                        setTotalCollected(res.totalCollected);
+                        setLogData(res.logList);
+                    }
+                    console.log(res.logList);
+                } else {
+                    console.log(res.error);
+                }
+            })
+            .catch(console.log);
 
 
         return () => {
@@ -146,6 +186,24 @@ const HomeVol = (props: IHomeVolProps) => {
                     onPress={() => onSubmit(email, eventId, price, price, participantNo, token)}
                 />
             </KeyboardAvoidingView>
+            <Text>Logs</Text>
+            <Text>Total Sold: {totalSold}</Text>
+            <Text>Total Collected: {totalCollected}</Text>
+            <ScrollView style={styles.container}>
+                <View>
+                    <FlatList
+                        data={logsData}
+                        renderItem={(log) => {
+                            return (
+                                <View>
+                                    <Text>{log.index}</Text>
+                                </View>
+                            )
+                        }}
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+                </View>
+            </ScrollView>
         </ScrollView>
     )
 }

@@ -7,7 +7,7 @@ export const onSubmitSignup = async (email: string, phone: string, password: str
 			method: 'POST',
 			headers: constants.defaultHeaders,
 			body: JSON.stringify({ phone, email, password })
-		})
+		});
 		let response: BasicApiType = await res.json();
 		return response;
 	} catch (err) {
@@ -25,7 +25,7 @@ export const onSubmitLogin = async (email: string, password: string, ) => {
 			method: 'POST',
 			headers: constants.defaultHeaders,
 			body: JSON.stringify({ email, password })
-		})
+		});
 		let response: LoginType = await res.json();
 		return response;
 	} catch (err) {

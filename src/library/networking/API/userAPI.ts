@@ -13,25 +13,18 @@ interface GetLogsType extends BasicApiType {
 	totalCollected: number
 }
 
-export const getLogs = (page: number, token: string) => {
-	fetch(constants.BASE_URL + "/ticket/invalidate", {
-		method: 'POST',
-		headers: constants.defaultHeaders,
-		body: JSON.stringify({ page, token })
-	})
-		.then(res => res.json())
-		.then((res: GetLogsType) => {
-			if (res.success) {
-				return res;
-			} else {
-				// Handle error
-				console.log('error');
-			}
-		})
-		.catch(err => {
-			// Handle error
-			console.log('error');
+export const getLogs = async (page: number, token: string) => {
+	try {
+		let res = await fetch(constants.BASE_URL + "/user/logs", {
+			method: 'POST',
+			headers: constants.defaultHeaders,
+			body: JSON.stringify({ page, token })
 		});
+		let response: GetLogsType = await res.json();
+		return response;
+	} catch (err) {
+		return { success: false, logList: [{vname: '', price: 0, ename: ''}], totalSold: 0, totalCollected: 0,error: err };
+	}
 }
 interface UserType {
 	_id: string,
