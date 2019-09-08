@@ -109,7 +109,6 @@ const HomeVol = (props: IHomeVolProps) => {
                         setTotalCollected(res.totalCollected);
                         setLogData(res.logList);
                     }
-                    console.log(res.logList);
                 } else {
                     console.log(res.error);
                 }
@@ -122,7 +121,7 @@ const HomeVol = (props: IHomeVolProps) => {
             isMounted = false;
         }
 
-    }, []);
+    }, [token]);
     return (
         <ScrollView style={styles.container}>
             <KeyboardAvoidingView style={styles.issueTicketContainer} enabled>

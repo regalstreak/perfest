@@ -54,11 +54,11 @@ interface TicketDetailsType {
 	dateIssued: Date;
 }
 
-interface GetDetailsFromTicketUrl extends BasicApiType {
-	userType: boolean;
-	userId: string;
-	eventDetails: EventDetailsType;
-	ticketDetials: TicketDetailsType
+export interface GetDetailsFromTicketUrl extends BasicApiType {
+	userType?: boolean;
+	userId?: string;
+	eventDetails?: EventDetailsType;
+	ticketDetails?: TicketDetailsType;
 }
 
 export const getDetailsFromTicketUrl = async (ticketUrl: string) => {

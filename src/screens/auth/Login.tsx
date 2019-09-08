@@ -10,7 +10,7 @@ import { ReducerState } from '../../store/reducer';
 import jwt_decode from 'jwt-decode';
 import { validateLogin } from '../../library/utils/utils';
 import { NavigationScreenProp } from 'react-navigation';
-
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 interface TokenType {
     type: string,
@@ -61,8 +61,9 @@ const Login = (props: ILoginProps) => {
 
     return (
         <KeyboardAvoidingView style={styles.container} enabled >
-            <Text>Login</Text>
+            <Text style={styles.loginText}>Login</Text>
             <PTextInput
+                style={styles.loginViews}
                 type='email-address'
                 placeholder="Email"
                 onChangeText={(text: string) => {
@@ -77,6 +78,7 @@ const Login = (props: ILoginProps) => {
                 }}
             /> */}
             <PTextInput
+                style={styles.loginViews}
                 password
                 placeholder="Password"
                 onChangeText={(text: string) => {
@@ -84,6 +86,7 @@ const Login = (props: ILoginProps) => {
                 }}
             />
             <PButton
+                style={styles.loginViews}
                 text={'Login'}
                 onPress={() => submitLogin(props.addToken, email, phone, password, props.navigation)}
             />
@@ -110,5 +113,13 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-    }
+    },
+    loginViews: {
+        margin: wp(2.6),
+    },
+    loginText: {
+        fontSize: hp(3.8),
+        fontWeight: '500',
+        marginHorizontal: hp(3)
+    },
 })

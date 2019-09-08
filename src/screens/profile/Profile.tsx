@@ -5,11 +5,44 @@ import { INavigation } from '../../library/interfaces/Navigation';
 import PButton from '../../library/components/PButton';
 import PTicket from '../../library/components/PTicket';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { useSelector, useDispatch } from 'react-redux';
 
 interface IProfileProps extends INavigation {
 
 }
 export default (props: IProfileProps) => {
+
+    const userType = useSelector((state: any) => state.userType);
+    const dispatch = useDispatch();
+
+    const LoginLogoutButtons = () => {
+        if (userType) {
+            return (
+                <View style={styles.loginSignupContainer}>
+                    <PButton
+                        onPress={() => {
+                            dispatch({ type: 'DELETE_TOKEN' })
+                            
+                        }}
+                        text='Logout' />
+                </View>
+            )
+        } else {
+            return (
+                <View style={styles.loginSignupContainer}>
+                    <PButton
+                        onPress={() => { props.navigation.navigate('Login') }}
+                        text='Login'
+                    />
+                    <Text style={{ marginHorizontal: 20 }}>OR</Text>
+                    <PButton
+                        onPress={() => { props.navigation.navigate('Signup') }}
+                        text='Signup'
+                    />
+                </View>
+            )
+        }
+    }
 
     let abc = ['av', 'as']
     return (
@@ -26,17 +59,7 @@ export default (props: IProfileProps) => {
 
             </View>
 
-            <View style={styles.loginSignupContainer}>
-                <PButton
-                    onPress={() => { props.navigation.navigate('Login') }}
-                    text='Login'
-                />
-                <Text style={{ marginHorizontal: 20 }}>OR</Text>
-                <PButton
-                    onPress={() => { props.navigation.navigate('Signup') }}
-                    text='Signup'
-                />
-            </View>
+            <LoginLogoutButtons />
 
             <PBottomNav
                 navigation={props.navigation}

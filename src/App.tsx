@@ -17,7 +17,7 @@ import Profile from "./screens/profile/Profile";
 import Notifications from "./screens/notifs/Notifications";
 
 import PEventDetails from './library/components/PEventDetails';
-import PTicketDetails from './library/components/PTicketDetails';
+import TicketDetails from './screens/profile/TicketDetails';
 
 // react-native-web is aliased to react-native automatically by create-react-app
 
@@ -56,7 +56,7 @@ const routeMap = {
         path: '/event/:name'
     },
     TicketDetails: {
-        component: PTicketDetails,
+        component: TicketDetails,
         path: '/t/:ticketId'
     }
 }

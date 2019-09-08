@@ -4,6 +4,7 @@ import PTextInput from '../../library/components/PTextInput';
 import { onSubmitSignup } from '../../library/networking/API/authAPI';
 import PButton from '../../library/components/PButton';
 import { validateSignup } from '../../library/utils/utils';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 interface ISignupProps {
 }
@@ -31,8 +32,9 @@ const Signup: React.FC<ISignupProps> = (props) => {
     const [phone, setPhone] = useState('');
     return (
         <KeyboardAvoidingView style={styles.container} enabled >
-            <Text>Signup</Text>
+            <Text style={styles.signupText}>Signup</Text>
             <PTextInput
+                style={styles.signupViews}
                 type='email-address'
                 placeholder="Email"
                 onChangeText={(text: string) => {
@@ -47,6 +49,7 @@ const Signup: React.FC<ISignupProps> = (props) => {
                 }}
             /> */}
             <PTextInput
+                style={styles.signupViews}
                 password
                 placeholder="Password"
                 onChangeText={(text: string) => {
@@ -54,6 +57,7 @@ const Signup: React.FC<ISignupProps> = (props) => {
                 }}
             />
             <PButton
+                style={styles.signupViews}
                 text={'SignUp'}
                 onPress={() => submitSignup(email, phone, password)}
             />
@@ -68,5 +72,13 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-    }
+    },
+    signupViews: {
+        margin: wp(2.6),
+    },
+    signupText: {
+        fontSize: hp(3.8),
+        fontWeight: '500',
+        marginHorizontal: hp(3)
+    },
 })
