@@ -51,13 +51,14 @@ interface GetAllEventsDropdownType extends BasicApiType {
 }
 
 export const getAllEventsDropdown = async () => {
+	let response: GetAllEventsDropdownType;
 	try {
 		let res = await fetch(constants.BASE_URL + '/event/dropdownList');
-		let response: GetAllEventsDropdownType = await res.json();
+		response = await res.json();
 		return response;
 	} catch (err) {
-		const eventList = [{ _id: '', name: 'Loading...', cost_1: 0, cost_2: 0, cost_4: 0 }];
-		return { success: false, eventList, error: err };
+		response = { success: false, eventList: [{ _id: '', name: 'Loading...', cost_1: 0, cost_2: 0, cost_4: 0 }], error: err };
+		return response;
 	}
 }
 

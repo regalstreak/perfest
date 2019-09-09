@@ -2,16 +2,18 @@ import constants from '../constants';
 import { BasicApiType } from '../../interfaces/BasicApi';
 
 export const issueTicket = async (email: string, event_id: string, price: number, paid: number, participantNo: number, token: string) => {
+	let response: BasicApiType;
 	try {
 		let res = await fetch(constants.BASE_URL + '/ticket/issue', {
 			method: 'POST',
 			headers: constants.defaultHeaders,
 			body: JSON.stringify({ email, event_id, price, paid, participantNo, token })
 		})
-		let response: BasicApiType = await res.json();
+		response = await res.json();
 		return response;
 	} catch (err) {
-		return { success: false, error: err };
+		response = { success: false, error: err };
+		return response;
 	}
 }
 
@@ -55,22 +57,24 @@ interface TicketDetailsType {
 }
 
 export interface GetDetailsFromTicketUrl extends BasicApiType {
-	userType?: boolean;
-	userId?: string;
-	eventDetails?: EventDetailsType;
-	ticketDetails?: TicketDetailsType;
+	userType: boolean;
+	userId: string;
+	eventDetails: EventDetailsType;
+	ticketDetails: TicketDetailsType;
 }
 
 export const getDetailsFromTicketUrl = async (ticketUrl: string) => {
+	let response: GetDetailsFromTicketUrl;
 	try {
 		let res = await fetch(constants.BASE_URL + '/ticket/getDetailsFromTicketUrl', {
 			method: 'POST',
 			headers: constants.defaultHeaders,
 			body: JSON.stringify({ ticketUrl })
 		})
-		let response: GetDetailsFromTicketUrl = await res.json();
+		response = await res.json();
 		return response;
 	} catch (err) {
-		return { success: false, error: err };
+		response = { success: false, userType: false, userId: '', eventDetails: { name: '', date: new Date(), venue: '' }, ticketDetails: { _id: '', price: 0, paid: 0, balance: 0, participantNo: 0, valid: false, secretString: '', dateIssued: new Date() }, error: err };
+		return response;
 	}
 }
