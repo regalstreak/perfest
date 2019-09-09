@@ -15,7 +15,7 @@ export default (props: IPTicketDetailsProps) => {
 
     const [qrSecret, setQrSecret] = useState<string>('');
     const [userRes, setUserRes] = useState<any>('');
-    const userTypeRedux = useSelector((state: any) => state.userType);
+    const userTypeRedux = useSelector((state: any) => state.auth.userType);
 
 
     const RenderQr = () => {

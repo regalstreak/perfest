@@ -12,7 +12,7 @@ interface IProfileProps extends INavigation {
 }
 export default (props: IProfileProps) => {
 
-    const userType = useSelector((state: any) => state.userType);
+    const userType = useSelector((state: any) => state.auth.userType);
     const dispatch = useDispatch();
 
     const LoginLogoutButtons = () => {
