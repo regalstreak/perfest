@@ -36,3 +36,19 @@ export const onSubmitLogin = async (email: string, password: string, ) => {
 		return response;
 	}
 }
+
+export const sendResetMail = async (email: string) => {
+	let response: BasicApiType;
+	try {
+		let res = await fetch(constants.BASE_URL + '/auth/sendResetMail', {
+			method: 'POST',
+			headers: constants.defaultHeaders,
+			body: JSON.stringify({ email })
+		});
+		response = await res.json();
+		return response;
+	} catch (err) {
+		response = { success: false };
+		return response
+	}
+}

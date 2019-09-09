@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { Text, StyleSheet, KeyboardAvoidingView, View, TouchableOpacity } from 'react-native';
 import PTextInput from '../../library/components/PTextInput';
 import PButton from '../../library/components/PButton';
 import { onSubmitLogin } from '../../library/networking/API/authAPI';
@@ -11,6 +11,7 @@ import jwt_decode from 'jwt-decode';
 import { validateLogin } from '../../library/utils/utils';
 import { NavigationScreenProp } from 'react-navigation';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { colors } from '../../library/res/colors';
 
 interface TokenType {
     type: string,
@@ -85,6 +86,20 @@ const Login = (props: ILoginProps) => {
                     setPassword(text);
                 }}
             />
+
+            <View style={styles.forgotSignup}>
+                <TouchableOpacity onPress={() => {
+                    props.navigation.navigate('Signup')
+                }}>
+                    <Text style={styles.forgotSignupText}>Signup</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {
+                    props.navigation.navigate('ResetPassword')
+                }}>
+                    <Text style={styles.forgotSignupText}>Reset password</Text>
+                </TouchableOpacity>
+            </View>
+
             <PButton
                 style={styles.loginViews}
                 text={'Login'}
@@ -122,4 +137,14 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         marginHorizontal: hp(3)
     },
+    forgotSignup: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: wp(70),
+        paddingHorizontal: 8
+    },
+    forgotSignupText: {
+        fontSize: wp(3),
+        color: colors.perfestPrimary
+    }
 })

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { Text, StyleSheet, KeyboardAvoidingView, TouchableOpacity, View } from 'react-native';
 import PTextInput from '../../library/components/PTextInput';
 import { onSubmitSignup } from '../../library/networking/API/authAPI';
 import PButton from '../../library/components/PButton';
 import { validateSignup } from '../../library/utils/utils';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { colors } from '../../library/res/colors';
+import { INavigation } from '../../library/interfaces/Navigation';
 
-interface ISignupProps {
+interface ISignupProps extends INavigation {
 }
 
 const submitSignup = async (email: string, phone: string, password: string) => {
@@ -56,11 +58,27 @@ const Signup: React.FC<ISignupProps> = (props) => {
                     setPassword(text);
                 }}
             />
+
+            <View style={styles.forgotSignup}>
+                <TouchableOpacity onPress={() => {
+                    props.navigation.navigate('Login')
+                }}>
+                    <Text style={styles.forgotSignupText}>Login</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {
+                    props.navigation.navigate('ResetPassword')
+                }}>
+                    <Text style={styles.forgotSignupText}>Reset password</Text>
+                </TouchableOpacity>
+            </View>
+
+
             <PButton
                 style={styles.signupViews}
-                text={'SignUp'}
+                text={'Signup'}
                 onPress={() => submitSignup(email, phone, password)}
             />
+
         </KeyboardAvoidingView>
     )
 }
@@ -81,4 +99,14 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         marginHorizontal: hp(3)
     },
+    forgotSignup: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: wp(70),
+        paddingHorizontal: 8
+    },
+    forgotSignupText: {
+        fontSize: wp(3),
+        color: colors.perfestPrimary
+    }
 })

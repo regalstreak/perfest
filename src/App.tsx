@@ -1,3 +1,5 @@
+// react-native-web is aliased to react-native automatically by create-react-app
+
 import React, { useEffect } from 'react';
 import { View, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
@@ -10,6 +12,8 @@ import WebRoutesGenerator from "./library/utils/WebRoutesWrapper/WebRoutesGenera
 import Auth from "./screens/auth/Auth";
 import Signup from "./screens/auth/Signup";
 import Login from "./screens/auth/Login";
+import ResetPassword from './screens/auth/ResetPassword';
+import ChangePasswordLink from './screens/auth/ChangePasswordLink';
 
 import Home from "./screens/home/Home";
 import Events from "./screens/events/Events";
@@ -19,7 +23,6 @@ import Notifications from "./screens/notifs/Notifications";
 import PEventDetails from './library/components/PEventDetails';
 import TicketDetails from './screens/profile/TicketDetails';
 
-// react-native-web is aliased to react-native automatically by create-react-app
 
 const routeMap = {
     Auth: {
@@ -33,6 +36,14 @@ const routeMap = {
     Signup: {
         component: Signup,
         path: '/signup'
+    },
+    ResetPassword: {
+        component: ResetPassword,
+        path: '/reset'
+    },
+    ChangePasswordLink: {
+        component: ChangePasswordLink,
+        path: '/c/:changePasswordToken'
     },
     Home: {
         component: Home,
