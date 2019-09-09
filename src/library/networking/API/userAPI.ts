@@ -175,19 +175,20 @@ export const updateUserProfile = async (data: UserType) => {
 }
 
 interface AnonymousUserType {
-	"_id": string,
-	"college": {
-		"name": null,
-		"department": null,
-		"year": null
+	_id?: string,
+	college?: {
+		name: null | string,
+		department: null | string,
+		year: null | string
 	},
-	"name": null,
-	"password": null,
-	"type": boolean,
-	"csi_member": boolean,
-	"tickets": string[] | [],
-	"contact": {
-		"email": string
+	name?: null | string,
+	password?: null | string,
+	type?: boolean,
+	csi_member?: boolean,
+	tickets?: string[] | [],
+	contact?: {
+		email: string;
+		phone?: string;
 	}
 }
 

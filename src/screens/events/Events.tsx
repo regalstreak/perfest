@@ -36,7 +36,13 @@ export default (props: IEventsProps) => {
     if (!events) {
         return (
             <View style={styles.container}>
-                <Text>Loading</Text>
+                <View style={styles.container}>
+                    <Text>Loading</Text>
+                </View >
+                <PBottomNav
+                    navigation={props.navigation}
+                    index={1}
+                ></PBottomNav>
             </View>
         )
     } else {

@@ -12,11 +12,7 @@ import { validateLogin } from '../../library/utils/utils';
 import { NavigationScreenProp } from 'react-navigation';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { colors } from '../../library/res/colors';
-
-interface TokenType {
-    type: string,
-    userId: string
-}
+import { TokenType } from '../../library/interfaces/AuthTypes';
 
 interface ILoginProps {
     addToken: (token: string, userId: string, userType: string) => {

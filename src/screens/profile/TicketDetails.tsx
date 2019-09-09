@@ -5,6 +5,7 @@ import { getDetailsFromTicketUrl, GetDetailsFromTicketUrl } from '../../library/
 import PBottomNav from '../../library/components/PBottomNav';
 import { useSelector } from 'react-redux';
 import User from './User';
+import { TokenType } from '../../library/interfaces/AuthTypes';
 
 const QRCode = require('qrcode.react');
 
@@ -32,7 +33,7 @@ export default (props: IPTicketDetailsProps) => {
 
     const RenderUpgradeLoginUser = () => {
         return (
-            userRes ? <User userRes={userRes}></User> : <Text>Error getting ticket</Text>
+            userRes ? <User navigation={props.navigation} userRes={userRes}></User> : <Text>Loading... If stuck on loading, there's an error getting ticket.</Text>
         )
     }
 

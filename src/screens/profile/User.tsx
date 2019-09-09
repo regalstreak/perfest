@@ -1,31 +1,81 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Platform, ScrollView, KeyboardAvoidingView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Platform, ScrollView, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import PTextInput from '../../library/components/PTextInput';
 import PButton from '../../library/components/PButton';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import PSearchDropdown from '../../library/components/PSearchDropdown';
-import { updateUserProfile } from '../../library/networking/API/userAPI';
+import { updateUserProfile, upgradeAnonymousToUser } from '../../library/networking/API/userAPI';
+import { validateLogin } from '../../library/utils/utils';
+import { onSubmitLogin } from '../../library/networking/API/authAPI';
+import jwt_decode from 'jwt-decode';
+import { useDispatch } from 'react-redux';
+import { ADD_TOKEN } from '../../store/actions';
+import { INavigation } from '../../library/interfaces/Navigation';
+import { TokenType } from '../../library/interfaces/AuthTypes';
+import { colors } from '../../library/res/colors';
 
-interface IUserProps {
+interface IUserProps extends INavigation {
     userRes: any;
 }
 
 export default (props: IUserProps) => {
-
-    // Non upgrade only password stuff
-
-    // Upgrade Stuff
+    
+    const dispatch = useDispatch();
 
     if (props.userRes) {
         if (props.userRes.type) {
             // userType is true, ask for password
+
+            const [password, setPassword] = useState<string>('');
+
+            const submitButtonLogin = async () => {
+                if (validateLogin(props.userRes.contact.email, '', password)) {
+                    let res = await onSubmitLogin(props.userRes.contact.email, password);
+                    if (res.success) {
+                        let token = res.token;
+                        let userType = jwt_decode<TokenType>(token).type;
+                        let userId = jwt_decode<TokenType>(token).userId;
+                        dispatch({ type: ADD_TOKEN, token, userId, userType })
+                        // Handle success
+                        props.navigation.navigate('TicketDetails', {
+                            ticketId: props.navigation.getParam('ticketId')
+                        })
+                    } else {
+                        // Handle error
+                        console.log(res.error);
+                    }
+                } else {
+                    // Handle error
+                    console.log('pls fill all fields');
+                }
+            }
+
+
             return (
-                <View style={styles.container}>
+                <KeyboardAvoidingView style={styles.userMain}>
                     <Text>Hello {props.userRes.name ? props.userRes.name : props.userRes.contact.email}</Text>
-                    <Text>Please enter your Perfest password to view your ticket:</Text>
-                    <PTextInput style={styles.userViews} placeholder='Password' password></PTextInput>
-                    <PButton style={styles.userViews} text='View Ticket'></PButton>
-                </View>
+                    <Text style={{ marginTop: 8, maxWidth: wp(70), textAlign: 'center' }}>Please enter your Perfest password to view your ticket:</Text>
+                    <PTextInput
+                        style={styles.userViews}
+                        placeholder='Password'
+                        password
+                        onChangeText={(text: string) => {
+                            setPassword(text);
+                        }}
+                    />
+                    <View style={styles.forgotPassword}>
+                        <TouchableOpacity onPress={() => {
+                            props.navigation.navigate('ResetPassword')
+                        }}>
+                            <Text style={styles.forgotPasswordText}>Reset password</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <PButton
+                        style={styles.userViews}
+                        text='View Ticket'
+                        onPress={submitButtonLogin}
+                    />
+                </KeyboardAvoidingView>
             )
         } else {
             // userType is false, ask for upgrade 
@@ -38,9 +88,9 @@ export default (props: IUserProps) => {
 
 
             const submitButtonUpdate = () => {
-                updateUserProfile({
-                    userId: props.userRes._id,
-                    data: {
+                upgradeAnonymousToUser(
+                    props.userRes._id,
+                    {
                         name,
                         password,
                         contact: {
@@ -55,7 +105,17 @@ export default (props: IUserProps) => {
                         type: true,
                         csi_member: false,
                     }
-                }).then((res) => {
+                ).then((res) => {
+                    if (res.success) {
+                        let token = res.token;
+                        let userType = jwt_decode<TokenType>(token).type;
+                        let userId = jwt_decode<TokenType>(token).userId;
+                        dispatch({ type: ADD_TOKEN, token, userId, userType })
+                        // Handle success
+                        props.navigation.navigate('TicketDetails', {
+                            ticketId: props.navigation.getParam('ticketId')
+                        })
+                    }
                     console.log(res);
                 }).catch(err => {
                     console.log(err);
@@ -91,9 +151,6 @@ export default (props: IUserProps) => {
                             }}
                         />
 
-
-
-
                         <Text>College</Text>
 
                         <PTextInput
@@ -116,7 +173,6 @@ export default (props: IUserProps) => {
                                 { name: '6', meta: '6' },
                                 { name: 'Other', meta: 'Other' }
                             ]}
-                            default='1'
                             editable={false}
                             onChangeSelection={(text: string) => {
                                 setYear(text);
@@ -141,11 +197,22 @@ export default (props: IUserProps) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+
     },
     userMain: {
         alignItems: 'center',
     },
     userViews: {
         margin: wp(2.6),
+    },
+    forgotPassword: {
+        flexDirection: 'row',
+        // justifyContent: 'space-between',
+        width: wp(70),
+        paddingHorizontal: 8
+    },
+    forgotPasswordText: {
+        fontSize: wp(3),
+        color: colors.perfestPrimary
     }
 })
