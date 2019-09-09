@@ -210,3 +210,23 @@ export const getAnonymousUserDetails = async (userId: string) => {
 		return response;
 	}
 }
+
+interface UpgradeAnonymousToUserType extends BasicApiType {
+	token: string;
+}
+
+export const upgradeAnonymousToUser = async (userId: string, data: AnonymousUserType) => {
+	let response: UpgradeAnonymousToUserType;
+	try {
+		let res = await fetch(constants.BASE_URL + "/user/upgradeAnonymousToUser", {
+			method: 'POST',
+			headers: constants.defaultHeaders,
+			body: JSON.stringify({ userId, data })
+		});
+		response = await res.json();
+		return response;
+	} catch (err) {
+		response = { success: false, token: '', error: err };
+		return response;
+	}
+}
