@@ -44,7 +44,7 @@ const routeMap: any = {
     },
     ChangePasswordLink: {
         component: ChangePasswordLink,
-        path: '/c/:changePasswordToken'
+        path: '/c/:changePasswordString'
     },
     Home: {
         component: Home,

@@ -52,3 +52,19 @@ export const sendResetMail = async (email: string) => {
 		return response
 	}
 }
+
+export const resetPassword = async (userStr: string, password: string) => {
+	let response: BasicApiType;
+	try {
+		let res = await fetch(constants.BASE_URL + '/auth/resetPassword', {
+			method: 'POST',
+			headers: constants.defaultHeaders,
+			body: JSON.stringify({ userStr, password })
+		});
+		response = await res.json();
+		return response;
+	} catch (err) {
+		response = { success: false };
+		return response;
+	}
+}
