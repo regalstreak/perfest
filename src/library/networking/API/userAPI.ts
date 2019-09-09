@@ -140,6 +140,7 @@ export const getTicketById = async (userId: string, token: string) => {
 }
 
 interface UserType {
+	userId: string;
 	data: {
 		name: string,
 		password: string,
@@ -163,7 +164,7 @@ export const updateUserProfile = async (data: UserType) => {
 		let res = await fetch(constants.BASE_URL + "/user/updateProfile", {
 			method: 'POST',
 			headers: constants.defaultHeaders,
-			body: JSON.stringify({ data })
+			body: JSON.stringify(data)
 		});
 		response = await res.json();
 		return response;

@@ -21,7 +21,7 @@ export default (props: IPTicketDetailsProps) => {
     const RenderQr = () => {
         if (Platform.OS === 'web') {
             return (
-                <QRCode size={256} value={qrSecret} />
+                qrSecret ? <QRCode size={256} value={qrSecret} /> : <Text>No qr secret</Text>
             )
         } else {
             return (
@@ -32,7 +32,7 @@ export default (props: IPTicketDetailsProps) => {
 
     const RenderUpgradeLoginUser = () => {
         return (
-            <User userRes={userRes}></User>
+            userRes ? <User userRes={userRes}></User> : <Text>Error getting ticket</Text>
         )
     }
 
@@ -66,9 +66,6 @@ export default (props: IPTicketDetailsProps) => {
         <View style={styles.container}>
 
             <View style={styles.container}>
-                <Text>Hello PTicketDetails</Text>
-                <Text>Redux type: {userTypeRedux}</Text>
-
                 {
                     userTypeRedux ? <RenderQr /> :
                         <RenderUpgradeLoginUser />
