@@ -30,45 +30,39 @@ export const getLogs = async (page: number, token: string) => {
 	}
 }
 
-interface UserType {
+interface UserTypeMin {
 	_id: string,
 	name: string,
-	contact: string,
-	college: string
+	email: string
 }
 
 interface GetUserVolListType extends BasicApiType {
-	list: UserType[]
+	list: UserTypeMin[]
 }
 
-export const getUserVolList = (type: string, token: string) => {
-	fetch(constants.BASE_URL + "/user/list", {
-		method: 'POST',
-		headers: constants.defaultHeaders,
-		body: JSON.stringify({ type, token })
-	})
-		.then(res => res.json())
-		.then((res: GetUserVolListType) => {
-			if (res.success) {
-				return res;
-			} else {
-				// Handle error
-				console.log('error');
-			}
-		})
-		.catch(err => {
-			// Handle error
-			console.log('error');
+export const getUserVolList = async (type: string, token: string) => {
+	let response: GetUserVolListType;
+	try {
+		let res = await fetch(constants.BASE_URL + "/user/list", {
+			method: 'POST',
+			headers: constants.defaultHeaders,
+			body: JSON.stringify({ token, type })
 		});
+		response = await res.json();
+		return response;
+	} catch (err) {
+		response = { success: false, list: [{ _id: '', name: '', email: '' }], error: err };
+		return response;
+	}
 }
 
-export const upgradeUserToVolunteer = async (token: string) => {
+export const upgradeUserToVolunteer = async (token: string, email: string) => {
 	let response: BasicApiType;
 	try {
 		let res = await fetch(constants.BASE_URL + "/user/updateUser", {
 			method: 'POST',
 			headers: constants.defaultHeaders,
-			body: JSON.stringify({ token })
+			body: JSON.stringify({ token, email })
 		});
 		response = await res.json();
 		return response;
