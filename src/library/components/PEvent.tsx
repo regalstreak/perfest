@@ -2,18 +2,25 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { colors } from '../res/colors';
-import { NavigationScreenProp } from 'react-navigation';
+import { INavigation } from '../interfaces/Navigation';
+import { FullEventType } from '../interfaces/FullEventType';
 
-interface IPEventProps {
-    navigation: NavigationScreenProp<any, any>;
+interface IPEventProps extends INavigation {
+    event: FullEventType
 }
 
-
 const PEvent = (props: IPEventProps) => {
+    let { event } = props;
+    let { date } = event;
+    let displayDate: string = '';
+    if (date) {
+        let ISODate = new Date(date);
+        displayDate = ISODate.getDate().toString() + ' ' + ISODate.toLocaleString('default', { month: 'short' }) + ', ' + ISODate.getFullYear().toString();
+    }
     return (
         <TouchableOpacity
             onPress={() => props.navigation.navigate('EventDetails', {
-                name: 'Abcabc'
+                name: event.name
             })}
             style={styles.container}
         >
@@ -21,11 +28,11 @@ const PEvent = (props: IPEventProps) => {
             </View>
             <View style={styles.rest}>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.title}>Highway to heaven</Text>
+                    <Text style={styles.title}>{event.name}</Text>
                 </View>
                 <View style={styles.venueTimeContainer}>
-                    <Text style={styles.venueTime}>Room: 512</Text>
-                    <Text style={styles.venueTime}>8th Oct</Text>
+                    <Text style={styles.venueTime}>Room: {event.venue}</Text>
+                    <Text style={styles.venueTime}>{displayDate}</Text>
                 </View>
             </View>
         </TouchableOpacity>

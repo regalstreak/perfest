@@ -1,41 +1,21 @@
 import constants from '../constants';
 import { BasicApiType } from '../../interfaces/BasicApi'
-
-// Check _id type
-interface FullEventType {
-	_id: string,
-	name: string,
-	description: string,
-	date: Date,
-	cost: {
-		cost_1: number,
-		cost_2?: number,
-		cost_4?: number
-	},
-	image: string,
-	venue: string,
-}
+import { FullEventType } from '../../interfaces/FullEventType';
 
 interface GetAllEventsType extends BasicApiType {
 	eventList: FullEventType[]
 }
 
-export const getAllEvents = () => {
-	fetch(constants.BASE_URL + "/event/list")
-		.then(res => res.json())
-		.then((res: GetAllEventsType) => {
-			if (res.success) {
-				// Handle success
-				console.log('success');
-			} else {
-				// Handle error
-				console.log('error');
-			}
-		})
-		.catch(err => {
-			// Handle error
-			console.log('error');
-		});
+export const getAllEvents = async () => {
+	let response: GetAllEventsType;
+	try {
+		let res = await fetch(constants.BASE_URL + '/event/list');
+		response = await res.json();
+		return response;
+	} catch (err) {
+		response = { success: false, eventList: [{ _id: '', name: 'Loading...', description: '', date: '', cost_1: 0, cost_2: 0, cost_4: 0, image: '', venue: '' }], error: err };
+		return response;
+	}
 }
 
 interface EventsDropdownType {
@@ -66,22 +46,16 @@ interface GetEventType extends BasicApiType {
 	event: FullEventType,
 }
 
-export const getEvent = (eventId: string) => {
-	fetch(constants.BASE_URL + "/event/" + eventId)
-		.then(res => res.json())
-		.then((res: GetEventType) => {
-			if (res.success) {
-				// Handle success
-				console.log('success');
-			} else {
-				// Handle error
-				console.log('error');
-			}
-		})
-		.catch(err => {
-			// Handle error
-			console.log('error');
-		});
+export const getEvent = async (name: string) => {
+	let response: GetEventType;
+	try {
+		let res = await fetch(constants.BASE_URL + "/event/" + name);
+		response = await res.json();
+		return response;
+	} catch (err) {
+		response = { success: false, event: { _id: '', name: 'Loading...', description: '', date: '', cost_1: 0, cost_2: 0, cost_4: 0, image: '', venue: '' }, error: err };
+		return response;
+	}
 }
 
 interface EventType {
