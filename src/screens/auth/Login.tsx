@@ -6,7 +6,7 @@ import { onSubmitLogin } from '../../library/networking/API/authAPI';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { ADD_TOKEN } from '../../store/actions';
-import { ReducerState } from '../../store/reducer';
+import { AppState } from '../../store/rootReducer';
 import jwt_decode from 'jwt-decode';
 import { validateLogin } from '../../library/utils/utils';
 import { NavigationScreenProp } from 'react-navigation';
@@ -94,9 +94,9 @@ const Login = (props: ILoginProps) => {
     )
 }
 
-const mapStateToProps = (state: ReducerState) => {
+const mapStateToProps = (state: AppState) => {
     return {
-        token: state.token
+        token: state.auth.token
     }
 }
 

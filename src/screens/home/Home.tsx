@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import { connect } from 'react-redux';
-import { ReducerState } from '../../store/reducer';
+import { AppState } from '../../store/rootReducer';
 
 import PBottomNav from '../../library/components/PBottomNav';
 import { INavigation } from '../../library/interfaces/Navigation';
@@ -62,9 +62,9 @@ const styles = StyleSheet.create({
 })
 
 
-const mapStateToProps = (state: ReducerState) => {
+const mapStateToProps = (state: AppState) => {
     return {
-        userType: state.userType,
+        userType: state.auth.userType,
     }
 }
 

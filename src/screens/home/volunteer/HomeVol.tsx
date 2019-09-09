@@ -10,7 +10,7 @@ import { issueTicket } from '../../../library/networking/API/ticketAPI';
 import { getAllEventsDropdown } from '../../../library/networking/API/eventAPI';
 
 import { connect } from 'react-redux';
-import { ReducerState } from '../../../store/reducer';
+import { AppState } from '../../../store/rootReducer';
 import { getLogs } from '../../../library/networking/API/userAPI';
 
 interface IHomeVolProps {
@@ -207,9 +207,9 @@ const HomeVol = (props: IHomeVolProps) => {
     )
 }
 
-const mapStateToProps = (state: ReducerState) => {
+const mapStateToProps = (state: AppState) => {
     return {
-        token: state.token
+        token: state.auth.token
     }
 }
 

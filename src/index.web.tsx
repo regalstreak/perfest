@@ -6,11 +6,11 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-import Reducer from './store/reducer';
+import rootReducer from './store/rootReducer';
 import * as serviceWorker from './serviceWorker';
 const Feather_ttf = require('react-native-vector-icons/Fonts/Feather.ttf')
 
-const store = createStore(Reducer);
+const store = createStore(rootReducer);
 
 ReactDOM.render(
     <BrowserRouter>

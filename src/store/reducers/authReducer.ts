@@ -1,5 +1,5 @@
-import { ActionTypes } from '../library/interfaces/ActionTypes';
-import { ADD_TOKEN, DELETE_TOKEN } from './actions';
+import { ActionTypes } from '../../library/interfaces/AuthActionTypes';
+import { ADD_TOKEN, DELETE_TOKEN } from '../actions';
 import { AsyncStorage } from 'react-native';
 
 interface InitState {
@@ -26,7 +26,7 @@ const initState: InitState = {
 	userId: ''
 }
 
-const RootReducer = (state: InitState = initState, action: ActionTypes) => {
+const authReducer = (state: InitState = initState, action: ActionTypes) => {
 	switch (action.type) {
 		case ADD_TOKEN:
 			setToken(action.token);
@@ -47,6 +47,6 @@ const RootReducer = (state: InitState = initState, action: ActionTypes) => {
 	}
 }
 
-export default RootReducer
+export default authReducer;
 
-export type ReducerState = ReturnType<typeof RootReducer>
+export type ReducerState = ReturnType<typeof authReducer>;
