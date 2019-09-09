@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import PBottomNav from '../../library/components/PBottomNav';
 import { INavigation } from '../../library/interfaces/Navigation';
 import PButton from '../../library/components/PButton';
-import PTicket from '../../library/components/PTicket';
+import PTicketVol from '../../library/components/PTicketVol';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -52,7 +52,7 @@ export default (props: IProfileProps) => {
                     <Text style={styles.yourTicketText}>Your Tickets</Text>
                     {
                         abc.map((item, index) => (
-                            <PTicket key={index} navigation={props.navigation} />
+                            <PTicketVol key={index} navigation={props.navigation} />
                         ))
                     }
                 </View>

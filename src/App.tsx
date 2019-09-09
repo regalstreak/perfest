@@ -19,12 +19,13 @@ import Home from "./screens/home/Home";
 import Events from "./screens/events/Events";
 import Profile from "./screens/profile/Profile";
 import Notifications from "./screens/notifs/Notifications";
+import Volunteers from './screens/volunteers/Volunteers';
 
 import PEventDetails from './library/components/PEventDetails';
 import TicketDetails from './screens/profile/TicketDetails';
 
 
-const routeMap = {
+const routeMap: any = {
     Auth: {
         component: Auth,
         path: '/auth'
@@ -69,8 +70,13 @@ const routeMap = {
     TicketDetails: {
         component: TicketDetails,
         path: '/t/:ticketId'
+    },
+    Volunteers: {
+        component: Volunteers,
+        path: '/volunteers'
     }
 }
+
 
 interface TokenType {
     type: string,
@@ -87,6 +93,7 @@ interface IAppProps {
 }
 
 const App = (props: IAppProps) => {
+
     useEffect(() => {
         AsyncStorage.getItem('token')
             .then(token => {

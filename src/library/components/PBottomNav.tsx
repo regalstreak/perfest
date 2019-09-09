@@ -4,6 +4,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { INavigation } from '../interfaces/Navigation';
 import FeatherIcon from 'react-native-vector-icons/dist/Feather';
 import { colors } from '../res/colors';
+import { useSelector } from 'react-redux';
 
 
 interface IPBottomNavProps extends INavigation {
@@ -14,12 +15,12 @@ interface IPBottomNavProps extends INavigation {
 }
 
 interface Iitem {
+    component: string;
     title: string;
     icon: string;
-    component: string;
 }
 
-const volunteerNavBar = [
+const normalNavBar = [
     {
         component: 'Home',
         title: 'Home',
@@ -41,8 +42,40 @@ const volunteerNavBar = [
         icon: 'user',
     },
 ]
+const adminNavBar = [
+    {
+        component: 'Home',
+        title: 'Home',
+        icon: 'home',
+    },
+    {
+        component: 'Events',
+        title: 'Events',
+        icon: 'align-justify',
+    },
+    {
+        component: 'Volunteers',
+        title: 'Volunteers',
+        icon: 'users',
+    },
+    {
+        component: 'Profile',
+        title: 'Profile',
+        icon: 'user',
+    },
+]
 
 const PBottomNav = (props: IPBottomNavProps) => {
+
+    const userType = useSelector((state: any) => state.auth.userType)
+
+    let navBar: Iitem[];
+
+    if (userType === 'admin') {
+        navBar = adminNavBar;
+    } else {
+        navBar = normalNavBar;
+    }
 
     let primaryTextStyle = { color: colors.perfestPrimary }
     let secondaryTextStyle = { color: colors.perfestGrey }
@@ -52,19 +85,19 @@ const PBottomNav = (props: IPBottomNavProps) => {
 
             <View style={styles.items}>
                 {
-                    volunteerNavBar.map((item: Iitem, index: number) => {
+                    navBar.map((item: Iitem, index: number) => {
                         if (props.index === index) {
                             return (
                                 <TouchableOpacity
                                     onPress={() => {
-                                        props.navigation.navigate(volunteerNavBar[index].component)
+                                        props.navigation.navigate(navBar[index].component)
                                     }}
                                     key={item.title}
                                     style={styles.itemView}
                                 >
                                     <View style={styles.textIconContainer}>
                                         <FeatherIcon
-                                            name={volunteerNavBar[index].icon}
+                                            name={navBar[index].icon}
                                             size={24}
                                             color={colors.perfestPrimary} />
                                         <Text style={[styles.itemText, primaryTextStyle]}>
@@ -77,14 +110,14 @@ const PBottomNav = (props: IPBottomNavProps) => {
                             return (
                                 <TouchableOpacity
                                     onPress={() => {
-                                        props.navigation.navigate(volunteerNavBar[index].component)
+                                        props.navigation.navigate(navBar[index].component)
                                     }}
                                     key={item.title}
                                     style={styles.itemView}
                                 >
                                     <View style={styles.textIconContainer}>
                                         <FeatherIcon
-                                            name={volunteerNavBar[index].icon}
+                                            name={navBar[index].icon}
                                             size={24}
                                             color={colors.perfestGrey}
                                         />

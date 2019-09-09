@@ -6,10 +6,14 @@ import { NavigationScreenProp } from 'react-navigation';
 
 interface IPTicketProps {
     navigation: NavigationScreenProp<any, any>;
+    type?: 'ticket' | 'volunteer';
+    title?: string;
+    bottomLeft?: string;
+    bottomRight?: string;
 }
 
 
-const PTicket = (props: IPTicketProps) => {
+const PTicketVol = (props: IPTicketProps) => {
     return (
         <TouchableOpacity
             onPress={() => props.navigation.navigate('TicketDetails', {
@@ -21,11 +25,11 @@ const PTicket = (props: IPTicketProps) => {
             </View>
             <View style={styles.rest}>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.title}>Highway to heayasdasdasydven</Text>
+                    <Text style={styles.title}>{props.title}</Text>
                 </View>
                 <View style={styles.venueTimeContainer}>
-                    <Text style={styles.venueTime}>Room: 512</Text>
-                    <Text style={styles.venueTime}>8th Oct</Text>
+                    <Text style={styles.venueTime}>{props.bottomLeft}</Text>
+                    <Text style={styles.venueTime}>{props.bottomRight}</Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -69,4 +73,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default PTicket;
+export default PTicketVol;
