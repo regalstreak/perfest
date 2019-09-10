@@ -23,6 +23,7 @@ import Notifications from "./screens/notifs/Notifications";
 import Volunteers from './screens/volunteers/Volunteers';
 
 import AddVolunteerModal from './screens/volunteers/AddVolunteerModal';
+import VolunteerDetails from './screens/volunteers/VolunteerDetails';
 
 import PEventDetails from './library/components/PEventDetails';
 import TicketDetails from './screens/profile/TicketDetails';
@@ -75,7 +76,11 @@ const routeMap: any = {
     },
     Volunteers: {
         component: Volunteers,
-        path: '/volunteers'
+        path: '/volunteers',
+    },
+    VolunteerDetails: {
+        component: VolunteerDetails,
+        path: '/volunteer/:volunteerId'
     },
     AddVolunteerModal: {
         component: AddVolunteerModal,

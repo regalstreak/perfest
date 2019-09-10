@@ -30,10 +30,10 @@ export const getLogs = async (page: number, token: string) => {
 	}
 }
 
-interface UserTypeMin {
+export interface UserTypeMin {
 	_id: string,
 	name: string,
-	email: string
+	email?: string
 }
 
 interface GetUserVolListType extends BasicApiType {

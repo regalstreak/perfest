@@ -7,21 +7,22 @@ import PTextInput from '../../library/components/PTextInput';
 import PTicketVol from '../../library/components/PTicketVol';
 import PButton from '../../library/components/PButton';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import { getUserVolList } from '../../library/networking/API/userAPI';
+import { getUserVolList, UserTypeMin } from '../../library/networking/API/userAPI';
 import { getAllEventsDropdown } from '../../library/networking/API/eventAPI';
 import { AppState } from '../../store/rootReducer';
 import { connect } from 'react-redux';
 
 interface IVolunteersProps extends INavigation {
-    token: string
 }
 
 const Volunteers = (props: IVolunteersProps) => {
-    const userType = useSelector((state: any) => state.auth.userType);
     const [searchVol, setSearchVol] = useState<string>('');
     const [events, setEvents] = useState<any>('');
-    const [volunteers, setVolunteers] = useState<any>('');
-    let { token } = props;
+    const [volunteers, setVolunteers] = useState<UserTypeMin[]>();
+
+    const userType = useSelector((state: any) => state.auth.userType);
+    const token = useSelector((state: any) => state.auth.token);
+
     useEffect(() => {
         if (token) {
             let isMounted = true;
@@ -29,7 +30,6 @@ const Volunteers = (props: IVolunteersProps) => {
                 .then(res => {
                     if (res.success) {
                         if (isMounted) {
-                            console.log(res.list);
                             setVolunteers(res.list);
                         }
                     } else {
@@ -42,6 +42,7 @@ const Volunteers = (props: IVolunteersProps) => {
             }
         }
     }, [token]);
+
     useEffect(() => {
         let isMounted = true;
         getAllEventsDropdown()
@@ -80,16 +81,16 @@ const Volunteers = (props: IVolunteersProps) => {
                     }}
                 />
                 <ScrollView style={styles.container}>
-                    {
-                        [0, 1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => (
+                    {volunteers ?
+                        volunteers.map((item: { _id: string, name: string }, index: number) => (
                             <PTicketVol
+                                type='volunteer'
+                                navigId={item.name}
                                 key={index}
                                 navigation={props.navigation}
-                                title={item + ' Name'}
-                                bottomLeft={JSON.stringify(item)}
-                                bottomRight={JSON.stringify(item) + ' right'}
+                                title={item.name}
                             />
-                        ))
+                        )) : <View></View>
                     }
                 </ScrollView>
 
@@ -112,13 +113,7 @@ const Volunteers = (props: IVolunteersProps) => {
     }
 }
 
-const mapStateToProps = (state: AppState) => {
-    return {
-        token: state.auth.token
-    }
-}
-
-export default connect(mapStateToProps)(Volunteers);
+export default Volunteers;
 
 const styles = StyleSheet.create({
     container: {

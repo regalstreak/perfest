@@ -6,7 +6,8 @@ import { NavigationScreenProp } from 'react-navigation';
 
 interface IPTicketProps {
     navigation: NavigationScreenProp<any, any>;
-    type?: 'ticket' | 'volunteer';
+    type: 'ticket' | 'volunteer';
+    navigId: string;
     title?: string;
     bottomLeft?: string;
     bottomRight?: string;
@@ -16,9 +17,17 @@ interface IPTicketProps {
 const PTicketVol = (props: IPTicketProps) => {
     return (
         <TouchableOpacity
-            onPress={() => props.navigation.navigate('TicketDetails', {
-                ticketId: 'Abcabc'
-            })}
+            onPress={() => {
+                if (props.type === 'ticket') {
+                    props.navigation.navigate('TicketDetails', {
+                        ticketId: props.navigId
+                    })
+                } else if (props.type === 'volunteer') {
+                    props.navigation.navigate('VolunteerDetails', {
+                        volunteerId: props.navigId
+                    })
+                }
+            }}
             style={styles.container}
         >
             <View style={styles.image}>
