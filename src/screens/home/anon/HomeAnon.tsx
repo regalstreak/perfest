@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { textStyles } from '../../../library/res/styles';
 
 
 interface IHomeAnonProps {
@@ -9,7 +10,7 @@ interface IHomeAnonProps {
 export default (props: IHomeAnonProps) => {
     return (
         <View style={styles.container}>
-            <Text>Hello HomeAnon</Text>
+            <Text style={textStyles.headerText}>Hey there! Welcome to Perfest</Text>
         </View>
     )
 }

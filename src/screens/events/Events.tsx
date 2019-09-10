@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { INavigation } from '../../library/interfaces/Navigation';
 import PBottomNav from '../../library/components/PBottomNav';
-import PEvent from '../../library/components/PEvent';
 import { getAllEvents } from '../../library/networking/API/eventAPI';
 import { FullEventType } from '../../library/interfaces/FullEventType';
 import PLoading from '../../library/components/PLoading';
+import PMainListItem from '../../library/components/PMainListItem';
+import { getFormattedDateAndTime } from '../../library/utils/utils';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { textStyles } from '../../library/res/styles';
 
 interface IEventsProps extends INavigation {
 
@@ -49,13 +52,21 @@ export default (props: IEventsProps) => {
     } else {
         return (
             <View style={styles.container}>
-                <Text>Events</Text>
-
+                <Text style={textStyles.headerText}>Events</Text>
                 <ScrollView>
                     {
                         events.map((item, index) =>
                             (
-                                <PEvent key={index} navigation={props.navigation} event={item}></PEvent>
+                                <PMainListItem
+                                    type='event'
+                                    key={index}
+                                    navigation={props.navigation}
+                                    navigId={item.name}
+                                    title={item.name}
+                                    bottomLeft={item.venue}
+                                    bottomRight={getFormattedDateAndTime(item.date)[0]}
+                                />
+
                             )
                         )
                     }
@@ -74,5 +85,5 @@ export default (props: IEventsProps) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    }
+    },
 })

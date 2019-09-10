@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { INavigation } from '../interfaces/Navigation';
-import { getEvent } from '../networking/API/eventAPI';
+import { INavigation } from '../../library/interfaces/Navigation';
+import { getEvent } from '../../library/networking/API/eventAPI';
+import PBottomNav from '../../library/components/PBottomNav';
 
-interface IPEventDetailsProps extends INavigation {
+interface IEventDetailsProps extends INavigation {
 }
 
-export default (props: IPEventDetailsProps) => {
+export default (props: IEventDetailsProps) => {
     let [name, setName] = useState('');
     let [description, setDescription] = useState('');
     let [date, setDate] = useState('');
@@ -50,14 +51,17 @@ export default (props: IPEventDetailsProps) => {
     if (cost_4 != 0) cost_4Display = <Text>Cost(4): {cost_4}</Text>;
     return (
         <View style={styles.container}>
-            <Text>Hello PEventDetails</Text>
-            <Text>Name: {name}</Text>
-            <Text>Description: {description}</Text>
-            <Text>Date: {date}</Text>
-            <Text>Venue: {venue}</Text>
-            <Text>Cost(1): {cost_1}</Text>
-            {cost_2Display}
-            {cost_4Display}
+            <View style={styles.container}>
+                <Text>Hello EventDetails</Text>
+                <Text>Name: {name}</Text>
+                <Text>Description: {description}</Text>
+                <Text>Date: {date}</Text>
+                <Text>Venue: {venue}</Text>
+                <Text>Cost(1): {cost_1}</Text>
+                {cost_2Display}
+                {cost_4Display}
+            </View>
+            <PBottomNav navigation={props.navigation} index={1}/>
         </View>
     )
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, KeyboardAvoidingView, ScrollView, Text, View, FlatList } from 'react-native';
 
 import PTextInput from '../../../library/components/PTextInput';
-import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PButton from '../../../library/components/PButton';
 import PSearchDropdown from '../../../library/components/PSearchDropdown';
 import { validateTicketIssue } from '../../../library/utils/utils';
@@ -13,24 +13,10 @@ import { getFormattedDateAndTime } from '../../../library/utils/utils'
 import { connect } from 'react-redux';
 import { AppState } from '../../../store/rootReducer';
 import { getLogs } from '../../../library/networking/API/userAPI';
+import { textStyles } from '../../../library/res/styles';
 
 interface IHomeVolProps {
     token: string;
-}
-
-const onSubmit = async (email: string, event_id: string, price: number, paid: number, participantNo: number, token: string) => {
-    if (validateTicketIssue(email, event_id, price, price, participantNo)) {
-        let res = await issueTicket(email, event_id, price, price, participantNo, token)
-        if (res.success) {
-            // Succesfully issued ticket
-            console.log('Succesfully issued ticket');
-        } else {
-            console.log(res.error);
-        }
-    } else {
-        // Handle Error
-        console.log('Fill all fields');
-    }
 }
 
 interface EventType {
@@ -124,9 +110,42 @@ const HomeVol = (props: IHomeVolProps) => {
         }
 
     }, [token]);
+
+
+
+    const onIssueTicketClicked = async () => {
+        if (validateTicketIssue(email, eventId, price, price, participantNo)) {
+            let res = await issueTicket(email, eventId, price, price, participantNo, token)
+            if (res.success) {
+                // Succesfully issued ticket
+                console.log('Succesfully issued ticket');
+
+                // get latest logs
+                getLogs(1, token)
+                    .then(res => {
+                        if (res.success) {
+                            setTotalSold(res.totalSold);
+                            setTotalCollected(res.totalCollected);
+                            setLogData(res.logList);
+                        } else {
+                            console.log(res.error);
+                        }
+                    })
+                    .catch(console.log);
+            } else {
+                console.log(res.error);
+            }
+        } else {
+            // Handle Error
+            console.log('Fill all fields');
+        }
+    }
+
     return (
         <ScrollView style={styles.container}>
+            <Text style={textStyles.headerText}>Home</Text>
             <KeyboardAvoidingView style={styles.issueTicketContainer} enabled>
+
                 <PTextInput
                     style={styles.issueTicketTextViews}
                     placeholder="Email"
@@ -182,34 +201,34 @@ const HomeVol = (props: IHomeVolProps) => {
                     default={'0'}
                 />
                 <PButton
-                    style={styles.issueTicketTextViews}
+                    style={[styles.issueTicketTextViews, styles.issueTicketButton]}
                     text='Issue Ticket'
-                    onPress={() => onSubmit(email, eventId, price, price, participantNo, token)}
+                    onPress={() => onIssueTicketClicked()}
                 />
             </KeyboardAvoidingView>
-            <Text>Logs</Text>
-            <Text>Total Sold: {totalSold}</Text>
-            <Text>Total Collected: {totalCollected}</Text>
-            <ScrollView style={styles.container}>
-                <View>
-                    <FlatList
-                        data={logsData}
-                        renderItem={log => {
-                            let displayDate: string = '';
-                            let date, time;
-                            if (log.item.date) {
-                                [date, time] = getFormattedDateAndTime(log.item.date);
-                            }
-                            return (
-                                <View>
-                                    <Text>{log.item.vname + ' sold 1 ticket of event ' + log.item.ename + ' worth ' + log.item.price + '₹' + ' on ' + date + ' at ' + time}</Text>
-                                </View>
-                            )
-                        }}
-                        keyExtractor={(item, index) => index.toString()}
-                    />
-                </View>
-            </ScrollView>
+            <Text style={textStyles.subHeaderText}>Logs</Text>
+
+            <View style={styles.logsContainer}>
+
+                <Text style={styles.logsTextViews}>Total Sold: {totalSold}</Text>
+                <Text style={styles.logsTextViews}>Total Collected: {totalCollected}</Text>
+                <FlatList
+                    data={logsData}
+                    renderItem={log => {
+                        let displayDate: string = '';
+                        let date, time;
+                        if (log.item.date) {
+                            [date, time] = getFormattedDateAndTime(log.item.date);
+                        }
+                        return (
+                            <View style={styles.issueTicketTextViews}>
+                                <Text>{log.item.vname + ' sold 1 ticket of event ' + log.item.ename + ' worth ' + log.item.price + '₹' + ' on ' + date + ' at ' + time}</Text>
+                            </View>
+                        )
+                    }}
+                    keyExtractor={(item, index) => index.toString()}
+                />
+            </View>
         </ScrollView>
     )
 }
@@ -227,10 +246,18 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     issueTicketContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
+        marginHorizontal: hp(3.5),
     },
     issueTicketTextViews: {
-        margin: wp(2.6),
+        marginVertical: wp(2.6),
+    },
+    issueTicketButton: {
+        alignSelf: 'flex-start'
+    },
+    logsTextViews: {
+        marginVertical: wp(2),
+    },
+    logsContainer: {
+        marginHorizontal: hp(3.5),
     }
 });

@@ -25,7 +25,7 @@ import Volunteers from './screens/volunteers/Volunteers';
 import AddVolunteerModal from './screens/volunteers/AddVolunteerModal';
 import VolunteerDetails from './screens/volunteers/VolunteerDetails';
 
-import PEventDetails from './library/components/PEventDetails';
+import EventDetails from './screens/events/EventDetails';
 import TicketDetails from './screens/profile/TicketDetails';
 
 const routeMap: any = {
@@ -67,7 +67,7 @@ const routeMap: any = {
         path: '/profile'
     },
     EventDetails: {
-        component: PEventDetails,
+        component: EventDetails,
         path: '/event/:name'
     },
     TicketDetails: {

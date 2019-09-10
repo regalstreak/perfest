@@ -6,7 +6,7 @@ import { NavigationScreenProp } from 'react-navigation';
 
 interface IPTicketProps {
     navigation: NavigationScreenProp<any, any>;
-    type: 'ticket' | 'volunteer';
+    type: 'ticket' | 'volunteer' | 'event';
     navigId: string;
     title?: string;
     bottomLeft?: string;
@@ -14,18 +14,32 @@ interface IPTicketProps {
 }
 
 
-const PTicketVol = (props: IPTicketProps) => {
+const PMainListItem = (props: IPTicketProps) => {
     return (
         <TouchableOpacity
             onPress={() => {
-                if (props.type === 'ticket') {
-                    props.navigation.navigate('TicketDetails', {
-                        ticketId: props.navigId
-                    })
-                } else if (props.type === 'volunteer') {
-                    props.navigation.navigate('VolunteerDetails', {
-                        volunteerId: props.navigId
-                    })
+                switch (props.type) {
+                    case 'ticket': {
+                        props.navigation.navigate('TicketDetails', {
+                            ticketId: props.navigId
+                        });
+                        break;
+                    }
+                    case 'volunteer': {
+                        props.navigation.navigate('VolunteerDetails', {
+                            volunteerId: props.navigId
+                        });
+                        break;
+                    }
+                    case 'event': {
+                        props.navigation.navigate('EventDetails', {
+                            name: props.navigId
+                        });
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
                 }
             }}
             style={styles.container}
@@ -82,4 +96,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default PTicketVol;
+export default PMainListItem;

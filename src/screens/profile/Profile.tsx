@@ -3,10 +3,11 @@ import { View, Text, StyleSheet } from 'react-native';
 import PBottomNav from '../../library/components/PBottomNav';
 import { INavigation } from '../../library/interfaces/Navigation';
 import PButton from '../../library/components/PButton';
-import PTicketVol from '../../library/components/PTicketVol';
+import PMainListItem from '../../library/components/PMainListItem';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllTickets } from '../../library/networking/API/userAPI';
+import { textStyles } from '../../library/res/styles';
 
 interface IProfileProps extends INavigation {
 
@@ -69,11 +70,16 @@ export default (props: IProfileProps) => {
     return (
         <View style={styles.container}>
             <View style={styles.container}>
+                <Text style={textStyles.headerText}>Profile</Text>
                 <View style={styles.ticketContainer}>
-                    <Text style={styles.yourTicketText}>Your Tickets</Text>
+                    {
+                        (tickets.length > 0) ?
+                            <Text style={textStyles.subHeaderText}>Your Tickets</Text>
+                            : null
+                    }
                     {
                         tickets.map((item, index) => (
-                            <PTicketVol
+                            <PMainListItem
                                 type='ticket'
                                 navigId={item.url}
                                 title={item.event.name}
@@ -110,9 +116,4 @@ const styles = StyleSheet.create({
     ticketContainer: {
 
     },
-    yourTicketText: {
-        fontSize: hp(3.8),
-        fontWeight: '500',
-        marginHorizontal: hp(3)
-    }
 })

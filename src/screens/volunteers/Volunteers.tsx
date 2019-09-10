@@ -4,13 +4,14 @@ import PBottomNav from '../../library/components/PBottomNav';
 import { INavigation } from '../../library/interfaces/Navigation';
 import { useSelector } from 'react-redux';
 import PTextInput from '../../library/components/PTextInput';
-import PTicketVol from '../../library/components/PTicketVol';
+import PMainListItem from '../../library/components/PMainListItem';
 import PButton from '../../library/components/PButton';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { getUserVolList, UserTypeMin } from '../../library/networking/API/userAPI';
 import { getAllEventsDropdown } from '../../library/networking/API/eventAPI';
 import { AppState } from '../../store/rootReducer';
 import { connect } from 'react-redux';
+import { textStyles } from '../../library/res/styles';
 
 interface IVolunteersProps extends INavigation {
 }
@@ -73,26 +74,30 @@ const Volunteers = (props: IVolunteersProps) => {
     if (userType === 'admin') {
         return (
             <View style={styles.container}>
+                <Text style={textStyles.headerText}>Volunteers</Text>
+                <View style={styles.main}>
 
-                <PTextInput
-                    placeholder='Search'
-                    onChangeText={(text: string) => {
-                        setSearchVol(text)
-                    }}
-                />
-                <ScrollView style={styles.container}>
-                    {volunteers ?
-                        volunteers.map((item: { _id: string, name: string }, index: number) => (
-                            <PTicketVol
-                                type='volunteer'
-                                navigId={item._id}
-                                key={index}
-                                navigation={props.navigation}
-                                title={item.name}
-                            />
-                        )) : <View></View>
-                    }
-                </ScrollView>
+                    <PTextInput
+                        style={{ marginVertical: 16 }}
+                        placeholder='Search'
+                        onChangeText={(text: string) => {
+                            setSearchVol(text)
+                        }}
+                    />
+                    <ScrollView >
+                        {volunteers ?
+                            volunteers.map((item: { _id: string, name: string }, index: number) => (
+                                <PMainListItem
+                                    type='volunteer'
+                                    navigId={item._id}
+                                    key={index}
+                                    navigation={props.navigation}
+                                    title={item.name}
+                                />
+                            )) : <View></View>
+                        }
+                    </ScrollView>
+                </View>
 
                 <PButton
                     style={styles.addButtonContainer}
@@ -101,8 +106,6 @@ const Volunteers = (props: IVolunteersProps) => {
                         props.navigation.navigate('AddVolunteerModal')
                     }}
                 />
-
-
                 <PBottomNav index={2} navigation={props.navigation} />
             </View>
         )
@@ -118,6 +121,10 @@ export default Volunteers;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    main: {
+        flex: 1,
+        marginLeft: hp(3),
     },
     addButtonContainer: {
         position: 'absolute',

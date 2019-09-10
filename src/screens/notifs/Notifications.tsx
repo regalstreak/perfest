@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import PBottomNav from '../../library/components/PBottomNav';
 import { INavigation } from '../../library/interfaces/Navigation';
+import { textStyles } from '../../library/res/styles';
 
 interface INotificationsProps extends INavigation {
 
@@ -12,7 +13,7 @@ export default (props: INotificationsProps) => {
         <View style={styles.container}>
 
             <View style={styles.container}>
-                <Text>Notifications</Text>
+                <Text style={textStyles.headerText}>Notifications</Text>
             </View>
 
             <PBottomNav
