@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { ADD_TOKEN } from './store/actions';
 import jwt_decode from 'jwt-decode';
+import { ModalContainer } from 'react-router-modal';
 
 import WebRoutesGenerator from "./library/utils/WebRoutesWrapper/WebRoutesGenerator";
 
@@ -21,9 +22,10 @@ import Profile from "./screens/profile/Profile";
 import Notifications from "./screens/notifs/Notifications";
 import Volunteers from './screens/volunteers/Volunteers';
 
+import AddVolunteerModal from './screens/volunteers/AddVolunteerModal';
+
 import PEventDetails from './library/components/PEventDetails';
 import TicketDetails from './screens/profile/TicketDetails';
-
 
 const routeMap: any = {
     Auth: {
@@ -74,6 +76,11 @@ const routeMap: any = {
     Volunteers: {
         component: Volunteers,
         path: '/volunteers'
+    },
+    AddVolunteerModal: {
+        component: AddVolunteerModal,
+        path: '*/addVol',
+        modal: true
     }
 }
 
@@ -108,6 +115,7 @@ const App = (props: IAppProps) => {
     return (
         <View style={{ flex: 1 }} >
             {WebRoutesGenerator({ routeMap })}
+            <ModalContainer />
         </View>
     )
 }

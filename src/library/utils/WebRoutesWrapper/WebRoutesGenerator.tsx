@@ -65,6 +65,9 @@ const WebRoutesGenerator = ({ routeMap }: any) => {
           component={(props: any) => (
             <Wrapper element={<Component />} {...props} routeMap={routeMap} />
           )}
+          onBackdropClick={() => {
+            return;
+          }}
         />
       );
     } else {

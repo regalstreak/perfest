@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import PBottomNav from '../../library/components/PBottomNav';
 import { INavigation } from '../../library/interfaces/Navigation';
 import { useSelector } from 'react-redux';
 import PTextInput from '../../library/components/PTextInput';
 import PTicketVol from '../../library/components/PTicketVol';
 import PButton from '../../library/components/PButton';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 
 interface IVolunteersProps extends INavigation {
@@ -21,6 +22,7 @@ export default (props: IVolunteersProps) => {
     if (userType === 'admin') {
         return (
             <View style={styles.container}>
+
                 <PTextInput
                     placeholder='Search'
                     onChangeText={(text: string) => {
@@ -40,9 +42,18 @@ export default (props: IVolunteersProps) => {
                             />
                         ))
                     }
+
+
                 </ScrollView>
 
-                <PButton text='Add Volunteer' />
+                <PButton
+                    style={styles.addButtonContainer}
+                    text='Add Volunteer'
+                    onPress={() => {
+                        props.navigation.navigate('AddVolunteerModal')
+                    }}
+                />
+
 
                 <PBottomNav index={2} navigation={props.navigation} />
             </View>
@@ -57,5 +68,11 @@ export default (props: IVolunteersProps) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    }
+    },
+    addButtonContainer: {
+        position: 'absolute',
+        alignSelf: 'center',
+        bottom: 0,
+        marginBottom: hp(8) + 12,
+    },
 })

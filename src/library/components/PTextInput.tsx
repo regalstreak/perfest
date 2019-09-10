@@ -19,6 +19,7 @@ export interface IPTextInputProps {
     suffixIconOnPress?: () => void;
     default?: string;
     editable?: boolean;
+    width?: any;
 }
 
 const PTextInput: React.FC<IPTextInputProps> = (props) => {
@@ -42,6 +43,7 @@ const PTextInput: React.FC<IPTextInputProps> = (props) => {
 
     let placeHolderTopStyle = { top: placeholderTop }
     let outlineStyle = { borderColor: outline, borderWidth: outlineWidth }
+    let textInputWidth = props.width ? { width: props.width } : { width: wp(70) }
 
     // handlers
     const _handleFocus = () => {
@@ -92,7 +94,7 @@ const PTextInput: React.FC<IPTextInputProps> = (props) => {
                 ref={textInputRef}
                 onFocus={_handleFocus}
                 onBlur={_handleBlur}
-                style={[styles.textInput, outlineStyle]}
+                style={[styles.textInput, outlineStyle, textInputWidth]}
                 value={props.value ? props.value.toString() : text}
                 keyboardType={props.type}
                 onChangeText={(input) => {
@@ -149,7 +151,6 @@ const styles = StyleSheet.create({
     },
     textInput: {
         height: hp(7),
-        width: wp(70),
         fontSize: hp(3),
         paddingVertical: hp(1),
         paddingHorizontal: hp(2),
