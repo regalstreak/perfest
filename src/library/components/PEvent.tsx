@@ -4,6 +4,7 @@ import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { colors } from '../res/colors';
 import { INavigation } from '../interfaces/Navigation';
 import { FullEventType } from '../interfaces/FullEventType';
+import { getFormattedDateAndTime } from '../../library/utils/utils';
 
 interface IPEventProps extends INavigation {
     event: FullEventType
@@ -12,10 +13,9 @@ interface IPEventProps extends INavigation {
 const PEvent = (props: IPEventProps) => {
     let { event } = props;
     let { date } = event;
-    let displayDate: string = '';
     if (date) {
-        let ISODate = new Date(date);
-        displayDate = ISODate.getDate().toString() + ' ' + ISODate.toLocaleString('default', { month: 'short' }) + ', ' + ISODate.getFullYear().toString();
+        let dateTime = getFormattedDateAndTime(date);
+        date = dateTime[0];
     }
     return (
         <TouchableOpacity
@@ -32,7 +32,7 @@ const PEvent = (props: IPEventProps) => {
                 </View>
                 <View style={styles.venueTimeContainer}>
                     <Text style={styles.venueTime}>Room: {event.venue}</Text>
-                    <Text style={styles.venueTime}>{displayDate}</Text>
+                    <Text style={styles.venueTime}>{date}</Text>
                 </View>
             </View>
         </TouchableOpacity>

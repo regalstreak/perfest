@@ -8,6 +8,7 @@ import PSearchDropdown from '../../../library/components/PSearchDropdown';
 import { validateTicketIssue } from '../../../library/utils/utils';
 import { issueTicket } from '../../../library/networking/API/ticketAPI';
 import { getAllEventsDropdown } from '../../../library/networking/API/eventAPI';
+import { getFormattedDateAndTime } from '../../../library/utils/utils'
 
 import { connect } from 'react-redux';
 import { AppState } from '../../../store/rootReducer';
@@ -40,7 +41,8 @@ interface EventType {
 interface LogType {
     vname: string,
     price: number,
-    ename: string
+    ename: string,
+    date: string
 }
 
 const HomeVol = (props: IHomeVolProps) => {
@@ -54,7 +56,7 @@ const HomeVol = (props: IHomeVolProps) => {
 
     let defaultData = [{ name: 'Loading...', meta: { _id: '', cost_1: 0, cost_2: 0, cost_4: 0 } }];
     let [logsData, setLogData] = useState<LogType[]>([
-        { vname: '', price: 0, ename: '' }
+        { vname: '', price: 0, ename: '', date: '' }
     ]);
     let [totalSold, setTotalSold] = useState(0);
     let [totalCollected, setTotalCollected] = useState(0);
@@ -192,10 +194,15 @@ const HomeVol = (props: IHomeVolProps) => {
                 <View>
                     <FlatList
                         data={logsData}
-                        renderItem={(log) => {
+                        renderItem={log => {
+                            let displayDate: string = '';
+                            let date, time;
+                            if (log.item.date) {
+                                [date, time] = getFormattedDateAndTime(log.item.date);
+                            }
                             return (
                                 <View>
-                                    <Text>{log.index}</Text>
+                                    <Text>{log.item.vname + ' sold 1 ticket of event ' + log.item.ename + ' worth ' + log.item.price + '₹' + ' on ' + date + ' at ' + time}</Text>
                                 </View>
                             )
                         }}

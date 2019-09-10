@@ -38,9 +38,26 @@ export const getUserType = async () => {
 
 export const validateTicketIssue = (email: string, event_id: string, price: number, paid: number, participantNo: number) => {
 	if (email && event_id && price && paid && participantNo) {
-		
+
 		return true;
 	} else {
 		return false;
 	}
+}
+
+
+export const getFormattedDateAndTime = (dateString: string) => {
+	let date = new Date(dateString);
+	let hours = date.getHours();
+	let minutes = date.getMinutes();
+	let ampm = hours >= 12 ? 'pm' : 'am';
+	hours = hours % 12;
+	hours = hours ? hours : 12; // the hour '0' should be '12'
+	minutes = minutes < 10 ? 0 + minutes : minutes;
+	let strTime = hours + ':' + minutes + ' ' + ampm;
+	let currentDate = date.getDate();
+	let month = date.toLocaleString('default', { month: 'short' });
+	let year = date.getFullYear();
+	dateString = currentDate + ' ' + month + ', ' + year;
+	return [dateString, strTime];
 }

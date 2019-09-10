@@ -5,7 +5,7 @@ interface LogType {
 	vname: string,
 	price: number,
 	ename: string,
-	date: Date,
+	date: string,
 }
 
 interface GetLogsType extends BasicApiType {
@@ -25,7 +25,7 @@ export const getLogs = async (page: number, token: string) => {
 		response = await res.json();
 		return response;
 	} catch (err) {
-		response = { success: false, logList: [{ vname: '', price: 0, ename: '', date: new Date() }], totalSold: 0, totalCollected: 0, error: err };
+		response = { success: false, logList: [{ vname: '', price: 0, ename: '', date: '' }], totalSold: 0, totalCollected: 0, error: err };
 		return response;
 	}
 }
