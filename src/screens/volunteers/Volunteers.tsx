@@ -85,7 +85,7 @@ const Volunteers = (props: IVolunteersProps) => {
                         volunteers.map((item: { _id: string, name: string }, index: number) => (
                             <PTicketVol
                                 type='volunteer'
-                                navigId={item.name}
+                                navigId={item._id}
                                 key={index}
                                 navigation={props.navigation}
                                 title={item.name}
