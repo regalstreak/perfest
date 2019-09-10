@@ -5,6 +5,7 @@ import PBottomNav from '../../library/components/PBottomNav';
 import PEvent from '../../library/components/PEvent';
 import { getAllEvents } from '../../library/networking/API/eventAPI';
 import { FullEventType } from '../../library/interfaces/FullEventType';
+import PLoading from '../../library/components/PLoading';
 
 interface IEventsProps extends INavigation {
 
@@ -37,7 +38,7 @@ export default (props: IEventsProps) => {
         return (
             <View style={styles.container}>
                 <View style={styles.container}>
-                    <Text>Loading</Text>
+                    <PLoading />
                 </View >
                 <PBottomNav
                     navigation={props.navigation}

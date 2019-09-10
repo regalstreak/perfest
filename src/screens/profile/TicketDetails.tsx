@@ -6,6 +6,8 @@ import PBottomNav from '../../library/components/PBottomNav';
 import { useSelector } from 'react-redux';
 import User from './User';
 import { TokenType } from '../../library/interfaces/AuthTypes';
+import PLoading from '../../library/components/PLoading';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const QRCode = require('qrcode.react');
 
@@ -14,15 +16,26 @@ interface IPTicketDetailsProps extends INavigation {
 
 export default (props: IPTicketDetailsProps) => {
 
-    const [qrSecret, setQrSecret] = useState<string>('');
     const [userRes, setUserRes] = useState<any>('');
+    const [eventDetails, setEventDetails] = useState<any>(null)
+    const [ticketDetails, setTicketDetails] = useState<any>(null)
     const userTypeRedux = useSelector((state: any) => state.auth.userType);
 
 
     const RenderQr = () => {
         if (Platform.OS === 'web') {
             return (
-                qrSecret ? <QRCode size={256} value={qrSecret} /> : <Text>No qr secret</Text>
+                ticketDetails ?
+
+                    <View style={styles.qrMain}>
+                        <Text style={styles.qrSecret}>{eventDetails.name}</Text>
+                        <QRCode size={wp(50)} value={ticketDetails.secretString} />
+                        <Text style={styles.qrSecret}>{ticketDetails.secretString}</Text>
+                        <Text style={styles.qrText}>₹{ticketDetails.paid}</Text>
+                    </View>
+
+
+                    : <PLoading />
             )
         } else {
             return (
@@ -33,7 +46,7 @@ export default (props: IPTicketDetailsProps) => {
 
     const RenderUpgradeLoginUser = () => {
         return (
-            userRes ? <User navigation={props.navigation} userRes={userRes}></User> : <Text>Loading... If stuck on loading, there's an error getting ticket.</Text>
+            userRes ? <User navigation={props.navigation} userRes={userRes}></User> : <PLoading />
         )
     }
 
@@ -46,10 +59,14 @@ export default (props: IPTicketDetailsProps) => {
             getDetailsFromTicketUrl(ticketUrl).then((res: GetDetailsFromTicketUrl) => {
                 console.log(res);
 
-                setUserRes(res.userId);
 
-                if (isMounted && res.ticketDetails) {
-                    setQrSecret(res.ticketDetails.secretString)
+                if (isMounted) {
+                    setUserRes(res.userId);
+                    setEventDetails(res.eventDetails);
+
+                    if (res.ticketDetails) {
+                        setTicketDetails(res.ticketDetails)
+                    }
                 }
 
             }).catch(err => {
@@ -80,5 +97,20 @@ export default (props: IPTicketDetailsProps) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    qrMain: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    qrSecret: {
+        fontSize: hp(3),
+        fontWeight: '700',
+        textTransform: 'uppercase',
+        marginVertical: hp(3),
+    },
+    qrText: {
+        fontSize: hp(2),
+        marginVertical: hp(3),
     }
 })

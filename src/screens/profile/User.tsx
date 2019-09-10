@@ -13,13 +13,14 @@ import { ADD_TOKEN } from '../../store/actions';
 import { INavigation } from '../../library/interfaces/Navigation';
 import { TokenType } from '../../library/interfaces/AuthTypes';
 import { colors } from '../../library/res/colors';
+import PLoading from '../../library/components/PLoading';
 
 interface IUserProps extends INavigation {
     userRes: any;
 }
 
 export default (props: IUserProps) => {
-    
+
     const dispatch = useDispatch();
 
     if (props.userRes) {
@@ -189,7 +190,7 @@ export default (props: IUserProps) => {
         }
     } else {
         return (
-            <Text>Loading</Text>
+            <PLoading />
         )
     }
 }

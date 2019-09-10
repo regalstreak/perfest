@@ -75,7 +75,7 @@ export default (props: IProfileProps) => {
                         tickets.map((item, index) => (
                             <PTicketVol
                                 type='ticket'
-                                navigId={item._id}
+                                navigId={item.url}
                                 title={item.event.name}
                                 bottomLeft={item.event.venue}
                                 key={index}
