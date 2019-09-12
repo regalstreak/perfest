@@ -3,19 +3,18 @@ import EventType from '../../library/interfaces/EventType';
 import { REFRESH_EVENT_LIST, REFRESH_EVENT_LIST_SUCCESS, REFRESH_EVENT_LIST_FAILED } from '../actions';
 
 interface InitState {
-	eventList: EventType[] | []
+	eventList: EventType[]
 }
 
 const initState: InitState = {
 	eventList: []
 }
 
-const ticketReducer = (state: InitState = initState, action: ActionTypes) => {
+const eventReducer = (state: InitState = initState, action: ActionTypes) => {
 	switch (action.type) {
 		case REFRESH_EVENT_LIST:
 			return state
 		case REFRESH_EVENT_LIST_SUCCESS:
-			console.log(action);
 			return {
 				...state,
 				eventList: action.payload.eventList
@@ -23,12 +22,10 @@ const ticketReducer = (state: InitState = initState, action: ActionTypes) => {
 		case REFRESH_EVENT_LIST_FAILED:
 			return state
 		default:
-			console.log(action);
-			console.log(state);
 			return state
 	}
 }
 
-export default ticketReducer;
+export default eventReducer;
 
-export type ReducerState = ReturnType<typeof ticketReducer>;
+export type ReducerState = ReturnType<typeof eventReducer>;

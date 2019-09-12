@@ -11,28 +11,18 @@ import constants from '../../../library/networking/constants';
 import EventType from '../../../library/interfaces/EventType';
 
 import { Dispatch } from 'redux';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { AppState } from '../../../store/rootReducer';
 import { ADD_TICKET, ADD_TICKET_SUCCESS, ADD_TICKET_FAILED } from '../../../store/actions';
-import { getLogs } from '../../../library/networking/API/userAPI';
 import { textStyles } from '../../../library/res/styles';
 
 interface IHomeVolProps {
-    token: string;
     tryIssueTicket: any;
-    events: EventType[]
 }
 
 interface ShortEventType {
     name: string;
     meta: any;
-}
-
-interface LogType {
-    vname: string,
-    price: number,
-    ename: string,
-    date: string
 }
 
 const tryIssueTicket = (email: string, event_id: string, price: number, paid: number, participantNo: number, token: string) => ({
@@ -54,16 +44,20 @@ const HomeVol = (props: IHomeVolProps) => {
     const [price, setPrice] = useState(0);
     const [participantNo, setParticipantNo] = useState(1);
     const [eventName, setEventName] = useState('');
-    const { token } = props;
-
-    let [logsData, setLogData] = useState<LogType[]>([
-        { vname: '', price: 0, ename: '', date: '' }
-    ]);
-    let [totalSold, setTotalSold] = useState(0);
-    let [totalCollected, setTotalCollected] = useState(0);
+    const token = useSelector((state: AppState) => (state.auth.token));
+    let logsData = useSelector((state: AppState) => (state.logs.logList))
+    let totalSold = useSelector((state: AppState) => (state.logs.totalSold));
+    let totalCollected = useSelector((state: AppState) => (state.logs.totalCollected))
     let eventData: ShortEventType[];
-    if (props.events) {
-        eventData = props.events.map(event => {
+    let allPendingRequests = useSelector((state: any) => (state.offline.outbox));
+    let autoRetryTickets = allPendingRequests.filter((request: any) => {
+        return request.type === ADD_TICKET
+    });
+    let failedTickets = useSelector((state: AppState) => (state.ticket.pendingTickets));
+    let pendingTicketData = [...autoRetryTickets, ...failedTickets];
+    const events = useSelector((state: AppState) => (state.events.eventList));
+    if (events) {
+        eventData = events.map(event => {
             return {
                 name: event.name,
                 meta: {
@@ -77,35 +71,6 @@ const HomeVol = (props: IHomeVolProps) => {
     } else {
         eventData = [{ name: 'Loading...', meta: { _id: '', cost_1: 0, cost_2: 0, cost_4: 0 } }];
     }
-
-    useEffect(() => {
-
-        let isMounted = true;
-
-        // Make page number dynamic
-        getLogs(1, token)
-            .then(res => {
-                if (res.success) {
-                    if (isMounted) {
-                        setTotalSold(res.totalSold);
-                        setTotalCollected(res.totalCollected);
-                        setLogData(res.logList);
-                    }
-                } else {
-                    console.log(res.error);
-                }
-            })
-            .catch(console.log);
-
-
-        return () => {
-            // cleanup
-            isMounted = false;
-        }
-
-    }, [token]);
-
-
 
     const onIssueTicketClicked = async () => {
         if (validateTicketIssue(email, eventId, price, price, participantNo)) {
@@ -181,16 +146,14 @@ const HomeVol = (props: IHomeVolProps) => {
                     onPress={() => onIssueTicketClicked()}
                 />
             </KeyboardAvoidingView>
+
             <Text style={textStyles.subHeaderText}>Logs</Text>
-
             <View style={styles.logsContainer}>
-
                 <Text style={styles.logsTextViews}>Total Sold: {totalSold}</Text>
                 <Text style={styles.logsTextViews}>Total Collected: {totalCollected}</Text>
                 <FlatList
                     data={logsData}
                     renderItem={log => {
-                        let displayDate: string = '';
                         let date, time;
                         if (log.item.date) {
                             [date, time] = getFormattedDateAndTime(log.item.date);
@@ -204,15 +167,29 @@ const HomeVol = (props: IHomeVolProps) => {
                     keyExtractor={(item, index) => index.toString()}
                 />
             </View>
+
+            <Text style={textStyles.subHeaderText}>Pending Tickets</Text>
+            <View style={styles.logsContainer}>
+                <FlatList
+                    data={pendingTicketData}
+                    renderItem={ticket => {
+                        let eventName: string = '';
+                        let event = eventData.find(event => {
+                            return event.meta._id === ticket.item.event_id
+                        });
+                        if (event) eventName = event.name;
+                        return (
+                            <View style={styles.issueTicketTextViews}>
+                                <Text>{'Ticket for ' + ticket.item.email + ' of event ' + eventName + ' failed'}</Text>
+                            </View>
+                        )
+                    }}
+                    keyExtractor={(item, index) => index.toString()}
+                />
+            </View>
+
         </ScrollView>
     )
-}
-
-const mapStateToProps = (state: AppState) => {
-    return {
-        token: state.auth.token,
-        events: state.events.eventList
-    }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
@@ -221,7 +198,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeVol);
+export default connect(null, mapDispatchToProps)(HomeVol);
 
 const styles = StyleSheet.create({
     container: {

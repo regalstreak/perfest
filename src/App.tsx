@@ -2,12 +2,17 @@
 
 import React, { useEffect } from 'react';
 import { View, AsyncStorage } from 'react-native';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
-import { ADD_TOKEN, REFRESH_EVENT_LIST, REFRESH_EVENT_LIST_SUCCESS, REFRESH_EVENT_LIST_FAILED } from './store/actions';
+import {
+    ADD_TOKEN,
+    REFRESH_EVENT_LIST, REFRESH_EVENT_LIST_SUCCESS, REFRESH_EVENT_LIST_FAILED,
+    REFRESH_LOG_LIST, REFRESH_LOG_LIST_SUCCESS, REFRESH_LOG_LIST_FAILED
+} from './store/actions';
 import jwt_decode from 'jwt-decode';
 import { ModalContainer } from 'react-router-modal';
 import constants from './library/networking/constants';
+import { AppState } from './store/rootReducer';
 
 import WebRoutesGenerator from "./library/utils/WebRoutesWrapper/WebRoutesGenerator";
 
@@ -104,6 +109,7 @@ interface IAppProps {
         userType: string;
     },
     getLatestEvents: any;
+    getLatestLogs: any;
 }
 
 const getLatestEvents = () => ({
@@ -118,25 +124,29 @@ const getLatestEvents = () => ({
     }
 });
 
+const getLatestLogs = (token: string) => ({
+    type: REFRESH_LOG_LIST,
+    payload: { token },
+    meta: {
+        offline: {
+            effect: { url: constants.BASE_URL + '/user/logs', method: 'POST', json: { token } },
+            commit: { type: REFRESH_LOG_LIST_SUCCESS, meta: {} },
+            rollback: { type: REFRESH_LOG_LIST_FAILED, meta: {} }
+        }
+    }
+});
+
 const App = (props: IAppProps) => {
 
-    useEffect(() => {
-        AsyncStorage.getItem('token')
-            .then(token => {
-                if (token) {
-                    let userType = jwt_decode<TokenType>(token).type;
-                    let userId = jwt_decode<TokenType>(token).userId;
-                    props.addToken(token, userId, userType);
-                }
-            })
-            .catch(console.log);
-    });
+    const token = useSelector((state: AppState) => state.auth.token);
 
-    useEffect(() => {
-        if (props.getLatestEvents) {
-            props.getLatestEvents();
-        }
-    }, [props.getLatestEvents]);
+    if (props.getLatestEvents) {
+        props.getLatestEvents();
+    }
+
+    if (props.getLatestLogs && token) {
+        props.getLatestLogs(token);
+    }
 
     return (
         <View style={{ flex: 1 }} >
@@ -149,7 +159,8 @@ const App = (props: IAppProps) => {
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
         addToken: (token: string, userId: string, userType: string) => dispatch({ type: ADD_TOKEN, token, userId, userType }),
-        getLatestEvents: () => dispatch(getLatestEvents())
+        getLatestEvents: () => dispatch(getLatestEvents()),
+        getLatestLogs: (token: string) => dispatch(getLatestLogs(token))
     }
 }
 
