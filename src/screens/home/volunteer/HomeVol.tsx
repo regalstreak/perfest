@@ -6,9 +6,9 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PButton from '../../../library/components/PButton';
 import PSearchDropdown from '../../../library/components/PSearchDropdown';
 import { validateTicketIssue } from '../../../library/utils/utils';
-import { getAllEventsDropdown } from '../../../library/networking/API/eventAPI';
 import { getFormattedDateAndTime } from '../../../library/utils/utils'
 import constants from '../../../library/networking/constants';
+import EventType from '../../../library/interfaces/EventType';
 
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
@@ -20,9 +20,10 @@ import { textStyles } from '../../../library/res/styles';
 interface IHomeVolProps {
     token: string;
     tryIssueTicket: any;
+    events: EventType[]
 }
 
-interface EventType {
+interface ShortEventType {
     name: string;
     meta: any;
 }
@@ -55,49 +56,27 @@ const HomeVol = (props: IHomeVolProps) => {
     const [eventName, setEventName] = useState('');
     const { token } = props;
 
-    let defaultData = [{ name: 'Loading...', meta: { _id: '', cost_1: 0, cost_2: 0, cost_4: 0 } }];
     let [logsData, setLogData] = useState<LogType[]>([
         { vname: '', price: 0, ename: '', date: '' }
     ]);
     let [totalSold, setTotalSold] = useState(0);
     let [totalCollected, setTotalCollected] = useState(0);
-    const [eventData, setEventData] = useState<EventType[]>(defaultData);
-
-    useEffect(() => {
-
-        let isMounted = true;
-
-        getAllEventsDropdown()
-            .then(res => {
-                if (res.success) {
-                    let eventList = res.eventList;
-                    let newEventData = eventList.map(event => {
-                        return {
-                            name: event.name,
-                            meta: {
-                                _id: event._id,
-                                cost_1: event.cost_1,
-                                cost_2: event.cost_2,
-                                cost_4: event.cost_4
-                            }
-                        }
-                    });
-                    if (isMounted) {
-                        setEventData(newEventData);
-                    }
-                } else {
-                    console.log(res.error);
+    let eventData: ShortEventType[];
+    if (props.events) {
+        eventData = props.events.map(event => {
+            return {
+                name: event.name,
+                meta: {
+                    _id: event._id,
+                    cost_1: event.cost_1,
+                    cost_2: event.cost_2,
+                    cost_4: event.cost_4
                 }
-            })
-            .catch(console.log)
-
-
-        return () => {
-            // cleanup
-            isMounted = false;
-        }
-
-    }, []);
+            }
+        })
+    } else {
+        eventData = [{ name: 'Loading...', meta: { _id: '', cost_1: 0, cost_2: 0, cost_4: 0 } }];
+    }
 
     useEffect(() => {
 
@@ -130,27 +109,6 @@ const HomeVol = (props: IHomeVolProps) => {
 
     const onIssueTicketClicked = async () => {
         if (validateTicketIssue(email, eventId, price, price, participantNo)) {
-            // let res = await issueTicket(email, eventId, price, participantNo, token)
-            // if (res.success) {
-            //     // Succesfully issued ticket
-            //     console.log('Succesfully issued ticket');
-
-            //     // get latest logs
-            //     getLogs(1, token)
-            //         .then(res => {
-            //             if (res.success) {
-            //                 setTotalSold(res.totalSold);
-            //                 setTotalCollected(res.totalCollected);
-            //                 setLogData(res.logList);
-            //             } else {
-            //                 console.log(res.error);
-            //             }
-            //         })
-            //         .catch(console.log);
-            // } else {
-            //     console.log(res.error);
-            // }
-            // console.log('annn');
             props.tryIssueTicket(email, eventId, price, price, participantNo, token);
         } else {
             // Handle Error
@@ -252,7 +210,8 @@ const HomeVol = (props: IHomeVolProps) => {
 
 const mapStateToProps = (state: AppState) => {
     return {
-        token: state.auth.token
+        token: state.auth.token,
+        events: state.events.eventList
     }
 }
 

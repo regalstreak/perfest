@@ -1,9 +1,9 @@
 import constants from '../constants';
 import { BasicApiType } from '../../interfaces/BasicApi'
-import { FullEventType } from '../../interfaces/FullEventType';
+import EventType from '../../interfaces/EventType';
 
 interface GetAllEventsType extends BasicApiType {
-	eventList: FullEventType[]
+	eventList: EventType[]
 }
 
 export const getAllEvents = async () => {
@@ -43,7 +43,7 @@ export const getAllEventsDropdown = async () => {
 }
 
 interface GetEventType extends BasicApiType {
-	event: FullEventType,
+	event: EventType,
 }
 
 export const getEvent = async (name: string) => {
@@ -58,7 +58,7 @@ export const getEvent = async (name: string) => {
 	}
 }
 
-interface EventType {
+interface PostEventType {
 	name: string,
 	description: string,
 	date: Date,
@@ -71,7 +71,7 @@ interface EventType {
 	venue: string,
 }
 
-export const addEvent = (event: EventType, token: string) => {
+export const addEvent = (event: PostEventType, token: string) => {
 	fetch(constants.BASE_URL + "/event/add", {
 		method: 'POST',
 		headers: constants.defaultHeaders,
@@ -93,7 +93,7 @@ export const addEvent = (event: EventType, token: string) => {
 		});
 }
 
-export const editEvent = (event: FullEventType, token: string) => {
+export const editEvent = (event: EventType, token: string) => {
 	fetch(constants.BASE_URL + "/event/add", {
 		method: 'POST',
 		headers: constants.defaultHeaders,

@@ -2,41 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { INavigation } from '../../library/interfaces/Navigation';
 import PBottomNav from '../../library/components/PBottomNav';
-import { getAllEvents } from '../../library/networking/API/eventAPI';
-import { FullEventType } from '../../library/interfaces/FullEventType';
+// import { getAllEvents } from '../../library/networking/API/eventAPI';
+// import EventType from '../../library/interfaces/EventType';
+import { connect } from 'react-redux';
+import { AppState } from '../../store/rootReducer';
 import PLoading from '../../library/components/PLoading';
 import PMainListItem from '../../library/components/PMainListItem';
 import { getFormattedDateAndTime } from '../../library/utils/utils';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { textStyles } from '../../library/res/styles';
+import EventType from '../../library/interfaces/EventType';
 
 interface IEventsProps extends INavigation {
-
+    events: EventType[]
 }
 
-export default (props: IEventsProps) => {
-    const [events, setEvents] = useState<FullEventType[] | null>(null);
-    useEffect(() => {
-        let isMounted = true;
-        getAllEvents()
-            .then(res => {
-                if (res.success) {
-                    const { eventList } = res;
-                    console.log(eventList);
-                    if (isMounted) {
-                        setEvents(eventList);
-                    }
-                } else {
-                    console.log(res.error);
-                }
-            })
-            .catch(console.log)
-        return () => {
-            // cleanup
-            isMounted = false;
-        }
-    }, []);
-
+const Events = (props: IEventsProps) => {
+    let { events } = props;
     if (!events) {
         return (
             <View style={styles.container}>
@@ -81,6 +63,14 @@ export default (props: IEventsProps) => {
         )
     }
 }
+
+const mapStateTopProps = (state: AppState) => {
+    return {
+        events: state.events.eventList
+    }
+}
+
+export default connect(mapStateTopProps)(Events);
 
 const styles = StyleSheet.create({
     container: {

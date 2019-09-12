@@ -4,9 +4,10 @@ import React, { useEffect } from 'react';
 import { View, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { ADD_TOKEN } from './store/actions';
+import { ADD_TOKEN, REFRESH_EVENT_LIST, REFRESH_EVENT_LIST_SUCCESS, REFRESH_EVENT_LIST_FAILED } from './store/actions';
 import jwt_decode from 'jwt-decode';
 import { ModalContainer } from 'react-router-modal';
+import constants from './library/networking/constants';
 
 import WebRoutesGenerator from "./library/utils/WebRoutesWrapper/WebRoutesGenerator";
 
@@ -101,11 +102,24 @@ interface IAppProps {
         token: string;
         userId: string;
         userType: string;
-    }
+    },
+    getLatestEvents: any;
 }
 
+const getLatestEvents = () => ({
+    type: REFRESH_EVENT_LIST,
+    payload: {},
+    meta: {
+        offline: {
+            effect: { url: constants.BASE_URL + '/event/list', method: 'GET' },
+            commit: { type: REFRESH_EVENT_LIST_SUCCESS, meta: {} },
+            rollback: { type: REFRESH_EVENT_LIST_FAILED, meta: {} }
+        }
+    }
+});
+
 const App = (props: IAppProps) => {
-    
+
     useEffect(() => {
         AsyncStorage.getItem('token')
             .then(token => {
@@ -117,6 +131,13 @@ const App = (props: IAppProps) => {
             })
             .catch(console.log);
     });
+
+    useEffect(() => {
+        if (props.getLatestEvents) {
+            props.getLatestEvents();
+        }
+    }, [props.getLatestEvents]);
+
     return (
         <View style={{ flex: 1 }} >
             {WebRoutesGenerator({ routeMap })}
@@ -127,7 +148,8 @@ const App = (props: IAppProps) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
-        addToken: (token: string, userId: string, userType: string) => dispatch({ type: ADD_TOKEN, token, userId, userType })
+        addToken: (token: string, userId: string, userType: string) => dispatch({ type: ADD_TOKEN, token, userId, userType }),
+        getLatestEvents: () => dispatch(getLatestEvents())
     }
 }
 

@@ -11,7 +11,7 @@ import offlineConfig from '@redux-offline/redux-offline/lib/defaults';
 import rootReducer from './store/rootReducer';
 import * as serviceWorker from './serviceWorker';
 const Feather_ttf = require('react-native-vector-icons/Fonts/Feather.ttf')
-console.log(offlineConfig.retry({type: 'ADD_TOKEN', meta: { offline: {effect: { url:'localhost:3001/event/list', method: 'GET' }}}},5));
+
 const store = createStore(
     rootReducer,
     compose(

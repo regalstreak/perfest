@@ -8,14 +8,6 @@ interface InitState {
 	userId: string
 }
 
-const setToken = async (token: string) => {
-	try {
-		await AsyncStorage.setItem('token', token);
-	} catch (err) {
-		console.log(err)
-	}
-}
-
 const deleteToken = async () => {
 	await AsyncStorage.removeItem('token');
 }
@@ -29,7 +21,6 @@ const initState: InitState = {
 const authReducer = (state: InitState = initState, action: ActionTypes) => {
 	switch (action.type) {
 		case ADD_TOKEN:
-			// setToken(action.token);
 			return {
 				token: action.token,
 				userType: action.userType,

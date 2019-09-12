@@ -1,5 +1,6 @@
 import { ActionTypes } from '../../library/interfaces/PendingTicketActionType';
 import PendingTicketsType from '../../library/interfaces/PendingTicketsType';
+import { ADD_TICKET_SUCCESS, ADD_TICKET_FAILED } from '../actions';
 
 interface InitState {
 	pendingTickets: PendingTicketsType[]
@@ -11,7 +12,7 @@ const initState: InitState = {
 
 const ticketReducer = (state: InitState = initState, action: ActionTypes) => {
 	switch (action.type) {
-		case 'ADD_TICKET_SUCCESS':
+		case ADD_TICKET_SUCCESS:
 			console.log(action)
 			console.log(state);
 			let newList = state.pendingTickets.filter(ticket => {
@@ -21,7 +22,7 @@ const ticketReducer = (state: InitState = initState, action: ActionTypes) => {
 				...state,
 				pendingTickets: newList
 			}
-		case 'ADD_TICKET_FAILED':
+		case ADD_TICKET_FAILED:
 			console.log(action)
 			console.log(state);
 			return {
