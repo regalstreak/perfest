@@ -105,7 +105,7 @@ interface IAppProps {
 }
 
 const App = (props: IAppProps) => {
-
+    
     useEffect(() => {
         AsyncStorage.getItem('token')
             .then(token => {

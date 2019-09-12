@@ -6,17 +6,20 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PButton from '../../../library/components/PButton';
 import PSearchDropdown from '../../../library/components/PSearchDropdown';
 import { validateTicketIssue } from '../../../library/utils/utils';
-import { issueTicket } from '../../../library/networking/API/ticketAPI';
 import { getAllEventsDropdown } from '../../../library/networking/API/eventAPI';
 import { getFormattedDateAndTime } from '../../../library/utils/utils'
+import constants from '../../../library/networking/constants';
 
+import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { AppState } from '../../../store/rootReducer';
+import { ADD_TICKET, ADD_TICKET_SUCCESS, ADD_TICKET_FAILED } from '../../../store/actions';
 import { getLogs } from '../../../library/networking/API/userAPI';
 import { textStyles } from '../../../library/res/styles';
 
 interface IHomeVolProps {
     token: string;
+    tryIssueTicket: any;
 }
 
 interface EventType {
@@ -30,6 +33,18 @@ interface LogType {
     ename: string,
     date: string
 }
+
+const tryIssueTicket = (email: string, event_id: string, price: number, paid: number, participantNo: number, token: string) => ({
+    type: ADD_TICKET,
+    payload: { email, event_id, price, paid, participantNo, token },
+    meta: {
+        offline: {
+            effect: { url: constants.BASE_URL + '/ticket/issue', method: 'POST', json: { email, event_id, price, paid, participantNo, token } },
+            commit: { type: ADD_TICKET_SUCCESS, meta: { email, event_id, price, paid, participantNo, token } },
+            rollback: { type: ADD_TICKET_FAILED, meta: { email, event_id, price, paid, participantNo, token } }
+        }
+    }
+});
 
 const HomeVol = (props: IHomeVolProps) => {
     const [email, setEmail] = useState('');
@@ -115,26 +130,28 @@ const HomeVol = (props: IHomeVolProps) => {
 
     const onIssueTicketClicked = async () => {
         if (validateTicketIssue(email, eventId, price, price, participantNo)) {
-            let res = await issueTicket(email, eventId, price, price, participantNo, token)
-            if (res.success) {
-                // Succesfully issued ticket
-                console.log('Succesfully issued ticket');
+            // let res = await issueTicket(email, eventId, price, participantNo, token)
+            // if (res.success) {
+            //     // Succesfully issued ticket
+            //     console.log('Succesfully issued ticket');
 
-                // get latest logs
-                getLogs(1, token)
-                    .then(res => {
-                        if (res.success) {
-                            setTotalSold(res.totalSold);
-                            setTotalCollected(res.totalCollected);
-                            setLogData(res.logList);
-                        } else {
-                            console.log(res.error);
-                        }
-                    })
-                    .catch(console.log);
-            } else {
-                console.log(res.error);
-            }
+            //     // get latest logs
+            //     getLogs(1, token)
+            //         .then(res => {
+            //             if (res.success) {
+            //                 setTotalSold(res.totalSold);
+            //                 setTotalCollected(res.totalCollected);
+            //                 setLogData(res.logList);
+            //             } else {
+            //                 console.log(res.error);
+            //             }
+            //         })
+            //         .catch(console.log);
+            // } else {
+            //     console.log(res.error);
+            // }
+            // console.log('annn');
+            props.tryIssueTicket(email, eventId, price, price, participantNo, token);
         } else {
             // Handle Error
             console.log('Fill all fields');
@@ -239,7 +256,13 @@ const mapStateToProps = (state: AppState) => {
     }
 }
 
-export default connect(mapStateToProps)(HomeVol);
+const mapDispatchToProps = (dispatch: Dispatch) => {
+    return {
+        tryIssueTicket: (email: string, event_id: string, price: number, paid: number, participantNo: number, token: string) => dispatch(tryIssueTicket(email, event_id, price, paid, participantNo, token))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeVol);
 
 const styles = StyleSheet.create({
     container: {

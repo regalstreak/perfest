@@ -1,3 +1,9 @@
 export const ADD_TOKEN = 'ADD_TOKEN';
 
 export const DELETE_TOKEN = 'DELETE_TOKEN';
+
+export const ADD_TICKET = 'ADD_TICKET';
+
+export const ADD_TICKET_SUCCESS = 'ADD_TICKET_SUCCESS';
+
+export const ADD_TICKET_FAILED = 'ADD_TICKET_FAILED';

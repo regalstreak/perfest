@@ -1,5 +1,3 @@
-import { string } from "prop-types";
-
 interface AddTokenAction {
 	type: string,
 	token: string,
