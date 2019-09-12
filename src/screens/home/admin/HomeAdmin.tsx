@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { textStyles } from '../../../library/res/styles';
+import HomeVol from '../volunteer/HomeVol';
 
 
 interface IHomeAdminProps {
@@ -10,7 +11,7 @@ interface IHomeAdminProps {
 export default (props: IHomeAdminProps) => {
     return (
         <View style={styles.container}>
-            <Text style={textStyles.headerText}>Hey there admin!</Text>
+            <HomeVol />
         </View>
     )
 }
