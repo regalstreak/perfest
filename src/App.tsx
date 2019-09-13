@@ -1,7 +1,7 @@
 // react-native-web is aliased to react-native automatically by create-react-app
 
-import React, { useEffect } from 'react';
-import { View, AsyncStorage } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import { connect, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import {
@@ -9,7 +9,6 @@ import {
     REFRESH_EVENT_LIST, REFRESH_EVENT_LIST_SUCCESS, REFRESH_EVENT_LIST_FAILED,
     REFRESH_LOG_LIST, REFRESH_LOG_LIST_SUCCESS, REFRESH_LOG_LIST_FAILED
 } from './store/actions';
-import jwt_decode from 'jwt-decode';
 import { ModalContainer } from 'react-router-modal';
 import constants from './library/networking/constants';
 import { AppState } from './store/rootReducer';
@@ -95,12 +94,6 @@ const routeMap: any = {
     }
 }
 
-
-interface TokenType {
-    type: string,
-    userId: string
-}
-
 interface IAppProps {
     addToken: (token: string, userId: string, userType: string) => {
         type: string;
@@ -129,7 +122,7 @@ const getLatestLogs = (token: string) => ({
     payload: { token },
     meta: {
         offline: {
-            effect: { url: constants.BASE_URL + '/user/logs', method: 'POST', json: { token } },
+            effect: { url: constants.BASE_URL + '/user/logs', method: 'POST', json: { token, page: 1 /* Try to make this dynamic */ } },
             commit: { type: REFRESH_LOG_LIST_SUCCESS, meta: {} },
             rollback: { type: REFRESH_LOG_LIST_FAILED, meta: {} }
         }
@@ -138,13 +131,14 @@ const getLatestLogs = (token: string) => ({
 
 const App = (props: IAppProps) => {
 
-    const token = useSelector((state: AppState) => state.auth.token);
+    const token = useSelector((state: AppState) => (state.auth.token));
+    const userType = useSelector((state: AppState) => (state.auth.userType))
 
     if (props.getLatestEvents) {
         props.getLatestEvents();
     }
 
-    if (props.getLatestLogs && token) {
+    if (props.getLatestLogs && token && (userType === 'admin' || userType === 'volunteer')) {
         props.getLatestLogs(token);
     }
 

@@ -1,6 +1,6 @@
 import { ActionTypes } from '../../library/interfaces/LogActionType';
 import LogType from '../../library/interfaces/LogType';
-import { REFRESH_LOG_LIST, REFRESH_LOG_LIST_SUCCESS, REFRESH_LOG_LIST_FAILED } from '../actions';
+import { REFRESH_LOG_LIST, REFRESH_LOG_LIST_SUCCESS, REFRESH_LOG_LIST_FAILED, ADD_LOG } from '../actions';
 
 interface InitState {
 	logList: LogType[],
@@ -27,6 +27,15 @@ const eventReducer = (state: InitState = initState, action: ActionTypes) => {
 			}
 		case REFRESH_LOG_LIST_FAILED:
 			return state
+		case ADD_LOG:
+			let newLog: LogType = { vname: 'You', price: Number(action.ticket.price), ename: action.ticket.eventName, date: (new Date()).toString() }
+			let newTotalCollected = Number(state.totalCollected + action.ticket.price);
+			return {
+				...state,
+				logList: [newLog, ...state.logList],
+				totalSold: state.totalSold + 1,
+				totalCollected: newTotalCollected
+			}
 		default:
 			return state
 	}

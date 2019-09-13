@@ -1,4 +1,5 @@
 import LogType from '../interfaces/LogType';
+import PendingTicketsType from './PendingTicketsType';
 
 interface RefreshLogListAction {
 	type: string,
@@ -9,4 +10,9 @@ interface RefreshLogListAction {
 	}
 }
 
-export type ActionTypes = RefreshLogListAction;
+interface AddLogAction{
+	type: string,
+	ticket: PendingTicketsType & {eventName: string}
+}
+
+export type ActionTypes = RefreshLogListAction & AddLogAction;

@@ -10,15 +10,17 @@ import { offline } from '@redux-offline/redux-offline';
 import offlineConfig from '@redux-offline/redux-offline/lib/defaults';
 import rootReducer from './store/rootReducer';
 import * as serviceWorker from './serviceWorker';
+import asyncDispatchMiddleware from './store/asyncDispatchMiddleware';
 const Feather_ttf = require('react-native-vector-icons/Fonts/Feather.ttf')
 
 const store = createStore(
     rootReducer,
+    // @ts-ignore: Unreachable code error
     compose(
-        applyMiddleware(),
         offline({
             ...offlineConfig,
-        })
+        }),
+        applyMiddleware(asyncDispatchMiddleware)
     ),
 );
 

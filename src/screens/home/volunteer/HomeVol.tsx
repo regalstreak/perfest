@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, KeyboardAvoidingView, ScrollView, Text, View, FlatList } from 'react-native';
+import { StyleSheet, KeyboardAvoidingView, ScrollView, Text, View, FlatList, Button } from 'react-native';
 
 import PTextInput from '../../../library/components/PTextInput';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -9,15 +9,22 @@ import { validateTicketIssue } from '../../../library/utils/utils';
 import { getFormattedDateAndTime } from '../../../library/utils/utils'
 import constants from '../../../library/networking/constants';
 import EventType from '../../../library/interfaces/EventType';
+import LogType from '../../../library/interfaces/LogType';
 
 import { Dispatch } from 'redux';
 import { connect, useSelector } from 'react-redux';
 import { AppState } from '../../../store/rootReducer';
-import { ADD_TICKET, ADD_TICKET_SUCCESS, ADD_TICKET_FAILED } from '../../../store/actions';
+import { ADD_TICKET, ADD_TICKET_SUCCESS, ADD_TICKET_FAILED, REMOVE_FAILED_TICKET } from '../../../store/actions';
 import { textStyles } from '../../../library/res/styles';
+import PendingTicketsType from '../../../library/interfaces/PendingTicketsType';
+import { isProperty } from '@babel/types';
 
 interface IHomeVolProps {
     tryIssueTicket: any;
+    removeFailedTicket: (ticket: PendingTicketsType) => {
+        type: string;
+        ticket: PendingTicketsType;
+    }
 }
 
 interface ShortEventType {
@@ -25,13 +32,13 @@ interface ShortEventType {
     meta: any;
 }
 
-const tryIssueTicket = (email: string, event_id: string, price: number, paid: number, participantNo: number, token: string) => ({
+const tryIssueTicket = (email: string, event_id: string, price: number, paid: number, participantNo: number, token: string, eventName: string) => ({
     type: ADD_TICKET,
     payload: { email, event_id, price, paid, participantNo, token },
     meta: {
         offline: {
             effect: { url: constants.BASE_URL + '/ticket/issue', method: 'POST', json: { email, event_id, price, paid, participantNo, token } },
-            commit: { type: ADD_TICKET_SUCCESS, meta: { email, event_id, price, paid, participantNo, token } },
+            commit: { type: ADD_TICKET_SUCCESS, meta: { email, event_id, price, paid, participantNo, token, eventName } },
             rollback: { type: ADD_TICKET_FAILED, meta: { email, event_id, price, paid, participantNo, token } }
         }
     }
@@ -50,14 +57,22 @@ const HomeVol = (props: IHomeVolProps) => {
     let totalCollected = useSelector((state: AppState) => (state.logs.totalCollected))
     let eventData: ShortEventType[];
     let allPendingRequests = useSelector((state: any) => (state.offline.outbox));
-    let autoRetryTickets = allPendingRequests.filter((request: any) => {
+    let autoRetryTickets: PendingTicketsType[] = allPendingRequests.filter((request: any) => {
         return request.type === ADD_TICKET
     });
-    let failedTickets = useSelector((state: AppState) => (state.ticket.pendingTickets));
-    let pendingTicketData = [...autoRetryTickets, ...failedTickets];
+    autoRetryTickets = autoRetryTickets.map((data: any) => {
+        return {
+            email: data.payload.email,
+            event_id: data.payload.event_id,
+            price: data.payload.price,
+            participantNo: data.payload.participantNo,
+            token: data.payload.token
+        }
+    });
+    let failedTickets: PendingTicketsType[] = useSelector((state: AppState) => (state.ticket.pendingTickets));
     const events = useSelector((state: AppState) => (state.events.eventList));
     if (events) {
-        eventData = events.map(event => {
+        eventData = events.map((event: EventType) => {
             return {
                 name: event.name,
                 meta: {
@@ -74,7 +89,7 @@ const HomeVol = (props: IHomeVolProps) => {
 
     const onIssueTicketClicked = async () => {
         if (validateTicketIssue(email, eventId, price, price, participantNo)) {
-            props.tryIssueTicket(email, eventId, price, price, participantNo, token);
+            props.tryIssueTicket(email, eventId, price, price, participantNo, token, eventName);
         } else {
             // Handle Error
             console.log('Fill all fields');
@@ -153,14 +168,14 @@ const HomeVol = (props: IHomeVolProps) => {
                 <Text style={styles.logsTextViews}>Total Collected: {totalCollected}</Text>
                 <FlatList
                     data={logsData}
-                    renderItem={log => {
+                    renderItem={({ item }) => {
                         let date, time;
-                        if (log.item.date) {
-                            [date, time] = getFormattedDateAndTime(log.item.date);
+                        if (item.date) {
+                            [date, time] = getFormattedDateAndTime(item.date);
                         }
                         return (
                             <View style={styles.issueTicketTextViews}>
-                                <Text>{log.item.vname + ' sold 1 ticket of event ' + log.item.ename + ' worth ' + log.item.price + '₹' + ' on ' + date + ' at ' + time}</Text>
+                                <Text>{item.vname + ' sold 1 ticket of event ' + item.ename + ' worth ' + item.price + '₹' + ' on ' + date + ' at ' + time}</Text>
                             </View>
                         )
                     }}
@@ -169,18 +184,44 @@ const HomeVol = (props: IHomeVolProps) => {
             </View>
 
             <Text style={textStyles.subHeaderText}>Pending Tickets</Text>
+            <Text>Auto-Retrying</Text>
             <View style={styles.logsContainer}>
                 <FlatList
-                    data={pendingTicketData}
-                    renderItem={ticket => {
+                    data={autoRetryTickets}
+                    renderItem={({ item }) => {
                         let eventName: string = '';
                         let event = eventData.find(event => {
-                            return event.meta._id === ticket.item.event_id
+                            return event.meta._id === item.event_id
                         });
                         if (event) eventName = event.name;
                         return (
                             <View style={styles.issueTicketTextViews}>
-                                <Text>{'Ticket for ' + ticket.item.email + ' of event ' + eventName + ' failed'}</Text>
+                                <Text>{'Ticket for ' + item.email + ' of event ' + eventName + ' failed'}</Text>
+                            </View>
+                        )
+                    }}
+                    keyExtractor={(item, index) => index.toString()}
+                />
+            </View>
+            <Text>Failed Tickets</Text>
+            <View style={styles.logsContainer}>
+                <FlatList
+                    data={failedTickets}
+                    renderItem={({ item }) => {
+                        console.log(item);
+                        let currentEventName: string = '';
+                        let event = eventData.find(event => {
+                            return event.meta._id === item.event_id
+                        });
+                        if (event) currentEventName = event.name;
+                        return (
+                            <View style={styles.issueTicketTextViews}>
+                                <Text>{'Ticket for ' + item.email + ' of event ' + eventName + ' failed'}</Text>
+                                <Button title="Retry" onPress={() => {
+                                    props.tryIssueTicket(item.email, item.event_id, item.price, item.price, item.participantNo, item.token, currentEventName);
+                                    props.removeFailedTicket(item);
+                                }} />
+                                <Button title="Delete" onPress={() => { props.removeFailedTicket(item) }} />
                             </View>
                         )
                     }}
@@ -194,7 +235,8 @@ const HomeVol = (props: IHomeVolProps) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
-        tryIssueTicket: (email: string, event_id: string, price: number, paid: number, participantNo: number, token: string) => dispatch(tryIssueTicket(email, event_id, price, paid, participantNo, token))
+        tryIssueTicket: (email: string, event_id: string, price: number, paid: number, participantNo: number, token: string, eventName: string) => dispatch(tryIssueTicket(email, event_id, price, paid, participantNo, token, eventName)),
+        removeFailedTicket: (ticket: PendingTicketsType) => dispatch({ type: REMOVE_FAILED_TICKET, ticket })
     }
 }
 
