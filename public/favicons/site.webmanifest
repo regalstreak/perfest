@@ -16,6 +16,6 @@
     "theme_color": "#657fea",
     "background_color": "#657fea",
     "display": "standalone",
-    "start_url": "https://perfest.co",
+    "start_url": "/",
     "orientation": "portrait"
 }
