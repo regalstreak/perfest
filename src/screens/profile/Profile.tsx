@@ -4,7 +4,6 @@ import PBottomNav from '../../library/components/PBottomNav';
 import { INavigation } from '../../library/interfaces/Navigation';
 import PButton from '../../library/components/PButton';
 import PMainListItem from '../../library/components/PMainListItem';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllTickets } from '../../library/networking/API/userAPI';
 import { textStyles } from '../../library/res/styles';
@@ -36,7 +35,7 @@ export default (props: IProfileProps) => {
         return () => {
             isMounted = false;
         }
-    }, [])
+    }, [auth.token, auth.userType])
 
     const LoginLogoutButtons = () => {
         if (auth.userType) {

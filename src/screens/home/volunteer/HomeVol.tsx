@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, KeyboardAvoidingView, ScrollView, Text, View, FlatList, Button } from 'react-native';
 
 import PTextInput from '../../../library/components/PTextInput';
@@ -9,7 +9,6 @@ import { validateTicketIssue } from '../../../library/utils/utils';
 import { getFormattedDateAndTime } from '../../../library/utils/utils'
 import constants from '../../../library/networking/constants';
 import EventType from '../../../library/interfaces/EventType';
-import LogType from '../../../library/interfaces/LogType';
 
 import { Dispatch } from 'redux';
 import { connect, useSelector } from 'react-redux';
@@ -17,7 +16,6 @@ import { AppState } from '../../../store/rootReducer';
 import { ADD_TICKET, ADD_TICKET_SUCCESS, ADD_TICKET_FAILED, REMOVE_FAILED_TICKET } from '../../../store/actions';
 import { textStyles } from '../../../library/res/styles';
 import PendingTicketsType from '../../../library/interfaces/PendingTicketsType';
-import { isProperty } from '@babel/types';
 
 interface IHomeVolProps {
     tryIssueTicket: any;
@@ -175,7 +173,7 @@ const HomeVol = (props: IHomeVolProps) => {
                         }
                         return (
                             <View style={styles.issueTicketTextViews}>
-                                <Text>{item.vname + ' sold 1 ticket of event ' + item.ename + ' worth ' + item.price + '₹' + ' on ' + date + ' at ' + time}</Text>
+                                <Text>{item.vname} sold 1 ticket of event {item.ename} worth {item.price}₹ on {date} at {time}</Text>
                             </View>
                         )
                     }}

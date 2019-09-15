@@ -11,27 +11,33 @@ import { INavigation } from '../../library/interfaces/Navigation';
 interface ISignupProps extends INavigation {
 }
 
-const submitSignup = async (email: string, phone: string, password: string) => {
-    if (validateSignup(email, phone, password)) {
-        let res = await onSubmitSignup(email, phone, password);
-        if (res.success) {
-            // Handle success
-            console.log(res.success);
-        } else {
-            // Handle failure
-            console.log(res.success);
-        }
-    } else {
-        // Handle error
-        console.log('pls fill all fileds');
-    }
-}
 
 const Signup: React.FC<ISignupProps> = (props) => {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     // eslint-disable-next-line
     const [phone, setPhone] = useState('');
+
+
+    const submitSignup = async () => {
+        if (validateSignup(email, phone, password)) {
+            let res = await onSubmitSignup(email, phone, password);
+            if (res.success) {
+                props.navigation.navigate('Login')
+                console.log(res.success);
+            } else {
+                // Handle failure
+                console.log(res.success);
+            }
+        } else {
+            // Handle error
+            console.log('pls fill all fileds');
+        }
+    }
+
+
+
+
     return (
         <KeyboardAvoidingView style={styles.container} enabled >
             <Text style={styles.signupText}>Signup</Text>
@@ -76,7 +82,7 @@ const Signup: React.FC<ISignupProps> = (props) => {
             <PButton
                 style={styles.signupViews}
                 text={'Signup'}
-                onPress={() => submitSignup(email, phone, password)}
+                onPress={() => submitSignup()}
             />
 
         </KeyboardAvoidingView>

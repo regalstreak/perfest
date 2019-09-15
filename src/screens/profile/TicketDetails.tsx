@@ -5,7 +5,6 @@ import { getDetailsFromTicketUrl, GetDetailsFromTicketUrl } from '../../library/
 import PBottomNav from '../../library/components/PBottomNav';
 import { useSelector } from 'react-redux';
 import User from './User';
-import { TokenType } from '../../library/interfaces/AuthTypes';
 import PLoading from '../../library/components/PLoading';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { INavigation } from '../../library/interfaces/Navigation';
 import PBottomNav from '../../library/components/PBottomNav';
@@ -9,7 +9,6 @@ import { AppState } from '../../store/rootReducer';
 import PLoading from '../../library/components/PLoading';
 import PMainListItem from '../../library/components/PMainListItem';
 import { getFormattedDateAndTime } from '../../library/utils/utils';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { textStyles } from '../../library/res/styles';
 import EventType from '../../library/interfaces/EventType';
 

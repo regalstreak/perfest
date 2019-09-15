@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Platform, ScrollView, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import PTextInput from '../../library/components/PTextInput';
 import PButton from '../../library/components/PButton';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import PSearchDropdown from '../../library/components/PSearchDropdown';
-import { updateUserProfile, upgradeAnonymousToUser } from '../../library/networking/API/userAPI';
+import { upgradeAnonymousToUser } from '../../library/networking/API/userAPI';
 import { validateLogin } from '../../library/utils/utils';
 import { onSubmitLogin } from '../../library/networking/API/authAPI';
 import jwt_decode from 'jwt-decode';

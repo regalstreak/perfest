@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import PBottomNav from '../../library/components/PBottomNav';
 import { INavigation } from '../../library/interfaces/Navigation';
 import { useSelector } from 'react-redux';
 import PTextInput from '../../library/components/PTextInput';
 import PMainListItem from '../../library/components/PMainListItem';
 import PButton from '../../library/components/PButton';
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { getUserVolList, UserTypeMin } from '../../library/networking/API/userAPI';
 import { getAllEventsDropdown } from '../../library/networking/API/eventAPI';
-import { AppState } from '../../store/rootReducer';
-import { connect } from 'react-redux';
 import { textStyles } from '../../library/res/styles';
 
 interface IVolunteersProps extends INavigation {
 }
 
 const Volunteers = (props: IVolunteersProps) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [searchVol, setSearchVol] = useState<string>('');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [events, setEvents] = useState<any>('');
     const [volunteers, setVolunteers] = useState<UserTypeMin[]>();
 

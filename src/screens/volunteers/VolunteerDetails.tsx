@@ -34,7 +34,8 @@ const VolunteerDetails = (props: IVolunteerDetailsProps) => {
     const [eventData, setEventData] = useState<EventType[]>([{ name: 'Loading...', meta: { _id: '' } }]);
     const [selectedEventId, setSelectedEventId] = useState<string>('');
     const [vol, setVolunteer] = useState<VolunteerType>({ _id: '', name: '', contact: { email: '', phone: '' }, college: { name: '', department: '', year: '' }, events: [''], sold: { ticket: [''], amountCollected: 0 } });
-    const [assignedEvents, setAssignedEvents] = useState<any>(null);
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    const [assignedEvents, setAssignedEvents] = useState<any[]>([]);
     let { token } = props;
     useEffect(() => {
         let isMounted = true;
@@ -62,6 +63,7 @@ const VolunteerDetails = (props: IVolunteerDetailsProps) => {
             isMounted = false;
         }
     }, []);
+
     useEffect(() => {
         if (token) {
             let isMounted = true;
@@ -82,18 +84,18 @@ const VolunteerDetails = (props: IVolunteerDetailsProps) => {
                 isMounted = false;
             }
         }
-    }, [token]);
+    }, [token, volId]);
 
-    let eventsAssigned: any = null;
     useEffect(() => {
         let isMounted = true;
+        let eventsAssigned: any[] = [];
         if (vol.name) {
-            eventsAssigned = vol.events.map(eventId => {
+            vol.events.map(eventId => {
                 let event = eventData.find(oneEvent => {
                     return oneEvent.meta._id === eventId
                 });
-                console.log(event);
-                if (event) return (<Text key={event.meta._id}>{event}</Text>);
+                eventsAssigned.push(event);
+
                 return null;
             });
             if (isMounted) {
@@ -103,7 +105,9 @@ const VolunteerDetails = (props: IVolunteerDetailsProps) => {
         return () => {
             isMounted = false;
         }
-    }, [vol.name]);
+    }, [vol.name, eventData, vol.events]);
+
+
     let volPhone = <Text>''</Text>;
     if (vol.contact.phone) {
         volPhone = <Text>Phone No.: {vol.contact.phone}</Text>;
@@ -112,7 +116,6 @@ const VolunteerDetails = (props: IVolunteerDetailsProps) => {
         <View style={styles.container}>
             <View style={styles.main}>
                 <Text>Name: {vol.name}</Text>
-                {/* {assignedEvents} */}
                 <Text>Email: {vol.contact.email}</Text>
                 {volPhone}
                 <Text>College Name: {vol.college.name}</Text>
@@ -120,7 +123,15 @@ const VolunteerDetails = (props: IVolunteerDetailsProps) => {
                 <Text>Year: {vol.college.year}</Text>
                 <Text>Tickets Sold: {vol.sold.ticket.length}</Text>
                 <Text>Amount Collected: {vol.sold.amountCollected}</Text>
-                <Text>Events Assigned: </Text>
+                <Text>Events Assigned: {
+                    assignedEvents.map((event, index) => {
+                        if (index === assignedEvents.length - 1) {
+                            return event.name + '. '
+                        } else {
+                            return event.name + ', '
+                        }
+                    })
+                }</Text>
 
                 <KeyboardAvoidingView>
                     <PSearchDropdown

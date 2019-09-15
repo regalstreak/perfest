@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { textStyles } from '../../../library/res/styles';
+import { View, StyleSheet } from 'react-native';
 import HomeVol from '../volunteer/HomeVol';
 
 

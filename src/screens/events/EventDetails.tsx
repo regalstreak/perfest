@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { INavigation } from '../../library/interfaces/Navigation';
 import { connect } from 'react-redux';
@@ -30,13 +30,14 @@ const EventDetails = (props: IEventDetailsProps) => {
                 </View>
             )
         } else {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             let { name, description, date, cost_1, cost_2, cost_4, image, venue } = thisEvent;
             let ISODate = new Date(date);
             let displayDate: string = ISODate.getDate().toString() + ' ' + ISODate.toLocaleString('default', { month: 'short' }) + ', ' + ISODate.getFullYear().toString();
             let cost_2Display: any = null;
-            if (cost_2 != 0) cost_2Display = <Text>Cost(2): {cost_2}</Text>;
+            if (cost_2 !== 0) cost_2Display = <Text>Cost(2): {cost_2}</Text>;
             let cost_4Display: any = null;
-            if (cost_4 != 0) cost_4Display = <Text>Cost(4): {cost_4}</Text>;
+            if (cost_4 !== 0) cost_4Display = <Text>Cost(4): {cost_4}</Text>;
             return (
                 <View style={styles.container}>
                     <View style={styles.container}>
