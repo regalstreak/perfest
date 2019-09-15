@@ -9,7 +9,7 @@ interface IHomeUserProps {
 export default (props: IHomeUserProps) => {
     return (
         <View style={styles.container}>
-            <Text style={textStyles.headerText}>Hey user! Welcome to Perfest</Text>
+            <Text style={textStyles.headerText}>Hey user! Welcome to Perfest beta</Text>
         </View>
     )
 }

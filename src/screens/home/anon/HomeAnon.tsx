@@ -10,7 +10,7 @@ interface IHomeAnonProps {
 export default (props: IHomeAnonProps) => {
     return (
         <View style={styles.container}>
-            <Text style={textStyles.headerText}>Hey there! Welcome to Perfest</Text>
+            <Text style={textStyles.headerText}>Hey there! Welcome to Perfest beta</Text>
         </View>
     )
 }
