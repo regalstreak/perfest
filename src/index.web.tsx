@@ -50,4 +50,4 @@ if (style.styleSheet) {
 
 document.head.appendChild(style);
 
-serviceWorker.unregister();
+serviceWorker.register();
