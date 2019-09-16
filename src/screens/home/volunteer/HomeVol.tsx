@@ -167,15 +167,19 @@ const HomeVol = (props: IHomeVolProps) => {
                 <FlatList
                     data={logsData}
                     renderItem={({ item }) => {
-                        let date, time;
-                        if (item.date) {
-                            [date, time] = getFormattedDateAndTime(item.date);
+                        if (item) {
+                            let date, time;
+                            if (item.date) {
+                                [date, time] = getFormattedDateAndTime(item.date);
+                            }
+                            return (
+                                <View style={styles.issueTicketTextViews}>
+                                    <Text>{item.vname} sold 1 ticket of event {item.ename} worth {item.price}₹ on {date} at {time}</Text>
+                                </View>
+                            )
+                        } else {
+                            return null;
                         }
-                        return (
-                            <View style={styles.issueTicketTextViews}>
-                                <Text>{item.vname} sold 1 ticket of event {item.ename} worth {item.price}₹ on {date} at {time}</Text>
-                            </View>
-                        )
                     }}
                     keyExtractor={(item, index) => index.toString()}
                 />
