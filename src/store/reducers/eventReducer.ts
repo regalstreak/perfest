@@ -1,6 +1,6 @@
 import { ActionTypes } from '../../library/interfaces/EventActionType';
 import EventType from '../../library/interfaces/EventType';
-import { REFRESH_EVENT_LIST, REFRESH_EVENT_LIST_SUCCESS, REFRESH_EVENT_LIST_FAILED } from '../actions';
+import { REFRESH_EVENT_LIST, REFRESH_EVENT_LIST_SUCCESS, REFRESH_EVENT_LIST_FAILED } from '../actions/ActionNames';
 
 interface InitState {
 	eventList: EventType[]

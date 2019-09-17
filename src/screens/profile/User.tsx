@@ -9,7 +9,7 @@ import { validateLogin } from '../../library/utils/utils';
 import { onSubmitLogin } from '../../library/networking/API/authAPI';
 import jwt_decode from 'jwt-decode';
 import { useDispatch } from 'react-redux';
-import { ADD_TOKEN } from '../../store/actions';
+import { ADD_TOKEN } from '../../store/actions/ActionNames';
 import { INavigation } from '../../library/interfaces/Navigation';
 import { TokenType } from '../../library/interfaces/AuthTypes';
 import { colors } from '../../library/res/colors';

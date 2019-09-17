@@ -5,7 +5,7 @@ import PButton from '../../library/components/PButton';
 import { onSubmitLogin } from '../../library/networking/API/authAPI';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { ADD_TOKEN } from '../../store/actions';
+import { ADD_TOKEN } from '../../store/actions/ActionNames';
 import { AppState } from '../../store/rootReducer';
 import jwt_decode from 'jwt-decode';
 import { validateLogin } from '../../library/utils/utils';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, KeyboardAvoidingView, ScrollView, Text, View, FlatList, Button } from 'react-native';
 
 import PTextInput from '../../../library/components/PTextInput';
@@ -11,11 +11,12 @@ import constants from '../../../library/networking/constants';
 import EventType from '../../../library/interfaces/EventType';
 
 import { Dispatch } from 'redux';
-import { connect, useSelector } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../../store/rootReducer';
-import { ADD_TICKET, ADD_TICKET_SUCCESS, ADD_TICKET_FAILED, REMOVE_FAILED_TICKET } from '../../../store/actions';
+import { ADD_TICKET, ADD_TICKET_SUCCESS, ADD_TICKET_FAILED, REMOVE_FAILED_TICKET } from '../../../store/actions/ActionNames';
 import { textStyles } from '../../../library/res/styles';
 import PendingTicketsType from '../../../library/interfaces/PendingTicketsType';
+import { getLatestLogs, getLatestEvents } from '../../../store/actions/actions';
 
 interface IHomeVolProps {
     tryIssueTicket: any;
@@ -49,12 +50,16 @@ const HomeVol = (props: IHomeVolProps) => {
     const [price, setPrice] = useState(0);
     const [participantNo, setParticipantNo] = useState(1);
     const [eventName, setEventName] = useState('');
+
+    const dispatch = useDispatch();
+
     const token = useSelector((state: AppState) => (state.auth.token));
     let logsData = useSelector((state: AppState) => (state.logs.logList))
     let totalSold = useSelector((state: AppState) => (state.logs.totalSold));
     let totalCollected = useSelector((state: AppState) => (state.logs.totalCollected))
     let eventData: ShortEventType[];
     let allPendingRequests = useSelector((state: any) => (state.offline.outbox));
+
     let autoRetryTickets: PendingTicketsType[] = allPendingRequests.filter((request: any) => {
         return request.type === ADD_TICKET
     });
@@ -93,6 +98,12 @@ const HomeVol = (props: IHomeVolProps) => {
             console.log('Fill all fields');
         }
     }
+
+
+    useEffect(() => {
+        dispatch(getLatestLogs(token));
+        dispatch(getLatestEvents());
+    }, [dispatch, token])
 
     return (
         <ScrollView style={styles.container}>

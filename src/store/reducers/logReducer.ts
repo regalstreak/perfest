@@ -1,6 +1,6 @@
 import { ActionTypes } from '../../library/interfaces/LogActionType';
 import LogType from '../../library/interfaces/LogType';
-import { REFRESH_LOG_LIST, REFRESH_LOG_LIST_SUCCESS, REFRESH_LOG_LIST_FAILED, ADD_LOG } from '../actions';
+import { REFRESH_LOG_LIST, REFRESH_LOG_LIST_SUCCESS, REFRESH_LOG_LIST_FAILED, ADD_LOG } from '../actions/ActionNames';
 
 interface InitState {
 	logList: LogType[],

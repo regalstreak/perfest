@@ -1,6 +1,6 @@
 import { ActionTypes } from '../../library/interfaces/PendingTicketActionType';
 import PendingTicketsType from '../../library/interfaces/PendingTicketsType';
-import { ADD_TICKET_SUCCESS, ADD_TICKET_FAILED, REMOVE_FAILED_TICKET, ADD_LOG } from '../actions';
+import { ADD_TICKET_SUCCESS, ADD_TICKET_FAILED, REMOVE_FAILED_TICKET, ADD_LOG } from '../actions/ActionNames';
 
 interface InitState {
 	pendingTickets: PendingTicketsType[]

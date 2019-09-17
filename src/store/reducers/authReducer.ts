@@ -1,5 +1,5 @@
 import { ActionTypes } from '../../library/interfaces/AuthActionTypes';
-import { ADD_TOKEN, DELETE_TOKEN } from '../actions';
+import { ADD_TOKEN, DELETE_TOKEN } from '../actions/ActionNames';
 import { AsyncStorage } from 'react-native';
 
 interface InitState {
