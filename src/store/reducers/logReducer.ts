@@ -28,7 +28,7 @@ const eventReducer = (state: InitState = initState, action: ActionTypes) => {
 		case REFRESH_LOG_LIST_FAILED:
 			return state
 		case ADD_LOG:
-			let newLog: LogType = { vname: 'You', price: Number(action.ticket.price), ename: action.ticket.eventName, date: (new Date()).toString() }
+			let newLog: LogType = { vname: 'You', price: Number(action.ticket.price), ename: action.ticket.eventName, date: (new Date()).toString(), uemail: action.ticket.email }
 			let newTotalCollected = Number(state.totalCollected + action.ticket.price);
 			return {
 				...state,

@@ -171,31 +171,6 @@ const HomeVol = (props: IHomeVolProps) => {
                 />
             </KeyboardAvoidingView>
 
-            <Text style={textStyles.subHeaderText}>Logs</Text>
-            <View style={styles.logsContainer}>
-                <Text style={styles.logsTextViews}>Total Sold: {totalSold}</Text>
-                <Text style={styles.logsTextViews}>Total Collected: {totalCollected}</Text>
-                <FlatList
-                    data={logsData}
-                    renderItem={({ item }) => {
-                        if (item) {
-                            let date, time;
-                            if (item.date) {
-                                [date, time] = getFormattedDateAndTime(item.date);
-                            }
-                            return (
-                                <View style={styles.issueTicketTextViews}>
-                                    <Text>{item.vname} sold 1 ticket of event {item.ename} worth {item.price}₹ on {date} at {time}</Text>
-                                </View>
-                            )
-                        } else {
-                            return null;
-                        }
-                    }}
-                    keyExtractor={(item, index) => index.toString()}
-                />
-            </View>
-
             <Text style={textStyles.subHeaderText}>Pending Tickets</Text>
             <Text>Auto-Retrying</Text>
             <View style={styles.logsContainer}>
@@ -237,6 +212,31 @@ const HomeVol = (props: IHomeVolProps) => {
                                 <Button title="Delete" onPress={() => { props.removeFailedTicket(item) }} />
                             </View>
                         )
+                    }}
+                    keyExtractor={(item, index) => index.toString()}
+                />
+            </View>
+
+            <Text style={textStyles.subHeaderText}>Logs</Text>
+            <View style={styles.logsContainer}>
+                <Text style={styles.logsTextViews}>Total Sold: {totalSold}</Text>
+                <Text style={styles.logsTextViews}>Total Collected: {totalCollected}</Text>
+                <FlatList
+                    data={logsData}
+                    renderItem={({ item }) => {
+                        if (item) {
+                            let date, time;
+                            if (item.date) {
+                                [date, time] = getFormattedDateAndTime(item.date);
+                            }
+                            return (
+                                <View style={styles.issueTicketTextViews}>
+                                    <Text>{item.vname} sold 1 ticket of event {item.ename} worth {item.price}₹ to {item.uemail} on {date} at {time}</Text>
+                                </View>
+                            )
+                        } else {
+                            return null;
+                        }
                     }}
                     keyExtractor={(item, index) => index.toString()}
                 />
