@@ -1,6 +1,6 @@
 {
-    "name": "Perfest",
-    "short_name": "Perfest",
+    "name": "Perfest Dev",
+    "short_name": "PerfestDev",
     "icons": [
         {
             "src": "/favicons/android-chrome-192x192.png",
