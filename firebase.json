@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "perfest-dev",
     "public": "build",
     "ignore": [
       "firebase.json",
