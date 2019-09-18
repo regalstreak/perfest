@@ -5,6 +5,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 interface IPButtonProps {
     text: string,
+    width?: any;
     onPress?: () => void,
     style?: StyleProp<ViewStyle>,
 }
@@ -28,6 +29,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: wp(6),
         paddingVertical: wp(2.5),
         borderRadius: 4,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     text: {
         color: 'white',

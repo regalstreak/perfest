@@ -17,6 +17,7 @@ import { ADD_TICKET, ADD_TICKET_SUCCESS, ADD_TICKET_FAILED, REMOVE_FAILED_TICKET
 import { textStyles } from '../../../library/res/styles';
 import PendingTicketsType from '../../../library/interfaces/PendingTicketsType';
 import { getLatestLogs, getLatestEvents } from '../../../store/actions/actions';
+import PLogs from '../../../library/components/PLogs';
 
 interface IHomeVolProps {
     tryIssueTicket: any;
@@ -111,6 +112,7 @@ const HomeVol = (props: IHomeVolProps) => {
             <KeyboardAvoidingView style={styles.issueTicketContainer} enabled>
 
                 <PTextInput
+                    width={wp(86)}
                     style={styles.issueTicketTextViews}
                     placeholder="Email"
                     onChangeText={(text: string) => {
@@ -119,6 +121,7 @@ const HomeVol = (props: IHomeVolProps) => {
                 />
 
                 <PSearchDropdown
+                    width={wp(86)}
                     style={styles.issueTicketTextViews}
                     placeholder='Events'
                     data={eventData}
@@ -135,6 +138,7 @@ const HomeVol = (props: IHomeVolProps) => {
                     }}
                 />
                 <PSearchDropdown
+                    width={wp(86)}
                     style={styles.issueTicketTextViews}
                     placeholder='Number of Participants'
                     data={[
@@ -157,23 +161,22 @@ const HomeVol = (props: IHomeVolProps) => {
                         }
                     }}
                 />
-                <PTextInput
-                    style={styles.issueTicketTextViews}
-                    placeholder="Paid"
-                    value={price}
-                    editable={false}
-                    default={'0'}
-                />
                 <PButton
-                    style={[styles.issueTicketTextViews, styles.issueTicketButton]}
-                    text='Issue Ticket'
+                    style={[styles.issueTicketTextViews, styles.issueTicketButton, { width: wp(86) }]}
+                    text={'Collect ' + price + ' ₹'}
                     onPress={() => onIssueTicketClicked()}
                 />
             </KeyboardAvoidingView>
 
+            <Text style={textStyles.subHeaderText}>Total</Text>
+            <View style={styles.total}>
+                <Text style={styles.totalText}>Sold: <Text style={{ fontWeight: '500' }}>{totalSold}</Text> tickets</Text>
+                <Text style={styles.totalText}>Collected: <Text style={{ fontWeight: '500' }}>{totalCollected}</Text>₹</Text>
+            </View>
+
             <Text style={textStyles.subHeaderText}>Pending Tickets</Text>
-            <Text>Auto-Retrying</Text>
             <View style={styles.logsContainer}>
+                <Text>Auto-Retrying</Text>
                 <FlatList
                     data={autoRetryTickets}
                     renderItem={({ item }) => {
@@ -191,8 +194,8 @@ const HomeVol = (props: IHomeVolProps) => {
                     keyExtractor={(item, index) => index.toString()}
                 />
             </View>
-            <Text>Failed Tickets</Text>
             <View style={styles.logsContainer}>
+                <Text>Failed Tickets</Text>
                 <FlatList
                     data={failedTickets}
                     renderItem={({ item }) => {
@@ -219,11 +222,10 @@ const HomeVol = (props: IHomeVolProps) => {
 
             <Text style={textStyles.subHeaderText}>Logs</Text>
             <View style={styles.logsContainer}>
-                <Text style={styles.logsTextViews}>Total Sold: {totalSold}</Text>
-                <Text style={styles.logsTextViews}>Total Collected: {totalCollected}</Text>
+
                 <FlatList
                     data={logsData}
-                    renderItem={({ item }) => {
+                    renderItem={({ item, index }) => {
                         if (item) {
                             let date, time;
                             if (item.date) {
@@ -231,7 +233,15 @@ const HomeVol = (props: IHomeVolProps) => {
                             }
                             return (
                                 <View style={styles.issueTicketTextViews}>
-                                    <Text>{item.vname} sold 1 ticket of event {item.ename} worth {item.price}₹ to {item.uemail} on {date} at {time}</Text>
+                                    <PLogs
+                                        index={totalSold - index}
+                                        issuer={item.vname}
+                                        event={item.ename}
+                                        price={item.price}
+                                        buyer={item.uemail}
+                                        date={date}
+                                        time={time}
+                                    />
                                 </View>
                             )
                         } else {
@@ -273,5 +283,15 @@ const styles = StyleSheet.create({
     },
     logsContainer: {
         marginHorizontal: hp(3.5),
-    }
+    },
+    total: {
+        marginHorizontal: hp(3.5),
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+    },
+    totalText: {
+        marginVertical: wp(2),
+        fontSize: hp(2.7),
+
+    },
 });
