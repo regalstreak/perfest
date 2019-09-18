@@ -12,6 +12,7 @@ interface DataType {
 interface IPSearchDropdownProps extends IPTextInputProps {
     style?: StyleProp<ViewStyle>;
     data: DataType[];
+    width?: any;
     onChangeSelection?: (text: string) => void;
 }
 
@@ -34,7 +35,7 @@ export default (props: IPSearchDropdownProps) => {
             onPress={() => {
                 if (props.onChangeSelection) {
                     props.onChangeSelection(item);
-                } 
+                }
                 setText(item);
                 setIsFocused(false);
             }}
@@ -71,10 +72,13 @@ export default (props: IPSearchDropdownProps) => {
         }
     }
 
+    const containerStyle = { width: props.width ? props.width : wp(70) }
+
     return (
         <View>
-            <View style={[styles.container, props.style]}>
+            <View style={[styles.container, props.style, containerStyle]}>
                 <PTextInput
+                    width={props.width}
                     placeholder={props.placeholder}
                     onFocus={_handleFocus}
                     // onBlur={_handleBlur}
@@ -113,7 +117,6 @@ export default (props: IPSearchDropdownProps) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        width: wp(70),
     },
     flatList: {
         maxHeight: 200,
