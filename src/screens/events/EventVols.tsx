@@ -14,6 +14,8 @@ export default (props: IEventVolsProps) => {
     const [qrResult, setQrResult] = useState<string>('');
     const token = useSelector((state: AppState) => (state.auth.token));
     const [uploading, setUploading] = useState<any>(null);
+    const [userData, setUserData] = useState<any>(null);
+    const [error, setError] = useState('');
     const handleScan = async (data: string) => {
         if (data) {
             console.log(data);
@@ -26,10 +28,28 @@ export default (props: IEventVolsProps) => {
             if (res.success) {
                 // Handle success
                 console.log(res.ticketData);
+                setUserData(res.ticketData);
             } else {
                 console.log(res.error);
+                setError(res.error);
             }
         }
+    }
+
+    let displayUser = null;
+    if (userData) {
+        displayUser = (
+            <View>
+                <Text>Event: {userData.event.name}</Text>
+                <Text>Paid: {userData.paid}</Text>
+                <Text>Validity: {userData.validity}</Text>
+            </View>
+        )
+    }
+
+    let errorText;
+    if (error) {
+        errorText = <Text>An error occured !!! {error}</Text>
     }
 
     const handleError = (error: any) => {
@@ -41,9 +61,8 @@ export default (props: IEventVolsProps) => {
             {uploading}
             {Platform.OS === 'web' ?
 
-
                 <QrReader
-                    delay={300}
+                    delay={3000}
                     onError={(error: any) => { handleError(error) }}
                     onScan={(data: any) => (handleScan(data))}
                     style={{ width: '70%' }}
@@ -52,6 +71,8 @@ export default (props: IEventVolsProps) => {
             }
 
             <Text>QR RESULT IS: {qrResult}</Text>
+            {errorText}
+            {displayUser}
         </View>
     )
 }

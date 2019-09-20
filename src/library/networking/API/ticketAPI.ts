@@ -22,7 +22,8 @@ interface InvalidTicketType extends BasicApiType {
 }
 
 export const invalidateTicket = async (secretString: string, token: string) => {
-	let response: InvalidTicketType;
+	// let response: InvalidTicketType;
+	let response: any;
 	try {
 		let res = await fetch(constants.BASE_URL + '/ticket/invalidate', {
 			method: 'POST',
