@@ -13,14 +13,14 @@ export default (props: IEventVolsProps) => {
 
     const [qrResult, setQrResult] = useState<string>('');
     const token = useSelector((state: AppState) => (state.auth.token));
-    const [uploading, setUploading] = useState(false);
+    const [uploading, setUploading] = useState<any>(null);
     const handleScan = async (data: string) => {
         if (data) {
             console.log(data);
-            setUploading(true);
+            setUploading(<Text>Loading</Text>);
             let res = await invalidateTicket(data, token);
             setQrResult(data);
-            setUploading(false);
+            setUploading(null);
             // post data to server
             // show if valid or not
             if (res.success) {
@@ -36,17 +36,9 @@ export default (props: IEventVolsProps) => {
         console.log(error);
     }
 
-    const uploadingText = () => {
-        if (uploading) {
-            return <Text>Loading...</Text>
-        } else {
-            return null;
-        }
-    }
-
     return (
         <View style={styles.container}>
-            {uploadingText()}
+            {uploading}
             {Platform.OS === 'web' ?
 
 
