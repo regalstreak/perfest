@@ -19,9 +19,9 @@ export default (props: IEventVolsProps) => {
     const handleScan = async (data: string) => {
         if (data) {
             console.log(data);
+            setQrResult(data);
             setUploading(<Text>Loading</Text>);
             let res = await invalidateTicket(data, token);
-            setQrResult(data);
             setUploading(null);
             // post data to server
             // show if valid or not
