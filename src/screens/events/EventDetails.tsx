@@ -1,16 +1,21 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { INavigation } from '../../library/interfaces/Navigation';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import PBottomNav from '../../library/components/PBottomNav';
 import { AppState } from '../../store/rootReducer';
 import EventType from '../../library/interfaces/EventType';
+import EventVols from './EventVols';
 
 interface IEventDetailsProps extends INavigation {
     event: EventType[]
 }
 
 const EventDetails = (props: IEventDetailsProps) => {
+
+    const userType = useSelector((state: any) => state.auth.userType)
+
+
     if (!props.event) {
         return (
             <View style={styles.container}>
@@ -49,6 +54,12 @@ const EventDetails = (props: IEventDetailsProps) => {
                         <Text>Cost(1): {cost_1}</Text>
                         {cost_2Display}
                         {cost_4Display}
+
+                        {
+                            userType === 'admin' || 'volunteer' ?
+                                <EventVols /> : null
+                        }
+
                     </View>
                     <PBottomNav navigation={props.navigation} index={1} />
                 </View>
