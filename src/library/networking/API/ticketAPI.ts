@@ -17,18 +17,22 @@ export const issueTicket = async (email: string, event_id: string, price: number
 	}
 }
 
-export const invalidateTicket = async (ticketId: string, token: string) => {
-	let response: BasicApiType;
+interface InvalidTicketType extends BasicApiType {
+	ticketData: TicketDetailsType | null;
+}
+
+export const invalidateTicket = async (secretString: string, token: string) => {
+	let response: InvalidTicketType;
 	try {
 		let res = await fetch(constants.BASE_URL + '/ticket/invalidate', {
 			method: 'POST',
 			headers: constants.defaultHeaders,
-			body: JSON.stringify({ token, ticketId })
+			body: JSON.stringify({ token, secretString })
 		})
 		response = await res.json();
 		return response;
 	} catch (err) {
-		response = { success: false, error: err };
+		response = { success: false, ticketData: null, error: err };
 		return response;
 	}
 }

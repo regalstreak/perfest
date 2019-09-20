@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import QrReader from 'react-qr-reader'
-
+import { invalidateTicket } from '../../library/networking/API/ticketAPI';
+import { useSelector } from 'react-redux';
+import { AppState } from '../../store/rootReducer';
 
 interface IEventVolsProps {
 
@@ -10,13 +12,23 @@ interface IEventVolsProps {
 export default (props: IEventVolsProps) => {
 
     const [qrResult, setQrResult] = useState<string>('');
-
-    const handleScan = (data: string) => {
+    const token = useSelector((state: AppState) => (state.auth.token));
+    const [uploading, setUploading] = useState(false);
+    const handleScan = async (data: string) => {
         if (data) {
+            console.log(data);
+            setUploading(true);
+            let res = await invalidateTicket(data, token);
             setQrResult(data);
-
+            setUploading(false);
             // post data to server
             // show if valid or not
+            if (res.success) {
+                // Handle success
+                console.log(res.ticketData);
+            } else {
+                console.log(res.error);
+            }
         }
     }
 
@@ -24,8 +36,17 @@ export default (props: IEventVolsProps) => {
         console.log(error);
     }
 
+    const uploadingText = () => {
+        if (uploading) {
+            return <Text>Loading...</Text>
+        } else {
+            return null;
+        }
+    }
+
     return (
         <View style={styles.container}>
+            {uploadingText()}
             {Platform.OS === 'web' ?
 
 
