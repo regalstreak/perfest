@@ -43,6 +43,7 @@ export default (props: IEventVolsProps) => {
                 <Text>Event: {userData.event.name}</Text>
                 <Text>Paid: {userData.paid}</Text>
                 <Text>Validity: {userData.validity}</Text>
+                <Text>Email: {userData.user_id.contact.email}</Text>
             </View>
         )
     }
@@ -62,7 +63,7 @@ export default (props: IEventVolsProps) => {
             {Platform.OS === 'web' ?
 
                 <QrReader
-                    delay={3000}
+                    delay={1500}
                     onError={(error: any) => { handleError(error) }}
                     onScan={(data: any) => (handleScan(data))}
                     style={{ width: '70%' }}
