@@ -3,9 +3,16 @@ export default interface EventType {
 	name: string,
 	description: string,
 	date: string,
-	cost_1: number,
-	cost_2?: number,
-	cost_4?: number
+	cost_CSI: {
+		cost_1: number,
+		cost_2?: number,
+		cost_4?: number
+	}
+	cost_nonCSI: {
+		cost_1: number,
+		cost_2?: number,
+		cost_4?: number
+	}
 	image: string,
 	venue: string,
 }

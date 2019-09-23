@@ -9,7 +9,7 @@ export interface IPTextInputProps {
     placeholder: string;
     type?: 'default' | 'numeric' | 'email-address';
     password?: boolean;
-    onChangeText?: (text: string) => void;
+    onChangeText?: (text: any) => void;
     style?: StyleProp<ViewStyle>;
     onFocus?: () => void;
     onBlur?: () => void;
@@ -68,7 +68,7 @@ const PTextInput: React.FC<IPTextInputProps> = (props) => {
         if (!props.noDirty) {
             placeholderVal.setValue(1);
 
-            let checkTextCondition = props.value ? props.value.toString().length : text.length;
+            let checkTextCondition = props.value ? props.value.toString().length : text.toString().length;
             if (checkTextCondition === 0) {
                 Animated.timing(placeholderVal, {
                     toValue: 0,
@@ -95,7 +95,7 @@ const PTextInput: React.FC<IPTextInputProps> = (props) => {
                 onFocus={_handleFocus}
                 onBlur={_handleBlur}
                 style={[styles.textInput, outlineStyle, textInputWidth]}
-                value={props.value ? props.value.toString() : text}
+                value={props.value ? props.value.toString() : text.toString()}
                 keyboardType={props.type}
                 onChangeText={(input) => {
                     setText(input);

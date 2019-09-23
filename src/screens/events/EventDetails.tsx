@@ -36,13 +36,13 @@ const EventDetails = (props: IEventDetailsProps) => {
             )
         } else {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            let { name, description, date, cost_1, cost_2, cost_4, image, venue } = thisEvent;
+            let { name, description, date, cost_CSI, cost_nonCSI, image, venue } = thisEvent;
             let ISODate = new Date(date);
             let displayDate: string = ISODate.getDate().toString() + ' ' + ISODate.toLocaleString('default', { month: 'short' }) + ', ' + ISODate.getFullYear().toString();
             let cost_2Display: any = null;
-            if (cost_2 !== 0) cost_2Display = <Text>Cost(2): {cost_2}</Text>;
+            if (cost_CSI) cost_2Display = <Text>Cost CSI: {JSON.stringify(cost_CSI)}</Text>;
             let cost_4Display: any = null;
-            if (cost_4 !== 0) cost_4Display = <Text>Cost(4): {cost_4}</Text>;
+            if (cost_nonCSI) cost_4Display = <Text>Cost Non CSI: {JSON.stringify(cost_nonCSI)}</Text>;
             return (
                 <View style={styles.container}>
                     <View style={styles.container}>
@@ -51,7 +51,6 @@ const EventDetails = (props: IEventDetailsProps) => {
                         <Text>Description: {description}</Text>
                         <Text>Date: {displayDate}</Text>
                         <Text>Venue: {venue}</Text>
-                        <Text>Cost(1): {cost_1}</Text>
                         {cost_2Display}
                         {cost_4Display}
 

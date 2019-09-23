@@ -1,26 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, KeyboardAvoidingView, ScrollView, Text, View, FlatList, Button } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, ScrollView, Text, View, FlatList, Button } from 'react-native';
 
-import PTextInput from '../../../library/components/PTextInput';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import PButton from '../../../library/components/PButton';
-import PSearchDropdown from '../../../library/components/PSearchDropdown';
-import { validateTicketIssue } from '../../../library/utils/utils';
 import { getFormattedDateAndTime } from '../../../library/utils/utils'
-import constants from '../../../library/networking/constants';
-import EventType from '../../../library/interfaces/EventType';
 
 import { Dispatch } from 'redux';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../../store/rootReducer';
-import { ADD_TICKET, ADD_TICKET_SUCCESS, ADD_TICKET_FAILED, REMOVE_FAILED_TICKET } from '../../../store/actions/ActionNames';
+import { ADD_TICKET, REMOVE_FAILED_TICKET } from '../../../store/actions/ActionNames';
 import { textStyles } from '../../../library/res/styles';
 import PendingTicketsType from '../../../library/interfaces/PendingTicketsType';
 import { getLatestLogs, getLatestEvents } from '../../../store/actions/actions';
 import PLogs from '../../../library/components/PLogs';
+import IssueTicket from './IssueTicket';
+import EventType from '../../../library/interfaces/EventType';
+
 
 interface IHomeVolProps {
-    tryIssueTicket: any;
     removeFailedTicket: (ticket: PendingTicketsType) => {
         type: string;
         ticket: PendingTicketsType;
@@ -32,25 +28,11 @@ interface ShortEventType {
     meta: any;
 }
 
-const tryIssueTicket = (email: string, event_id: string, price: number, paid: number, participantNo: number, token: string, eventName: string) => ({
-    type: ADD_TICKET,
-    payload: { email, event_id, price, paid, participantNo, token },
-    meta: {
-        offline: {
-            effect: { url: constants.BASE_URL + '/ticket/issue', method: 'POST', json: { email, event_id, price, paid, participantNo, token } },
-            commit: { type: ADD_TICKET_SUCCESS, meta: { email, event_id, price, paid, participantNo, token, eventName } },
-            rollback: { type: ADD_TICKET_FAILED, meta: { email, event_id, price, paid, participantNo, token } }
-        }
-    }
-});
+
+
 
 const HomeVol = (props: IHomeVolProps) => {
-    const [email, setEmail] = useState('');
-    // const [paid, setPaid] = useState(0);
-    const [eventId, setEventId] = useState('');
-    const [price, setPrice] = useState(0);
-    const [participantNo, setParticipantNo] = useState(1);
-    const [eventName, setEventName] = useState('');
+
 
     const dispatch = useDispatch();
 
@@ -60,6 +42,24 @@ const HomeVol = (props: IHomeVolProps) => {
     let totalCollected = useSelector((state: AppState) => (state.logs.totalCollected))
     let eventData: ShortEventType[];
     let allPendingRequests = useSelector((state: any) => (state.offline.outbox));
+    const events = useSelector((state: AppState) => (state.events.eventList));
+
+
+    if (events) {
+        eventData = events.map((event: EventType) => {
+            return {
+                name: event.name,
+                meta: {
+                    _id: event._id,
+                    cost_CSI: event.cost_CSI,
+                    cost_nonCSI: event.cost_nonCSI,
+                }
+            }
+        })
+    } else {
+        eventData = [{ name: 'Loading...', meta: { _id: '', cost_CSI: { cost_1: 0 }, cost_nonCSI: { cost_1: 0 } } }];
+    }
+
 
     let autoRetryTickets: PendingTicketsType[] = allPendingRequests.filter((request: any) => {
         return request.type === ADD_TICKET
@@ -74,31 +74,7 @@ const HomeVol = (props: IHomeVolProps) => {
         }
     });
     let failedTickets: PendingTicketsType[] = useSelector((state: AppState) => (state.ticket.pendingTickets));
-    const events = useSelector((state: AppState) => (state.events.eventList));
-    if (events) {
-        eventData = events.map((event: EventType) => {
-            return {
-                name: event.name,
-                meta: {
-                    _id: event._id,
-                    cost_1: event.cost_1,
-                    cost_2: event.cost_2,
-                    cost_4: event.cost_4
-                }
-            }
-        })
-    } else {
-        eventData = [{ name: 'Loading...', meta: { _id: '', cost_1: 0, cost_2: 0, cost_4: 0 } }];
-    }
 
-    const onIssueTicketClicked = async () => {
-        if (validateTicketIssue(email, eventId, price, price, participantNo)) {
-            props.tryIssueTicket(email, eventId, price, price, participantNo, token, eventName);
-        } else {
-            // Handle Error
-            console.log('Fill all fields');
-        }
-    }
 
 
     useEffect(() => {
@@ -109,64 +85,8 @@ const HomeVol = (props: IHomeVolProps) => {
     return (
         <ScrollView style={styles.container}>
             <Text style={textStyles.headerText}>Home</Text>
-            <KeyboardAvoidingView style={styles.issueTicketContainer} enabled>
 
-                <PTextInput
-                    width={wp(86)}
-                    style={styles.issueTicketTextViews}
-                    placeholder="Email"
-                    onChangeText={(text: string) => {
-                        setEmail(text);
-                    }}
-                />
-
-                <PSearchDropdown
-                    width={wp(86)}
-                    style={styles.issueTicketTextViews}
-                    placeholder='Events'
-                    data={eventData}
-                    onChangeSelection={(text: string) => {
-                        let event = eventData.find(event => {
-                            return event.name === text
-                        });
-                        if (event) {
-                            setEventId(event.meta._id);
-                            let priceLocal = event.meta[`cost_${participantNo.toString()}`];
-                            setPrice(priceLocal);
-                        }
-                        setEventName(text);
-                    }}
-                />
-                <PSearchDropdown
-                    width={wp(86)}
-                    style={styles.issueTicketTextViews}
-                    placeholder='Number of Participants'
-                    data={[
-                        { name: '1', meta: '1' },
-                        { name: '2', meta: '2' },
-                        { name: '4', meta: '4' }
-                    ]}
-                    default='1'
-                    editable={false}
-                    onChangeSelection={(text: string) => {
-                        setParticipantNo(parseInt(text));
-                        let event = eventData.find(event => {
-                            return event.name === eventName
-                        });
-                        if (event) {
-                            let priceLocal = event.meta[`cost_${parseInt(text).toString()}`];
-                            setPrice(priceLocal);
-                        } else {
-                            setPrice(0);
-                        }
-                    }}
-                />
-                <PButton
-                    style={[styles.issueTicketTextViews, styles.issueTicketButton, { width: wp(86) }]}
-                    text={'Collect ' + price + ' ₹'}
-                    onPress={() => onIssueTicketClicked()}
-                />
-            </KeyboardAvoidingView>
+            <IssueTicket />
 
             <Text style={textStyles.subHeaderText}>Total</Text>
             <View style={styles.total}>
@@ -186,7 +106,7 @@ const HomeVol = (props: IHomeVolProps) => {
                         });
                         if (event) eventName = event.name;
                         return (
-                            <View style={styles.issueTicketTextViews}>
+                            <View style={styles.textViews}>
                                 <Text>{'Ticket for ' + item.email + ' of event ' + eventName + ' failed'}</Text>
                             </View>
                         )
@@ -200,16 +120,18 @@ const HomeVol = (props: IHomeVolProps) => {
                     data={failedTickets}
                     renderItem={({ item }) => {
                         console.log(item);
+                        // eslint-disable-next-line
                         let currentEventName: string = '';
                         let event = eventData.find(event => {
                             return event.meta._id === item.event_id
                         });
                         if (event) currentEventName = event.name;
                         return (
-                            <View style={styles.issueTicketTextViews}>
-                                <Text>{'Ticket for ' + item.email + ' of event ' + eventName + ' failed'}</Text>
+                            <View style={styles.textViews}>
+                                <Text>{'Ticket for ' + item.email + ' of event ' + event + ' failed'}</Text>
                                 <Button title="Retry" onPress={() => {
-                                    props.tryIssueTicket(item.email, item.event_id, item.price, item.price, item.participantNo, item.token, currentEventName);
+                                    /////////alsdkmasdlkasmdlasdmas;dkasd;askda;dska;sodkma;slkdm
+                                    // dispatch(tryIssueTicket(item.email, item.event_id, item.price, item.price, item.participantNo, item.token, currentEventName));
                                     props.removeFailedTicket(item);
                                 }} />
                                 <Button title="Delete" onPress={() => { props.removeFailedTicket(item) }} />
@@ -232,7 +154,7 @@ const HomeVol = (props: IHomeVolProps) => {
                                 [date, time] = getFormattedDateAndTime(item.date);
                             }
                             return (
-                                <View style={styles.issueTicketTextViews}>
+                                <View style={styles.textViews}>
                                     <PLogs
                                         index={totalSold - index}
                                         issuer={item.vname}
@@ -258,7 +180,6 @@ const HomeVol = (props: IHomeVolProps) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
-        tryIssueTicket: (email: string, event_id: string, price: number, paid: number, participantNo: number, token: string, eventName: string) => dispatch(tryIssueTicket(email, event_id, price, paid, participantNo, token, eventName)),
         removeFailedTicket: (ticket: PendingTicketsType) => dispatch({ type: REMOVE_FAILED_TICKET, ticket })
     }
 }
@@ -269,14 +190,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    issueTicketContainer: {
-        marginHorizontal: hp(3.5),
-    },
-    issueTicketTextViews: {
+    textViews: {
         marginVertical: wp(2.6),
-    },
-    issueTicketButton: {
-        alignSelf: 'flex-start'
     },
     logsTextViews: {
         marginVertical: wp(2),
@@ -294,4 +209,8 @@ const styles = StyleSheet.create({
         fontSize: hp(2.7),
 
     },
+    textHolders: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    }
 });
