@@ -3,5 +3,6 @@ export default interface LogType {
 	price: number,
 	ename: string,
 	date: string,
-	uemail: string
+	uemail: string,
+	paid: number
 }
