@@ -7,6 +7,7 @@ import PMainListItem from '../../library/components/PMainListItem';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllTickets } from '../../library/networking/API/userAPI';
 import { textStyles } from '../../library/res/styles';
+import { DELETE_ALL_LOGS, DELETE_TOKEN, DELETE_ALL_PENDING_TICKETS } from '../../store/actions/ActionNames';
 
 interface IProfileProps extends INavigation {
 
@@ -43,8 +44,9 @@ export default (props: IProfileProps) => {
                 <View style={styles.loginSignupContainer}>
                     <PButton
                         onPress={() => {
-                            dispatch({ type: 'DELETE_TOKEN' })
-
+                            dispatch({ type: DELETE_TOKEN });
+                            dispatch({ type: DELETE_ALL_LOGS });
+                            dispatch({ type: DELETE_ALL_PENDING_TICKETS });
                         }}
                         text='Logout' />
                 </View>

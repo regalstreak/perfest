@@ -1,6 +1,6 @@
 import { ActionTypes } from '../../library/interfaces/LogActionType';
 import LogType from '../../library/interfaces/LogType';
-import { REFRESH_LOG_LIST, REFRESH_LOG_LIST_SUCCESS, REFRESH_LOG_LIST_FAILED, ADD_LOG } from '../actions/ActionNames';
+import { REFRESH_LOG_LIST, REFRESH_LOG_LIST_SUCCESS, REFRESH_LOG_LIST_FAILED, ADD_LOG, DELETE_ALL_LOGS } from '../actions/ActionNames';
 
 interface InitState {
 	logList: LogType[],
@@ -36,6 +36,8 @@ const eventReducer = (state: InitState = initState, action: ActionTypes) => {
 				totalSold: state.totalSold + 1,
 				totalCollected: newTotalCollected
 			}
+		case DELETE_ALL_LOGS:
+			return initState
 		default:
 			return state
 	}

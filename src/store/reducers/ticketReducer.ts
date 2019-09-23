@@ -1,6 +1,6 @@
 import { ActionTypes } from '../../library/interfaces/PendingTicketActionType';
 import PendingTicketsType from '../../library/interfaces/PendingTicketsType';
-import { ADD_TICKET_SUCCESS, ADD_TICKET_FAILED, REMOVE_FAILED_TICKET, ADD_LOG } from '../actions/ActionNames';
+import { ADD_TICKET_SUCCESS, ADD_TICKET_FAILED, REMOVE_FAILED_TICKET, ADD_LOG, DELETE_ALL_PENDING_TICKETS } from '../actions/ActionNames';
 
 interface InitState {
 	pendingTickets: PendingTicketsType[]
@@ -30,10 +30,12 @@ const ticketReducer = (state: InitState = initState, action: ActionTypes) => {
 			let newList1 = state.pendingTickets.filter(ticket => {
 				return !(action.ticket.email === ticket.email && action.ticket.event_id === ticket.event_id)
 			});
-			return{
+			return {
 				...state,
 				pendingTickets: newList1
 			}
+		case DELETE_ALL_PENDING_TICKETS:
+			return initState
 		default:
 			return state
 	}
