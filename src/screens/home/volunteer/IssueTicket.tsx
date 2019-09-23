@@ -18,13 +18,19 @@ interface ShortEventType {
     meta: any;
 }
 
+interface CollegeType {
+    name: string,
+    year: string,
+    branch: string
+}
+
 export default (props: IIssueTicketProps) => {
 
     // state
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState<number>(0);
-    const [college, setCollege] = useState('');
+    const [college, setCollege] = useState<CollegeType>({ name: '', year: '', branch: '' });
 
     const [membership, setMembership] = useState('Non CSI');
     const [csi_member, setCsiMember] = useState<boolean>(false);
@@ -124,7 +130,7 @@ export default (props: IIssueTicketProps) => {
                     style={styles.issueTicketTextViews}
                     placeholder="College"
                     onChangeText={(text: string) => {
-                        setCollege(text);
+                        setCollege({ name: text, year: '', branch: '' });
                     }}
                 />
 

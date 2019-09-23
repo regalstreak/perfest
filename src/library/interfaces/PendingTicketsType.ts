@@ -3,7 +3,8 @@ interface PendingTicketsType {
 	event_id: string,
 	price: string,
 	participantNo: number,
-	token: string
+	token: string,
+	paid: number
 }
 
 export default PendingTicketsType;

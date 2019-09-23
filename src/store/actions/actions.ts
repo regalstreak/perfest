@@ -37,7 +37,11 @@ interface tryissueticketpayloadInterface {
     price: number;
     paid: number;
     participantNo: number;
-    college: string;
+    college: {
+        name: string,
+        year: string,
+        branch: string
+    };
     csi_member: boolean;
     token: string;
 }
