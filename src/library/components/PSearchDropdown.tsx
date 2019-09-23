@@ -6,17 +6,18 @@ import { colors } from '../res/colors';
 
 interface DataType {
     name: string;
-    meta: any;
+    meta?: any;
 }
 
 interface IPSearchDropdownProps extends IPTextInputProps {
     style?: StyleProp<ViewStyle>;
     data: DataType[];
     width?: any;
+    searchable?: boolean;
     onChangeSelection?: (text: string) => void;
 }
 
-export default (props: IPSearchDropdownProps) => {
+export const PSearchDropdown = (props: IPSearchDropdownProps) => {
 
     const [isFocused, setIsFocused] = useState<boolean>(false)
     const [text, setText] = useState<string>(props.default ? props.default : '')
@@ -59,8 +60,13 @@ export default (props: IPSearchDropdownProps) => {
         if (props.data.length > 0) {
             setIsFocused(true);
 
+
             let found = props.data.filter(({ name }) => {
-                return name.toLowerCase().includes(input.toLowerCase());
+                if (props.searchable) {
+                    return name.toLowerCase().includes(input.toLowerCase());
+                } else {
+                    return name.toLowerCase();
+                }
             });
 
             if (found.length === 0) {
@@ -113,6 +119,13 @@ export default (props: IPSearchDropdownProps) => {
         </View>
     )
 }
+
+PSearchDropdown.defaultProps = {
+    searchable: true,
+}
+
+export default PSearchDropdown;
+
 
 const styles = StyleSheet.create({
     container: {

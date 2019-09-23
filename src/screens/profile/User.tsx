@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, TouchableOpac
 import PTextInput from '../../library/components/PTextInput';
 import PButton from '../../library/components/PButton';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import PSearchDropdown from '../../library/components/PSearchDropdown';
 import { upgradeAnonymousToUser } from '../../library/networking/API/userAPI';
 import { validateLogin } from '../../library/utils/utils';
 import { onSubmitLogin } from '../../library/networking/API/authAPI';
@@ -81,30 +80,30 @@ export default (props: IUserProps) => {
         } else {
             // userType is false, ask for upgrade 
 
-            const [name, setName] = useState<string>('');
-            const [phone, setPhone] = useState<string>('');
+            // const [name, setName] = useState<string>('');
+            // const [phone, setPhone] = useState<string>('');
             const [password, setPassword] = useState<string>('');
-            const [college, setCollege] = useState<string>('');
-            const [year, setYear] = useState<string>('');
+            // const [college, setCollege] = useState<string>('');
+            // const [year, setYear] = useState<string>('');
 
 
             const submitButtonUpdate = () => {
                 upgradeAnonymousToUser(
                     props.userRes._id,
                     {
-                        name,
+                        // name,
                         password,
-                        contact: {
-                            email: props.userRes.contact.email,
-                            phone
-                        },
-                        college: {
-                            name: college,
-                            department: '',
-                            year
-                        },
-                        type: true,
-                        csi_member: false,
+                        // contact: {
+                        // email: props.userRes.contact.email,
+                        // phone
+                        // },
+                        // college: {
+                        // name: college,
+                        // department: '',
+                        // year
+                        // },
+                        // type: true,
+                        // csi_member: false,
                     }
                 ).then((res) => {
                     if (res.success) {
@@ -128,8 +127,8 @@ export default (props: IUserProps) => {
                     <KeyboardAvoidingView style={styles.userMain}>
 
                         <Text>Hey {props.userRes.contact.email}!</Text>
-                        <Text>Please complete your profile to view your ticket</Text>
-                        <PTextInput
+                        <Text>Please set a new password to view your ticket!</Text>
+                        {/* <PTextInput
                             style={styles.userViews}
                             placeholder='Name'
                             onChangeText={(text: string) => {
@@ -143,7 +142,7 @@ export default (props: IUserProps) => {
                                 setPhone(text);
                             }}
                             type='numeric'
-                        />
+                        /> */}
                         <PTextInput
                             style={styles.userViews}
                             placeholder='Set Password' password
@@ -151,7 +150,7 @@ export default (props: IUserProps) => {
                                 setPassword(text);
                             }}
                         />
-
+{/* 
                         <Text>College</Text>
 
                         <PTextInput
@@ -178,7 +177,7 @@ export default (props: IUserProps) => {
                             onChangeSelection={(text: string) => {
                                 setYear(text);
                             }}
-                        />
+                        /> */}
 
 
                         <PButton style={styles.userViews} text='Update' onPress={() => {
