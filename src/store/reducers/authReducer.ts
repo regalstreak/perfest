@@ -1,15 +1,10 @@
 import { ActionTypes } from '../../library/interfaces/AuthActionTypes';
 import { ADD_TOKEN, DELETE_TOKEN } from '../actions/ActionNames';
-import { AsyncStorage } from 'react-native';
 
 interface InitState {
 	token: string,
 	userType: string,
 	userId: string
-}
-
-const deleteToken = async () => {
-	await AsyncStorage.removeItem('token');
 }
 
 const initState: InitState = {
@@ -27,12 +22,7 @@ const authReducer = (state: InitState = initState, action: ActionTypes) => {
 				userId: action.userId
 			}
 		case DELETE_TOKEN:
-			deleteToken();
-			return {
-				token: '',
-				userType: '',
-				userId: ''
-			}
+			return initState
 		default:
 			return state
 	}
