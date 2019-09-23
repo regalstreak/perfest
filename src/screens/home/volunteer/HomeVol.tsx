@@ -37,9 +37,10 @@ const HomeVol = (props: IHomeVolProps) => {
     const dispatch = useDispatch();
 
     const token = useSelector((state: AppState) => (state.auth.token));
-    let logsData = useSelector((state: AppState) => (state.logs.logList))
+    let logsData = useSelector((state: AppState) => (state.logs.logList));
     let totalSold = useSelector((state: AppState) => (state.logs.totalSold));
-    let totalCollected = useSelector((state: AppState) => (state.logs.totalCollected))
+    let totalCollected = useSelector((state: AppState) => (state.logs.totalCollected));
+    let totalBalance = useSelector((state: AppState) => (state.logs.totalBalance));
     let eventData: ShortEventType[];
     let allPendingRequests = useSelector((state: any) => (state.offline.outbox));
     const events = useSelector((state: AppState) => (state.events.eventList));
@@ -70,7 +71,8 @@ const HomeVol = (props: IHomeVolProps) => {
             event_id: data.payload.event_id,
             price: data.payload.price,
             participantNo: data.payload.participantNo,
-            token: data.payload.token
+            token: data.payload.token,
+            paid: data.payload.paid
         }
     });
     let failedTickets: PendingTicketsType[] = useSelector((state: AppState) => (state.ticket.pendingTickets));
@@ -92,6 +94,7 @@ const HomeVol = (props: IHomeVolProps) => {
             <View style={styles.total}>
                 <Text style={styles.totalText}>Sold: <Text style={{ fontWeight: '500' }}>{totalSold}</Text> tickets</Text>
                 <Text style={styles.totalText}>Collected: <Text style={{ fontWeight: '500' }}>{totalCollected}</Text>₹</Text>
+                <Text style={styles.totalText}>Balance: <Text style={{ fontWeight: '500' }}>{totalBalance}</Text>₹</Text>
             </View>
 
             <Text style={textStyles.subHeaderText}>Pending Tickets</Text>
@@ -159,7 +162,7 @@ const HomeVol = (props: IHomeVolProps) => {
                                         index={totalSold - index}
                                         issuer={item.vname}
                                         event={item.ename}
-                                        price={item.price}
+                                        price={item.paid}
                                         buyer={item.uemail}
                                         date={date}
                                         time={time}

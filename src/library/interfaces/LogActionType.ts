@@ -6,13 +6,14 @@ interface RefreshLogListAction {
 	payload: {
 		logList: LogType[],
 		totalSold: number,
-		totalCollected: number
+		totalCollected: number,
+		totalBalance: number
 	}
 }
 
-interface AddLogAction{
+interface AddLogAction {
 	type: string,
-	ticket: PendingTicketsType & {eventName: string}
+	ticket: PendingTicketsType & { eventName: string }
 }
 
 export type ActionTypes = RefreshLogListAction & AddLogAction;
