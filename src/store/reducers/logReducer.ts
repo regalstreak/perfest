@@ -33,7 +33,10 @@ const eventReducer = (state: InitState = initState, action: ActionTypes) => {
 		case ADD_LOG:
 			let newLog: LogType = { vname: 'You', paid: Number(action.ticket.paid), price: Number(action.ticket.price), ename: action.ticket.eventName, date: (new Date()).toString(), uemail: action.ticket.email }
 			let newTotalCollected = Number(state.totalCollected + action.ticket.paid);
+<<<<<<< HEAD
 			let newTotalBalance = Number(state.totalBalance - action.ticket.paid + action.ticket.price);
+=======
+>>>>>>> d17a40aa2ddaa7b189355bbad52e3b6d3c20617f
 			return {
 				...state,
 				logList: [newLog, ...state.logList],
