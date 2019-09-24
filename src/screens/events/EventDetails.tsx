@@ -55,7 +55,7 @@ const EventDetails = (props: IEventDetailsProps) => {
                         {cost_4Display}
 
                         {
-                            userType === 'admin' || 'volunteer' ?
+                            userType === 'admin' || userType === 'volunteer' ?
                                 <EventVols /> : null
                         }
 

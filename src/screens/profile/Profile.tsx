@@ -159,7 +159,10 @@ export default (props: IProfileProps) => {
             <View style={styles.mainContainer}>
                 <Text style={textStyles.NheaderText}>Profile</Text>
 
-                <EditProfile />
+                {
+                    auth.token ?
+                        <EditProfile /> : null
+                }
 
                 <View style={styles.ticketContainer}>
                     {
