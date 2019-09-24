@@ -11,6 +11,8 @@ import offlineConfig from '@redux-offline/redux-offline/lib/defaults';
 import rootReducer from './store/rootReducer';
 import * as serviceWorker from './serviceWorker';
 import asyncDispatchMiddleware from './store/asyncDispatchMiddleware';
+import ReactGA from 'react-ga';
+
 const Feather_ttf = require('react-native-vector-icons/Fonts/Feather.ttf')
 
 const store = createStore(
@@ -51,3 +53,6 @@ if (style.styleSheet) {
 document.head.appendChild(style);
 
 serviceWorker.register();
+
+ReactGA.initialize('UA-148694282-1');
+ReactGA.pageview(window.location.pathname + window.location.search);
