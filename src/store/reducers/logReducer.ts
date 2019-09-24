@@ -1,6 +1,9 @@
 import { ActionTypes } from '../../library/interfaces/LogActionType';
 import LogType from '../../library/interfaces/LogType';
-import { REFRESH_LOG_LIST, REFRESH_LOG_LIST_SUCCESS, REFRESH_LOG_LIST_FAILED, ADD_LOG, DELETE_ALL_LOGS } from '../actions/ActionNames';
+import {
+	REFRESH_LOG_LIST, REFRESH_LOG_LIST_SUCCESS, REFRESH_LOG_LIST_FAILED,
+	ADD_LOG, DELETE_ALL_LOGS
+} from '../actions/ActionNames';
 
 interface InitState {
 	logList: LogType[],
@@ -31,7 +34,7 @@ const eventReducer = (state: InitState = initState, action: ActionTypes) => {
 		case REFRESH_LOG_LIST_FAILED:
 			return state
 		case ADD_LOG:
-			let newLog: LogType = { vname: 'You', paid: Number(action.ticket.paid), price: Number(action.ticket.price), ename: action.ticket.eventName, date: (new Date()).toString(), uemail: action.ticket.email }
+			let newLog: LogType = { vname: 'You', paid: Number(action.ticket.paid), price: Number(action.ticket.price), ename: action.ticket.eventName, date: (new Date()).toString(), uemail: action.ticket.email, _id: '' }
 			let newTotalCollected = Number(state.totalCollected + action.ticket.paid);
 			let newTotalBalance = Number(state.totalBalance - action.ticket.paid + action.ticket.price);
 			return {

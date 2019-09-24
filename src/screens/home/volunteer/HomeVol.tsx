@@ -41,6 +41,7 @@ const HomeVol = (props: IHomeVolProps) => {
     const dispatch = useDispatch();
 
     const token = useSelector((state: AppState) => (state.auth.token));
+    const userType = useSelector((state: AppState) => (state.auth.userType));
     let logsData = useSelector((state: AppState) => (state.logs.logList));
     let totalSold = useSelector((state: AppState) => (state.logs.totalSold));
     let totalCollected = useSelector((state: AppState) => (state.logs.totalCollected));
@@ -149,8 +150,10 @@ const HomeVol = (props: IHomeVolProps) => {
                 />
             </View>
 
-            <Text style={textStyles.subHeaderText}>
-                Logs
+            <View style={styles.logHeader}>
+                <Text style={styles.subHeaderText}>
+                    Logs
+            </Text>
                 <TouchableOpacity
                     onPress={() => {
                         refreshLogs(token, dispatch);
@@ -159,12 +162,12 @@ const HomeVol = (props: IHomeVolProps) => {
                 >
                     <View style={styles.refreshView}>
                         <FeatherIcon
-                            name={'refresh-ccw'}
+                            name={'rotate-ccw'}
                             size={24}
-                            color={colors.perfestPrimary} />
+                            color={colors.perfestGrey} />
                     </View>
                 </TouchableOpacity>
-            </Text>
+            </View>
             <View style={styles.logsContainer}>
 
                 <FlatList
@@ -179,12 +182,16 @@ const HomeVol = (props: IHomeVolProps) => {
                                 <View style={styles.textViews}>
                                     <PLogs
                                         index={totalSold - index}
+                                        id={item._id}
                                         issuer={item.vname}
                                         event={item.ename}
                                         price={item.paid}
                                         buyer={item.uemail}
                                         date={date}
                                         time={time}
+                                        userType={userType}
+                                        token={token}
+                                        refreshLogs={refreshLogs}
                                     />
                                 </View>
                             )
@@ -237,7 +244,17 @@ const styles = StyleSheet.create({
     },
     refreshButton: {},
     refreshView: {
-        marginHorizontal: hp(2.5),
-        marginTop: hp(2.6)
-    }
+        // marginHorizontal: hp(2.5),
+        // marginTop: hp(2.6)
+    },
+    logHeader: {
+        marginHorizontal: hp(3.5),
+        marginTop: hp(2.6),
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    subHeaderText: {
+        fontSize: hp(3.2),
+        fontWeight: '600',
+    },
 });

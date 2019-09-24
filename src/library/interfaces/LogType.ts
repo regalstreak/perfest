@@ -4,5 +4,6 @@ export default interface LogType {
 	ename: string,
 	date: string,
 	uemail: string,
-	paid: number
+	paid: number,
+	_id: string
 }

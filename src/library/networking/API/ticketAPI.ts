@@ -69,11 +69,27 @@ export const getDetailsFromTicketUrl = async (ticketUrl: string) => {
 			method: 'POST',
 			headers: constants.defaultHeaders,
 			body: JSON.stringify({ ticketUrl })
-		})
+		});
 		response = await res.json();
 		return response;
 	} catch (err) {
 		response = { success: false, userType: false, userId: '', eventDetails: { name: '', date: new Date(), venue: '' }, ticketDetails: { _id: '', price: 0, paid: 0, balance: 0, participantNo: 0, valid: false, secretString: '', dateIssued: new Date() }, error: err };
+		return response;
+	}
+}
+
+export const deleteTicket = async (ticketId: string, token: string) => {
+	let response: BasicApiType;
+	try {
+		let res = await fetch(constants.BASE_URL + '/ticket/delete', {
+			method: 'POST',
+			headers: constants.defaultHeaders,
+			body: JSON.stringify({ token, ticketId })
+		});
+		response = await res.json();
+		return response;
+	} catch (err) {
+		response = { success: false, error: err };
 		return response;
 	}
 }
