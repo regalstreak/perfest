@@ -44,7 +44,7 @@ const Home = (props: IHomeProps) => {
     return (
         <View style={styles.container}>
 
-            <HomeCategory />
+            <HomeCategory navigation={props.navigation} />
 
             <PBottomNav
                 navigation={props.navigation}
