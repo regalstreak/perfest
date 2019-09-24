@@ -42,6 +42,7 @@ const HomeVol = (props: IHomeVolProps) => {
     const dispatch = useDispatch();
 
     const token = useSelector((state: AppState) => (state.auth.token));
+    const userType = useSelector((state: AppState) => (state.auth.userType));
     let logsData = useSelector((state: AppState) => (state.logs.logList));
     let totalSold = useSelector((state: AppState) => (state.logs.totalSold));
     let totalCollected = useSelector((state: AppState) => (state.logs.totalCollected));
@@ -49,9 +50,7 @@ const HomeVol = (props: IHomeVolProps) => {
     let eventData: ShortEventType[];
     let allPendingRequests = useSelector((state: any) => (state.offline.outbox));
     const events = useSelector((state: AppState) => (state.events.eventList));
-    const userType = useSelector((state: AppState) => (state.auth.userType));
 
-    
     if (events) {
         eventData = events.map((event: EventType) => {
             return {
@@ -213,12 +212,16 @@ const HomeVol = (props: IHomeVolProps) => {
                                 <View style={styles.textViews}>
                                     <PLogs
                                         index={totalSold - index}
+                                        id={item._id}
                                         issuer={item.vname}
                                         event={item.ename}
                                         price={item.paid}
                                         buyer={item.uemail}
                                         date={date}
                                         time={time}
+                                        userType={userType}
+                                        token={token}
+                                        refreshLogs={refreshLogs}
                                     />
                                 </View>
                             )
