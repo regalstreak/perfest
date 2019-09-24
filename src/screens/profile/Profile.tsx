@@ -17,8 +17,6 @@ interface IProfileProps extends INavigation {
 
 const EditProfile = () => {
 
-    const userId = useSelector((state: any) => state.auth.userId);
-    const [userDetails, setUserDetails] = useState();
     const token = useSelector((state: any) => state.auth.token)
 
     const [name, setName] = useState<string>('');
@@ -30,11 +28,11 @@ const EditProfile = () => {
         let isMounted = true;
 
         getUserDetails(token).then((res) => {
-            console.log(res.user);
-            setUserDetails(res.user)
-            setName(res.user.name);
-            setEmail(res.user.contact.email);
-            setPhone(res.user.contact.phone);
+            if (isMounted) {
+                setName(res.user.name);
+                setEmail(res.user.contact.email);
+                setPhone(res.user.contact.phone);
+            }
         }).catch(err => {
             console.log(err);
         })
