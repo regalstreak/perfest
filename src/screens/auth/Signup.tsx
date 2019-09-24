@@ -17,6 +17,7 @@ const Signup: React.FC<ISignupProps> = (props) => {
     const [email, setEmail] = useState('');
     // eslint-disable-next-line
     const [phone, setPhone] = useState('');
+    const [error, setError] = useState('');
 
 
     const submitSignup = async () => {
@@ -24,19 +25,30 @@ const Signup: React.FC<ISignupProps> = (props) => {
             let res = await onSubmitSignup(email, phone, password);
             if (res.success) {
                 props.navigation.navigate('Login')
-                console.log(res.success);
             } else {
                 // Handle failure
-                console.log(res.success);
+                console.log(res.error);
+                let errorMessage: any = res.error;
+                if (typeof errorMessage === 'string') {
+                    setError(errorMessage);
+                } else {
+                    if (res.error) {
+                        if (res.error.toString() === 'TypeError: Failed to fetch') {
+                            setError('Please check your internet connection');
+                        } else {
+                            setError('An error occured. Please try again');
+                        }
+                    } else {
+                        setError('An error occured. Please try again');
+                    }
+                }
             }
         } else {
             // Handle error
             console.log('pls fill all fileds');
+            setError('pls fill all fileds');
         }
     }
-
-
-
 
     return (
         <KeyboardAvoidingView style={styles.container} enabled >
@@ -77,8 +89,7 @@ const Signup: React.FC<ISignupProps> = (props) => {
                     <Text style={styles.forgotSignupText}>Reset password</Text>
                 </TouchableOpacity>
             </View>
-
-
+            <Text style={styles.errorText}>{error}</Text>
             <PButton
                 style={styles.signupViews}
                 text={'Signup'}
@@ -114,5 +125,9 @@ const styles = StyleSheet.create({
     forgotSignupText: {
         fontSize: wp(3),
         color: colors.perfestPrimary
+    },
+    errorText: {
+        fontSize: wp(3),
+        color: 'red',
     }
 })

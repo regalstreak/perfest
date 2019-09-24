@@ -36,13 +36,29 @@ const submitLogin = async (addToken: (token: string, userId: string, userType: s
             addToken(token, userId, userType);
             // Handle success
             navigation.navigate('Home')
+            return '';
         } else {
             // Handle error
             console.log(res.error);
+            let errorMessage: any = res.error;
+            if (typeof errorMessage === 'string') {
+                return errorMessage;
+            } else {
+                if (res.error) {
+                    if (res.error.toString() === 'TypeError: Failed to fetch') {
+                        return 'Please check your internet connection';
+                    } else {
+                        return 'An error occured. Please try again'
+                    }
+                } else {
+                    return 'An error occured. Please try again'
+                }
+            }
         }
     } else {
         // Handle error
         console.log('pls fill all fields');
+        return 'pls fill all fields';
     }
 }
 
@@ -55,6 +71,7 @@ const Login = (props: ILoginProps) => {
     const [email, setEmail] = useState('');
     // eslint-disable-next-line
     const [phone, setPhone] = useState('');
+    const [error, setError] = useState('');
 
     return (
         <KeyboardAvoidingView style={styles.container} enabled >
@@ -95,11 +112,14 @@ const Login = (props: ILoginProps) => {
                     <Text style={styles.forgotSignupText}>Reset password</Text>
                 </TouchableOpacity>
             </View>
-
+            <Text style={styles.errorText}>{error}</Text>
             <PButton
                 style={styles.loginViews}
                 text={'Login'}
-                onPress={() => submitLogin(props.addToken, email, phone, password, props.navigation)}
+                onPress={async () => {
+                    let someError = await submitLogin(props.addToken, email, phone, password, props.navigation);
+                    setError(someError);
+                }}
             />
         </KeyboardAvoidingView>
     )
@@ -142,5 +162,9 @@ const styles = StyleSheet.create({
     forgotSignupText: {
         fontSize: wp(3),
         color: colors.perfestPrimary
+    },
+    errorText: {
+        fontSize: wp(3),
+        color: 'red',
     }
 })
