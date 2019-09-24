@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, ScrollView, Text, View, FlatList, Button } from 'react-native';
+import { StyleSheet, ScrollView, Text, View, FlatList, Button, TouchableOpacity } from 'react-native';
 
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { getFormattedDateAndTime } from '../../../library/utils/utils'
@@ -14,6 +14,8 @@ import { getLatestLogs, getLatestEvents } from '../../../store/actions/actions';
 import PLogs from '../../../library/components/PLogs';
 import IssueTicket from './IssueTicket';
 import EventType from '../../../library/interfaces/EventType';
+import FeatherIcon from 'react-native-vector-icons/dist/Feather';
+import { colors } from '../../../library/res/colors';
 
 
 interface IHomeVolProps {
@@ -28,7 +30,9 @@ interface ShortEventType {
     meta: any;
 }
 
-
+const refreshLogs = (token: string, dispatch: any) => {
+    dispatch(getLatestLogs(token));
+}
 
 
 const HomeVol = (props: IHomeVolProps) => {
@@ -145,7 +149,24 @@ const HomeVol = (props: IHomeVolProps) => {
                 />
             </View>
 
-            <Text style={textStyles.subHeaderText}>Logs</Text>
+            <View style={styles.logHeader}>
+                <Text style={styles.subHeaderText}>
+                    Logs
+            </Text>
+                <TouchableOpacity
+                    onPress={() => {
+                        refreshLogs(token, dispatch);
+                    }}
+                    style={styles.refreshButton}
+                >
+                    <View style={styles.refreshView}>
+                        <FeatherIcon
+                            name={'rotate-ccw'}
+                            size={24}
+                            color={colors.perfestGrey} />
+                    </View>
+                </TouchableOpacity>
+            </View>
             <View style={styles.logsContainer}>
 
                 <FlatList
@@ -215,5 +236,20 @@ const styles = StyleSheet.create({
     textHolders: {
         flexDirection: 'row',
         justifyContent: 'space-between'
-    }
+    },
+    refreshButton: {},
+    refreshView: {
+        // marginHorizontal: hp(2.5),
+        // marginTop: hp(2.6)
+    },
+    logHeader: {
+        marginHorizontal: hp(3.5),
+        marginTop: hp(2.6),
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    subHeaderText: {
+        fontSize: hp(3.2),
+        fontWeight: '600',
+    },
 });
