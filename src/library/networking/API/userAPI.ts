@@ -158,21 +158,21 @@ interface UserType {
 	}
 }
 
-export const updateUserProfile = async (data: UserType) => {
-	let response: BasicApiType
-	try {
-		let res = await fetch(constants.BASE_URL + "/user/updateProfile", {
-			method: 'POST',
-			headers: constants.defaultHeaders,
-			body: JSON.stringify(data)
-		});
-		response = await res.json();
-		return response;
-	} catch (err) {
-		response = { success: false, error: err };
-		return response;
-	}
-}
+// export const updateUserProfile = async (data: UserType) => {
+// 	let response: BasicApiType
+// 	try {
+// 		let res = await fetch(constants.BASE_URL + "/user/updateProfile", {
+// 			method: 'POST',
+// 			headers: constants.defaultHeaders,
+// 			body: JSON.stringify(data)
+// 		});
+// 		response = await res.json();
+// 		return response;
+// 	} catch (err) {
+// 		response = { success: false, error: err };
+// 		return response;
+// 	}
+// }
 
 interface AnonymousUserType {
 	_id?: string,
@@ -228,6 +228,44 @@ export const upgradeAnonymousToUser = async (userId: string, data: AnonymousUser
 		return response;
 	} catch (err) {
 		response = { success: false, token: '', error: err };
+		return response;
+	}
+}
+
+export const getUserDetails = async (token: string) => {
+	let response: any;
+	try {
+		let res = await fetch(constants.BASE_URL + '/user/getUserDetails', {
+			method: 'POST',
+			headers: constants.defaultHeaders,
+			body: JSON.stringify({ token })
+		});
+		response = await res.json();
+		return response;
+
+	} catch (err) {
+		response = {
+			success: false, token: '', error: err
+		}
+		return response;
+	}
+}
+
+export const updateUserProfile = async (token: string, data: object) => {
+	let response: any;
+
+	try {
+		let res = await fetch(constants.BASE_URL + '/user/updateUserProfile', {
+			method: 'POST',
+			headers: constants.defaultHeaders,
+			body: JSON.stringify({ token, data })
+		})
+		response = await res.json();
+		return response;
+	} catch (err) {
+		response = {
+			success: false
+		}
 		return response;
 	}
 }

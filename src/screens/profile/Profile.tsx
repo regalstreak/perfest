@@ -5,13 +5,101 @@ import { INavigation } from '../../library/interfaces/Navigation';
 import PButton from '../../library/components/PButton';
 import PMainListItem from '../../library/components/PMainListItem';
 import { useSelector, useDispatch } from 'react-redux';
-import { getAllTickets } from '../../library/networking/API/userAPI';
+import { getAllTickets, getUserDetails, updateUserProfile } from '../../library/networking/API/userAPI';
 import { textStyles } from '../../library/res/styles';
 import { DELETE_ALL_LOGS, DELETE_TOKEN, DELETE_ALL_PENDING_TICKETS } from '../../store/actions/ActionNames';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import PEditableTextInput from '../../library/components/PEditableTextInput';
 
 interface IProfileProps extends INavigation {
 
 }
+
+const EditProfile = () => {
+
+    const userId = useSelector((state: any) => state.auth.userId);
+    const [userDetails, setUserDetails] = useState();
+    const token = useSelector((state: any) => state.auth.token)
+
+    const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [phone, setPhone] = useState<string>('');
+
+    // get user details from id
+    useEffect(() => {
+        let isMounted = true;
+
+        getUserDetails(token).then((res) => {
+            console.log(res.user);
+            setUserDetails(res.user)
+            setName(res.user.name);
+            setEmail(res.user.contact.email);
+            setPhone(res.user.contact.phone);
+        }).catch(err => {
+            console.log(err);
+        })
+
+        return () => {
+            isMounted = false;
+        }
+    }, [token])
+
+    return (
+        <View>
+            <Text>Edit profile</Text>
+            <PEditableTextInput
+                width={wp(60)}
+                style={styles.profileTextViews}
+                placeholder='Name'
+                onChangeText={(text: string) => {
+                    setName(text);
+                }}
+                onSave={() => {
+                    updateUserProfile(token, { name }).then(res => {
+                        console.log(res);
+                    }).catch(err => {
+                        console.log(err);
+                    })
+                }}
+                value={name}
+            />
+            <PEditableTextInput
+                width={wp(60)}
+                style={styles.profileTextViews}
+                placeholder='Email'
+                value={email}
+                onChangeText={(text: string) => {
+                    setEmail(text);
+                }}
+                onSave={() => {
+                    updateUserProfile(token, { email }).then(res => {
+                        console.log(res);
+                    }).catch(err => {
+                        console.log(err);
+                    })
+                }}
+            />
+            <PEditableTextInput
+                width={wp(60)}
+                style={styles.profileTextViews}
+                placeholder='Phone'
+                value={phone}
+                onChangeText={(text: string) => {
+                    setPhone(text);
+                }}
+                onSave={() => {
+                    updateUserProfile(token, { phone }).then(res => {
+                        console.log(res);
+                    }).catch(err => {
+                        console.log(err);
+                    })
+                }}
+            />
+        </View>
+    )
+}
+
+
 export default (props: IProfileProps) => {
 
     const auth = useSelector((state: any) => state.auth);
@@ -70,12 +158,15 @@ export default (props: IProfileProps) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.container}>
-                <Text style={textStyles.headerText}>Profile</Text>
+            <View style={styles.mainContainer}>
+                <Text style={textStyles.NheaderText}>Profile</Text>
+
+                <EditProfile />
+
                 <View style={styles.ticketContainer}>
                     {
                         (tickets.length > 0) ?
-                            <Text style={textStyles.subHeaderText}>Your Tickets</Text>
+                            <Text style={textStyles.NsubHeaderText}>Your Tickets</Text>
                             : null
                     }
                     {
@@ -108,6 +199,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    mainContainer: {
+        flex: 1,
+        marginHorizontal: hp(3.5),
+    },
     loginSignupContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
@@ -117,4 +212,7 @@ const styles = StyleSheet.create({
     ticketContainer: {
 
     },
+    profileTextViews: {
+        marginVertical: hp(3)
+    }
 })
