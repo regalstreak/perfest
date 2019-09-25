@@ -26,7 +26,7 @@ interface ILoginProps {
 }
 
 const submitLogin = async (addToken: (token: string, userId: string, userType: string) => { type: string, token: string, userId: string, userType: string },
-    email: string, phone: string, password: string, navigation: NavigationScreenProp<any, any>) => {
+    email: string, phone: string, password: string, navigation: NavigationScreenProp<any, any>, setDisableButton: any) => {
     if (validateLogin(email, phone, password)) {
         let res = await onSubmitLogin(email, password);
         if (res.success) {
@@ -38,6 +38,7 @@ const submitLogin = async (addToken: (token: string, userId: string, userType: s
             navigation.navigate('Home')
             return '';
         } else {
+            setDisableButton(false);
             // Handle error
             console.log(res.error);
             let errorMessage: any = res.error;
@@ -58,6 +59,7 @@ const submitLogin = async (addToken: (token: string, userId: string, userType: s
     } else {
         // Handle error
         console.log('pls fill all fields');
+        setDisableButton(false);
         return 'pls fill all fields';
     }
 }
@@ -72,6 +74,7 @@ const Login = (props: ILoginProps) => {
     // eslint-disable-next-line
     const [phone, setPhone] = useState('');
     const [error, setError] = useState('');
+    const [disableButton, setDisableButton] = useState(false);
 
     return (
         <KeyboardAvoidingView style={styles.container} enabled >
@@ -116,8 +119,11 @@ const Login = (props: ILoginProps) => {
             <PButton
                 style={styles.loginViews}
                 text={'Login'}
+                disable={disableButton}
                 onPress={async () => {
-                    let someError = await submitLogin(props.addToken, email, phone, password, props.navigation);
+                    setError('');
+                    setDisableButton(true);
+                    let someError = await submitLogin(props.addToken, email, phone, password, props.navigation, setDisableButton);
                     setError(someError);
                 }}
             />

@@ -17,10 +17,10 @@ export default (props: IAddVolunteerModalProps) => {
     const [email, setEmail] = useState<string>('')
     const token = useSelector((state: any) => state.auth.token);
     const [error, setError] = useState('');
+    const [disableButton, setDisableButton] = useState(false);
 
-    const addVolClicked = () => {
-        setError('');
-        upgradeUserToVolunteer(token, email).then((res) => {
+    const addVolClicked = async () => {
+        await upgradeUserToVolunteer(token, email).then((res) => {
             if (res.success) {
                 props.navigation.goBack();
             } else {
@@ -96,8 +96,12 @@ export default (props: IAddVolunteerModalProps) => {
                 <PButton
                     text='Add'
                     style={styles.addViews}
-                    onPress={() => {
-                        addVolClicked();
+                    disable={disableButton}
+                    onPress={async () => {
+                        setError('');
+                        setDisableButton(true);
+                        await addVolClicked();
+                        setDisableButton(false);
                     }}
                 />
             </KeyboardAvoidingView>
