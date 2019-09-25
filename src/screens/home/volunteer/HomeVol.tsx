@@ -10,7 +10,7 @@ import { AppState } from '../../../store/rootReducer';
 import { ADD_TICKET, REMOVE_FAILED_TICKET } from '../../../store/actions/ActionNames';
 import { textStyles } from '../../../library/res/styles';
 import PendingTicketsType from '../../../library/interfaces/PendingTicketsType';
-import { getLatestLogs, getLatestEvents } from '../../../store/actions/actions';
+import { getLatestLogs, getLatestEvents, tryIssueTicket } from '../../../store/actions/actions';
 import PLogs from '../../../library/components/PLogs';
 import IssueTicket from './IssueTicket';
 import EventType from '../../../library/interfaces/EventType';
@@ -156,24 +156,20 @@ const HomeVol = (props: IHomeVolProps) => {
                             <View style={styles.textViews}>
                                 <Text>{'Ticket for ' + item.email + ' of event ' + event + ' failed'}</Text>
                                 <Button title="Retry" onPress={() => {
-                                    // let payload = {
-                                    // name: name,
-                                    // phone: phone,
-                                    // email: email,
-                                    // event_id: string,
-                                    // price: number,
-                                    // paid: number,
-                                    // participantNo: number
-                                    // college: {
-                                    // name: string,
-                                    // year: string,
-                                    // branch: string
-                                    // };
-                                    // csi_member: boolean;
-                                    // token: string;
-                                    // }
+                                    let payload = {
+                                        name: item.name,
+                                        phone: item.phone,
+                                        email: item.email,
+                                        event_id: item.event_id,
+                                        price: item.price,
+                                        paid: item.paid,
+                                        participantNo: item.participantNo,
+                                        college: item.college,
+                                        csi_member: item.csi_member,
+                                        token: item.token
+                                    }
 
-                                    // dispatch(tryIssueTicket(item.email, item.event_id, item.price, item.price, item.participantNo, item.token, currentEventName));
+                                    dispatch(tryIssueTicket(payload));
                                     props.removeFailedTicket(item);
                                 }} />
                                 <Button title="Delete" onPress={() => { props.removeFailedTicket(item) }} />
