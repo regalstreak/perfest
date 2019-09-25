@@ -18,13 +18,14 @@ const Signup: React.FC<ISignupProps> = (props) => {
     // eslint-disable-next-line
     const [phone, setPhone] = useState('');
     const [error, setError] = useState('');
-
+    const [disableButton, setDisableButton] = useState(false);
 
     const submitSignup = async () => {
         if (validateSignup(email, phone, password)) {
             let res = await onSubmitSignup(email, phone, password);
             if (res.success) {
-                props.navigation.navigate('Login')
+                props.navigation.navigate('Login');
+                return;
             } else {
                 // Handle failure
                 console.log(res.error);
@@ -48,6 +49,7 @@ const Signup: React.FC<ISignupProps> = (props) => {
             console.log('pls fill all fileds');
             setError('pls fill all fileds');
         }
+        setDisableButton(false);
     }
 
     return (
@@ -93,7 +95,12 @@ const Signup: React.FC<ISignupProps> = (props) => {
             <PButton
                 style={styles.signupViews}
                 text={'Signup'}
-                onPress={() => submitSignup()}
+                disable={disableButton}
+                onPress={async () => {
+                    setError('');
+                    setDisableButton(true);
+                    await submitSignup();
+                }}
             />
 
         </KeyboardAvoidingView>
