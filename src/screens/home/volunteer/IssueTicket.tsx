@@ -38,7 +38,7 @@ export default (props: IIssueTicketProps) => {
     const [membership, setMembership] = useState('Non CSI');
     const [csi_member, setCsiMember] = useState<boolean>(false);
     const [paid, setPaid] = useState<number>(0);
-    const [payment, setPayment] = useState('Full');
+    // const [payment, setPayment] = useState('Full');
 
     const [price, setPrice] = useState(0);
     const [eventId, setEventId] = useState('');
@@ -89,7 +89,7 @@ export default (props: IIssueTicketProps) => {
 
             dispatch(tryIssueTicket(payload));
             setModalVisible(false);
-            
+
             // clear everything            
             // setName('');
             // setEmail('');
@@ -97,7 +97,7 @@ export default (props: IIssueTicketProps) => {
             // setEventId('');
             // setParticipantNo()
             // setCollege({ name: '', branch: '', year: '' })
-            
+
         } else {
             // Handle Error
             console.log('Fill all fields');
@@ -107,14 +107,13 @@ export default (props: IIssueTicketProps) => {
     const calculatePricing = (eventInput: string,
         membershipInput: string,
         participantInput: number,
-        paymentInput: string
     ) => {
         let event = eventData.find(event => {
             return event.name === eventInput
         });
         if (event) {
             setEventId(event.meta._id);
-            let priceLocal, paidLocal;
+            let priceLocal;
             if (membershipInput === 'CSI') {
                 priceLocal = event.meta.cost_CSI[`cost_${participantInput.toString()}`];
             } else if (membershipInput === 'Non CSI') {
@@ -123,14 +122,7 @@ export default (props: IIssueTicketProps) => {
                 priceLocal = 0;
             }
 
-            if (paymentInput === 'Half') {
-                paidLocal = priceLocal / 2;
-                setPaid(paidLocal);
-                setPrice(priceLocal);
-            } else {
-                setPaid(priceLocal);
-                setPrice(priceLocal);
-            }
+            setPrice(priceLocal);
         }
     }
 
@@ -183,7 +175,7 @@ export default (props: IIssueTicketProps) => {
                 data={eventData}
                 onChangeSelection={(text: string) => {
                     setEventName(text);
-                    calculatePricing(text, membership, participantNo, payment);
+                    calculatePricing(text, membership, participantNo);
                 }}
             />
 
@@ -200,7 +192,7 @@ export default (props: IIssueTicketProps) => {
                 editable={false}
                 onChangeSelection={(text: string) => {
                     setParticipantNo(parseInt(text));
-                    calculatePricing(eventName, membership, parseInt(text), payment)
+                    calculatePricing(eventName, membership, parseInt(text))
                 }}
             />
 
@@ -223,15 +215,34 @@ export default (props: IIssueTicketProps) => {
                     } else {
                         setCsiMember(false);
                     }
-                    calculatePricing(eventName, text, participantNo, payment)
+                    calculatePricing(eventName, text, participantNo)
                 }}
             />
 
+            <View style={styles.price}>
+                <PTextInput
+                    width={wp(43)}
+                    style={styles.issueTicketTextViews}
+                    placeholder="Paid"
+                    type='numeric'
+                    onChangeText={(text: number) => {
+                        setPaid(text);
+                    }}
+                />
+                <View style={{ width: wp(34) }}>
 
+                    <Text style={styles.priceText}>Price: <Text style={styles.priceNumberText}>
+                        {price}₹
+                    </Text>
+                    </Text>
+                </View>
+            </View>
+
+            {/* 
             <PSearchDropdown
                 width={wp(86)}
                 style={styles.issueTicketTextViews}
-                placeholder='Payment'
+                placeholder='Paid'
                 data={[
                     { name: 'Half', meta: 'Half' },
                     { name: 'Full', meta: 'Full' },
@@ -240,10 +251,9 @@ export default (props: IIssueTicketProps) => {
                 editable={false}
                 searchable={false}
                 onChangeSelection={(text: string) => {
-                    setPayment(text);
                     calculatePricing(eventName, membership, participantNo, text)
                 }}
-            />
+            /> */}
 
 
             <PButton
@@ -350,5 +360,18 @@ const styles = StyleSheet.create({
         marginTop: wp(5),
         fontSize: 16,
         textAlign: 'center'
-    }
+    },
+    price: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    priceText: {
+        fontSize: hp(3),
+        fontWeight: '600',
+    },
+    priceNumberText: {
+        fontSize: hp(3),
+        fontWeight: '400',
+    },
 })
