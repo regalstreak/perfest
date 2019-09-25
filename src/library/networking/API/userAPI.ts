@@ -30,6 +30,28 @@ export const getLogs = async (page: number, token: string) => {
 	}
 }
 
+export const getExcelLogs = async (token: string) => {
+	let response: any;
+	try {
+		let res = await fetch(constants.BASE_URL + "/user/getExcelLogs", {
+			method: 'POST',
+			headers: constants.defaultHeaders,
+			body: JSON.stringify({ token })
+		});
+		response = await res.blob();
+		var url = window.URL.createObjectURL(response);
+		var a = document.createElement('a');
+		a.href = url;
+		a.download = "filename.xlsx";
+		document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+		a.click();    
+		a.remove();
+	} catch (err) {
+		console.log(err);
+		response = {success: false, error: err};
+	}
+}
+
 export interface UserTypeMin {
 	_id: string,
 	name: string,

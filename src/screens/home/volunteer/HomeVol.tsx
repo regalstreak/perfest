@@ -16,6 +16,7 @@ import IssueTicket from './IssueTicket';
 import EventType from '../../../library/interfaces/EventType';
 import FeatherIcon from 'react-native-vector-icons/dist/Feather';
 import { colors } from '../../../library/res/colors';
+import { getExcelLogs } from '../../..//library/networking/API/userAPI';
 
 
 interface IHomeVolProps {
@@ -82,7 +83,24 @@ const HomeVol = (props: IHomeVolProps) => {
     });
     let failedTickets: PendingTicketsType[] = useSelector((state: AppState) => (state.ticket.pendingTickets));
 
-
+    let downloadLogs: any;
+    if (userType === 'admin') {
+        downloadLogs = (
+            <TouchableOpacity
+                onPress={async () => {
+                    await getExcelLogs(token);
+                }}
+                style={styles.refreshButton}
+            >
+                <View style={styles.refreshView}>
+                    <FeatherIcon
+                        name={'download'}
+                        size={24}
+                        color={colors.perfestPrimary} />
+                </View>
+            </TouchableOpacity>
+        );
+    }
 
     useEffect(() => {
         dispatch(getLatestLogs(token));
@@ -139,22 +157,22 @@ const HomeVol = (props: IHomeVolProps) => {
                                 <Text>{'Ticket for ' + item.email + ' of event ' + event + ' failed'}</Text>
                                 <Button title="Retry" onPress={() => {
                                     // let payload = {
-                                        // name: name,
-                                        // phone: phone,
-                                        // email: email,
-                                        // event_id: string,
-                                        // price: number,
-                                        // paid: number,
-                                        // participantNo: number
-                                        // college: {
-                                            // name: string,
-                                            // year: string,
-                                            // branch: string
-                                        // };
-                                        // csi_member: boolean;
-                                        // token: string;
+                                    // name: name,
+                                    // phone: phone,
+                                    // email: email,
+                                    // event_id: string,
+                                    // price: number,
+                                    // paid: number,
+                                    // participantNo: number
+                                    // college: {
+                                    // name: string,
+                                    // year: string,
+                                    // branch: string
+                                    // };
+                                    // csi_member: boolean;
+                                    // token: string;
                                     // }
-                                    
+
                                     // dispatch(tryIssueTicket(item.email, item.event_id, item.price, item.price, item.participantNo, item.token, currentEventName));
                                     props.removeFailedTicket(item);
                                 }} />
@@ -163,7 +181,7 @@ const HomeVol = (props: IHomeVolProps) => {
                         )
                     }}
                     keyExtractor={(item, index) => index.toString()}
-                /> 
+                />
             </View>
 
             <View style={styles.logHeader}>
@@ -183,6 +201,7 @@ const HomeVol = (props: IHomeVolProps) => {
                             color={colors.perfestGrey} />
                     </View>
                 </TouchableOpacity>
+                {downloadLogs}
             </View>
             <View style={styles.logsContainer}>
 
