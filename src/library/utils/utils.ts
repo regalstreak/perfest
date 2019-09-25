@@ -49,7 +49,7 @@ export const validateTicketIssue = (
 	event_id: string, participantNo: number,
 	membership: string, price: number, paid: number) => {
 	if (name && college && email && phone && event_id && participantNo && membership && price && paid) {
-		if (validateEmail(email)) {
+		if (validateEmail(email) && paid <= price) {
 			return true;
 		} else {
 			return false;

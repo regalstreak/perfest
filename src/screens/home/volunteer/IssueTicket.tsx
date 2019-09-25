@@ -284,6 +284,7 @@ export default (props: IIssueTicketProps) => {
                 <View style={{ alignItems: 'center' }}>
                     <Text style={textStyles.subHeaderText}>Error</Text>
                     <Text style={styles.errorText}> Please fill all the details and check email id correctly</Text>
+                    <Text style={styles.errorText}> Also, paid amount should be less than price</Text>
                 </View>
             </PError>
 
