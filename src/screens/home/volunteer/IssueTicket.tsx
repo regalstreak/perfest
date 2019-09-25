@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { View, StyleSheet, KeyboardAvoidingView, Text } from 'react-native';
 import PTextInput from '../../../library/components/PTextInput';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PSearchDropdown from '../../../library/components/PSearchDropdown';
@@ -8,6 +8,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import EventType from '../../../library/interfaces/EventType';
 import { validateTicketIssue } from '../../../library/utils/utils';
 import { tryIssueTicket } from '../../../store/actions/actions';
+import Modal from 'modal-enhanced-react-native-web'
+import { textStyles } from '../../../library/res/styles';
+import PError from '../../../library/components/PError';
 
 
 interface IIssueTicketProps {
@@ -42,6 +45,9 @@ export default (props: IIssueTicketProps) => {
     const [participantNo, setParticipantNo] = useState(1);
     const [eventName, setEventName] = useState('');
 
+    const [modalVisible, setModalVisible] = useState<boolean>(false)
+    const [fillAllErrorVisible, setFillAllErrorVisible] = useState<boolean>(false)
+
     let eventData: ShortEventType[];
 
     // store
@@ -66,7 +72,14 @@ export default (props: IIssueTicketProps) => {
     }
 
     const onIssueTicketClicked = async () => {
-        if (validateTicketIssue(email, eventId, price, paid, participantNo)) {
+
+
+        if (validateTicketIssue(
+            name, college.name,
+            email, phone,
+            eventId, participantNo,
+            membership, price, paid
+        )) {
 
             const payload = {
                 name, phone, email, event_id: eventId, price, paid, participantNo, college, csi_member, token
@@ -75,6 +88,16 @@ export default (props: IIssueTicketProps) => {
             console.log(payload);
 
             dispatch(tryIssueTicket(payload));
+            setModalVisible(false);
+            
+            // clear everything            
+            // setName('');
+            // setEmail('');
+            // setPhone(0);
+            // setEventId('');
+            // setParticipantNo()
+            // setCollege({ name: '', branch: '', year: '' })
+            
         } else {
             // Handle Error
             console.log('Fill all fields');
@@ -111,130 +134,185 @@ export default (props: IIssueTicketProps) => {
         }
     }
 
+    // render Modal
+
     return (
         <KeyboardAvoidingView style={styles.issueTicketContainer} enabled>
 
+            <PTextInput
+                width={wp(86)}
+                style={styles.issueTicketTextViews}
+                placeholder="Name"
+                onChangeText={(text: string) => {
+                    setName(text);
+                }}
+            />
 
-            <View style={styles.textHolders}>
-                <PTextInput
-                    width={wp(41.25)}
-                    style={styles.issueTicketTextViews}
-                    placeholder="Name"
-                    onChangeText={(text: string) => {
-                        setName(text);
-                    }}
-                />
+            <PTextInput
+                width={wp(86)}
+                style={styles.issueTicketTextViews}
+                placeholder="Email"
+                onChangeText={(text: string) => {
+                    setEmail(text);
+                }}
+            />
 
-                <PTextInput
-                    width={wp(41.25)}
-                    style={styles.issueTicketTextViews}
-                    placeholder="College"
-                    onChangeText={(text: string) => {
-                        setCollege({ name: text, year: '', branch: '' });
-                    }}
-                />
+            <PTextInput
+                width={wp(86)}
+                style={styles.issueTicketTextViews}
+                placeholder="Phone"
+                type='numeric'
+                onChangeText={(text: number) => {
+                    setPhone(text);
+                }}
+            />
 
-            </View>
+            <PTextInput
+                width={wp(86)}
+                style={styles.issueTicketTextViews}
+                placeholder="College"
+                onChangeText={(text: string) => {
+                    setCollege({ name: text, year: '', branch: '' });
+                }}
+            />
 
-            <View style={styles.textHolders}>
-                <PTextInput
-                    width={wp(41.25)}
-                    style={styles.issueTicketTextViews}
-                    placeholder="Email"
-                    onChangeText={(text: string) => {
-                        setEmail(text);
-                    }}
-                />
+            <PSearchDropdown
+                width={wp(86)}
+                style={styles.issueTicketTextViews}
+                placeholder='Event'
+                data={eventData}
+                onChangeSelection={(text: string) => {
+                    setEventName(text);
+                    calculatePricing(text, membership, participantNo, payment);
+                }}
+            />
 
-                <PTextInput
-                    width={wp(41.25)}
-                    style={styles.issueTicketTextViews}
-                    placeholder="Phone"
-                    type='numeric'
-                    onChangeText={(text: number) => {
-                        setPhone(text);
-                    }}
-                />
-            </View>
-
-            <View style={styles.textHolders}>
-                <PSearchDropdown
-                    width={wp(41.25)}
-                    style={styles.issueTicketTextViews}
-                    placeholder='Event'
-                    data={eventData}
-                    onChangeSelection={(text: string) => {
-                        setEventName(text);
-                        calculatePricing(text, membership, participantNo, payment);
-                    }}
-                />
-                <PSearchDropdown
-                    width={wp(41.25)}
-                    style={styles.issueTicketTextViews}
-                    placeholder='Participants'
-                    data={[
-                        { name: '1', meta: '1' },
-                        { name: '2', meta: '2' },
-                        { name: '4', meta: '4' }
-                    ]}
-                    default='1'
-                    editable={false}
-                    onChangeSelection={(text: string) => {
-                        setParticipantNo(parseInt(text));
-                        calculatePricing(eventName, membership, parseInt(text), payment)
-                    }}
-                />
-            </View>
-
-            <View style={styles.textHolders}>
-
-                <PSearchDropdown
-                    width={wp(41.25)}
-                    style={styles.issueTicketTextViews}
-                    placeholder='Membership'
-                    data={[
-                        { name: 'CSI', meta: 'CSI' },
-                        { name: 'Non CSI', meta: 'Non CSI' },
-                    ]}
-                    default='Non CSI'
-                    editable={false}
-                    searchable={false}
-                    onChangeSelection={(text: string) => {
-                        setMembership(text);
-                        if (text === 'CSI') {
-                            setCsiMember(true);
-                        } else {
-                            setCsiMember(false);
-                        }
-                        calculatePricing(eventName, text, participantNo, payment)
-                    }}
-                />
+            <PSearchDropdown
+                width={wp(86)}
+                style={styles.issueTicketTextViews}
+                placeholder='Participants'
+                data={[
+                    { name: '1', meta: '1' },
+                    { name: '2', meta: '2' },
+                    { name: '4', meta: '4' }
+                ]}
+                default='1'
+                editable={false}
+                onChangeSelection={(text: string) => {
+                    setParticipantNo(parseInt(text));
+                    calculatePricing(eventName, membership, parseInt(text), payment)
+                }}
+            />
 
 
-                <PSearchDropdown
-                    width={wp(41.25)}
-                    style={styles.issueTicketTextViews}
-                    placeholder='Payment'
-                    data={[
-                        { name: 'Half', meta: 'Half' },
-                        { name: 'Full', meta: 'Full' },
-                    ]}
-                    default='Full'
-                    editable={false}
-                    searchable={false}
-                    onChangeSelection={(text: string) => {
-                        setPayment(text);
-                        calculatePricing(eventName, membership, participantNo, text)
-                    }}
-                />
-            </View>
+            <PSearchDropdown
+                width={wp(86)}
+                style={styles.issueTicketTextViews}
+                placeholder='Membership'
+                data={[
+                    { name: 'CSI', meta: 'CSI' },
+                    { name: 'Non CSI', meta: 'Non CSI' },
+                ]}
+                default='Non CSI'
+                editable={false}
+                searchable={false}
+                onChangeSelection={(text: string) => {
+                    setMembership(text);
+                    if (text === 'CSI') {
+                        setCsiMember(true);
+                    } else {
+                        setCsiMember(false);
+                    }
+                    calculatePricing(eventName, text, participantNo, payment)
+                }}
+            />
+
+
+            <PSearchDropdown
+                width={wp(86)}
+                style={styles.issueTicketTextViews}
+                placeholder='Payment'
+                data={[
+                    { name: 'Half', meta: 'Half' },
+                    { name: 'Full', meta: 'Full' },
+                ]}
+                default='Full'
+                editable={false}
+                searchable={false}
+                onChangeSelection={(text: string) => {
+                    setPayment(text);
+                    calculatePricing(eventName, membership, participantNo, text)
+                }}
+            />
 
 
             <PButton
-                style={[styles.issueTicketTextViews, styles.issueTicketButton, { width: wp(86) }]}
                 text={'Collect ' + paid + ' ₹'}
-                onPress={() => onIssueTicketClicked()}
+                width={wp(86)}
+                onPress={() => {
+                    if (validateTicketIssue(
+                        name, college.name,
+                        email, phone,
+                        eventId, participantNo,
+                        membership, price, paid
+                    )) {
+                        setModalVisible(true)
+                    } else {
+                        setFillAllErrorVisible(true)
+                        console.log("Enter all details");
+                    }
+
+                }}
             />
+
+            <PError
+                isVisible={fillAllErrorVisible}
+                onBackdropPress={() => {
+                    setFillAllErrorVisible(false)
+                }}
+            >
+                <View style={{ alignItems: 'center' }}>
+                    <Text style={textStyles.subHeaderText}>Error</Text>
+                    <Text style={styles.errorText}> Please fill all the details and check email id correctly</Text>
+                </View>
+            </PError>
+
+            <Modal
+                isVisible={modalVisible}
+                onBackdropPress={() => { setModalVisible(false) }}
+            >
+                <View style={styles.modal}>
+                    <Text style={textStyles.subHeaderText}>
+                        Confirmation
+                    </Text>
+
+
+                    <Text style={styles.errorText}>
+                        Please recheck details
+                    </Text>
+
+                    <Text>Name: {name}</Text>
+                    <Text>Email: {email}</Text>
+                    <Text>Phone: {phone}</Text>
+                    <Text>College: {college.name}</Text>
+                    <Text>Event: {eventName}</Text>
+                    <Text>Participants: {participantNo}</Text>
+                    <Text>Payment: {paid}</Text>
+
+                    <View style={styles.modalButtons}>
+
+                        <PButton style={styles.modalButton}
+                            text='Cancel'
+                            onPress={() => { setModalVisible(false) }}
+                        />
+                        <PButton style={styles.modalButton}
+                            text='Issue'
+                            onPress={() => { onIssueTicketClicked() }}
+                        />
+                    </View>
+                </View>
+
+            </Modal>
         </KeyboardAvoidingView>
 
 
@@ -249,10 +327,28 @@ const styles = StyleSheet.create({
         marginVertical: wp(2.6),
     },
     issueTicketButton: {
-        alignSelf: 'flex-start'
+        alignSelf: 'flex-start',
     },
     textHolders: {
         flexDirection: 'row',
         justifyContent: 'space-between'
+    },
+    modal: {
+        flex: 0.5,
+        borderRadius: 16,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        alignContent: 'center',
+    },
+    modalButtons: {
+        flexDirection: 'row'
+    },
+    modalButton: {
+        margin: wp(5)
+    },
+    errorText: {
+        marginTop: wp(5),
+        fontSize: 16,
+        textAlign: 'center'
     }
 })
