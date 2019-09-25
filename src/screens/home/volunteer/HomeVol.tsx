@@ -212,7 +212,7 @@ const HomeVol = (props: IHomeVolProps) => {
                             return (
                                 <View style={styles.textViews}>
                                     <PLogs
-                                        index={totalSold - index}
+                                    index={totalSold - index}
                                         id={item._id}
                                         issuer={item.vname}
                                         event={item.ename}

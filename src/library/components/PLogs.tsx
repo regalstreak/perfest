@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { colors } from '../res/colors';
 import FeatherIcon from 'react-native-vector-icons/dist/Feather';
 import { deleteTicket } from '../networking/API/ticketAPI';
 import { useDispatch } from 'react-redux';
-
+import Modal from 'modal-enhanced-react-native-web'
+import PButton from './PButton';
+import { textStyles } from '../res/styles';
 
 interface IPLogsProps {
     id: string;
@@ -24,23 +26,33 @@ interface IPLogsProps {
 export default (props: IPLogsProps) => {
     let { token, userType, id } = props;
     const dispatch = useDispatch();
-    let deleteIcon;
+
+    const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false);
+
+    let deleteIcon, deleteTicketFunction: () => void;
     if (token && userType === 'admin') {
+
+        deleteTicketFunction = async () => {
+            let res = await deleteTicket(id, token);
+            if (res.success) {
+                props.refreshLogs(token, dispatch);
+                setIsDeleteModal(false);
+            } else {
+                //Handle error
+                setIsDeleteModal(false);
+            }
+        }
+
         deleteIcon = (
             <TouchableOpacity
-                onPress={async () => {
-                    let res = await deleteTicket(id, token);
-                    if (res.success) {
-                        props.refreshLogs(token, dispatch);
-                    } else {
-                        //Handle error
-                    }
+                onPress={() => {
+                    setIsDeleteModal(true)
                 }}
                 style={styles.deleteButton}
             >
                 <FeatherIcon
-                    name={'delete'}
-                    size={20}
+                    name={'x-circle'}
+                    size={24}
                     color={'red'}
                 />
             </TouchableOpacity>
@@ -52,17 +64,43 @@ export default (props: IPLogsProps) => {
                 <Text style={styles.issuerText}>{props.index}) {props.issuer}</Text>
                 <Text style={styles.issuerText}>{props.price}₹</Text>
             </View>
-            <View>
+            <View style={styles.deleteIcon}>
                 <Text style={styles.buyerText} >
                     {props.buyer}
-                    {deleteIcon}
                 </Text>
+                {deleteIcon}
             </View>
             <View style={[styles.mainContainer, styles.lastChild]}>
                 <Text style={styles.eventText}>{props.event}</Text>
                 <Text style={styles.eventText}>{props.date} | {props.time}</Text>
             </View>
-        </View>
+
+            <Modal
+                isVisible={isDeleteModal}
+                onBackdropPress={() => {
+                    setIsDeleteModal(false);
+                }}
+            >
+                <View style={styles.modal}>
+
+                    <Text style={textStyles.subHeaderText}>
+                        Confirmation
+                    </Text>
+
+                    <View style={styles.modalButtons}>
+
+                        <PButton style={styles.modalButton}
+                            text='Cancel'
+                            onPress={() => { setIsDeleteModal(false) }}
+                        />
+                        <PButton style={styles.modalButton}
+                            text='Delete'
+                            onPress={() => { deleteTicketFunction(); }}
+                        />
+                    </View>
+                </View>
+            </Modal>
+        </View >
     )
 }
 
@@ -92,5 +130,23 @@ const styles = StyleSheet.create({
     },
     deleteButton: {
         marginLeft: hp(1)
-    }
+    },
+    deleteIcon: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginVertical: 4
+    },
+    modalButtons: {
+        flexDirection: 'row'
+    },
+    modalButton: {
+        margin: wp(5)
+    },
+    modal: {
+        borderRadius: 16,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        alignContent: 'center',
+    },
 })
