@@ -16,16 +16,48 @@ export default (props: IAddVolunteerModalProps) => {
 
     const [email, setEmail] = useState<string>('')
     const token = useSelector((state: any) => state.auth.token);
+    const [error, setError] = useState('');
 
     const addVolClicked = () => {
+        setError('');
         upgradeUserToVolunteer(token, email).then((res) => {
             if (res.success) {
                 props.navigation.goBack();
             } else {
-                console.log('Error in adding volunteer');
+                // Handle failure
+                console.log(res.error);
+                let errorMessage: any = res.error;
+                if (typeof errorMessage === 'string') {
+                    setError(errorMessage);
+                } else {
+                    if (res.error) {
+                        if (res.error.toString() === 'TypeError: Failed to fetch') {
+                            setError('Please check your internet connection');
+                        } else {
+                            setError('An error occured. Please try again');
+                        }
+                    } else {
+                        setError('An error occured. Please try again');
+                    }
+                }
             }
         }).catch(err => {
+            // Handle failure
             console.log(err);
+            let errorMessage: any = error;
+            if (typeof errorMessage === 'string') {
+                setError(errorMessage);
+            } else {
+                if (error) {
+                    if (error.toString() === 'TypeError: Failed to fetch') {
+                        setError('Please check your internet connection');
+                    } else {
+                        setError('An error occured. Please try again');
+                    }
+                } else {
+                    setError('An error occured. Please try again');
+                }
+            }
         })
     }
 
@@ -60,7 +92,7 @@ export default (props: IAddVolunteerModalProps) => {
                         setEmail(text);
                     }}
                 />
-
+                <Text style={styles.errorText}>{error}</Text>
                 <PButton
                     text='Add'
                     style={styles.addViews}
@@ -91,5 +123,8 @@ const styles = StyleSheet.create({
     },
     backContainer: {
         margin: 8
+    },
+    errorText: {
+        color: 'red'
     }
 })
