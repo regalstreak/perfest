@@ -21,11 +21,13 @@ export default (props: IPButtonProps) => {
         loader = <ActivityIndicator color="#ffffff" style={styles.loader} />;
     }
 
+    let width = { maxWidth: props.width ? props.width : hp(15) }
+
     return (
         <TouchableHighlight
             onPress={props.onPress}
             underlayColor={'#4561d1'}
-            style={[styles.container, props.style]}
+            style={[styles.container, props.style, width]}
             disabled={disableButton}
         >
             <View style={styles.content}>
@@ -44,13 +46,13 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         justifyContent: 'center',
         alignItems: 'center',
-        maxWidth: hp(15)
+
     },
     text: {
         color: 'white',
         fontSize: hp(2.2),
     },
-    content:{
+    content: {
         flexDirection: 'row'
     },
     loader: {

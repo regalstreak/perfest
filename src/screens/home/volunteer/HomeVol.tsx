@@ -137,7 +137,23 @@ const HomeVol = (props: IHomeVolProps) => {
                             <View style={styles.textViews}>
                                 <Text>{'Ticket for ' + item.email + ' of event ' + event + ' failed'}</Text>
                                 <Button title="Retry" onPress={() => {
-                                    /////////alsdkmasdlkasmdlasdmas;dkasd;askda;dska;sodkma;slkdm
+                                    // let payload = {
+                                        // name: name,
+                                        // phone: phone,
+                                        // email: email,
+                                        // event_id: string,
+                                        // price: number,
+                                        // paid: number,
+                                        // participantNo: number
+                                        // college: {
+                                            // name: string,
+                                            // year: string,
+                                            // branch: string
+                                        // };
+                                        // csi_member: boolean;
+                                        // token: string;
+                                    // }
+                                    
                                     // dispatch(tryIssueTicket(item.email, item.event_id, item.price, item.price, item.participantNo, item.token, currentEventName));
                                     props.removeFailedTicket(item);
                                 }} />
@@ -146,7 +162,7 @@ const HomeVol = (props: IHomeVolProps) => {
                         )
                     }}
                     keyExtractor={(item, index) => index.toString()}
-                />
+                /> 
             </View>
 
             <View style={styles.logHeader}>

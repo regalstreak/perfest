@@ -36,10 +36,24 @@ export const getUserType = async () => {
 	}
 }
 
-export const validateTicketIssue = (email: string, event_id: string, price: number, paid: number, participantNo: number) => {
-	if (email && event_id && price && paid && participantNo) {
 
-		return true;
+export const validateEmail = (email: string): boolean => {
+	// let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	return re.test(String(email).toLowerCase());
+}
+
+export const validateTicketIssue = (
+	name: string, college: string,
+	email: string, phone: number,
+	event_id: string, participantNo: number,
+	membership: string, price: number, paid: number) => {
+	if (name && college && email && phone && event_id && participantNo && membership && price && paid) {
+		if (validateEmail(email)) {
+			return true;
+		} else {
+			return false;
+		}
 	} else {
 		return false;
 	}
