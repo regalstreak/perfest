@@ -68,7 +68,7 @@ const HomeVol = (props: IHomeVolProps) => {
     }
 
 
-    let autoRetryTickets: PendingTicketsType[] = allPendingRequests.filter((request: any) => {
+    let autoRetryTickets: any[] = allPendingRequests.filter((request: any) => {
         return request.type === ADD_TICKET
     });
     autoRetryTickets = autoRetryTickets.map((data: any) => {
