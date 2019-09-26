@@ -1,12 +1,6 @@
 import constants from '../constants';
 import { BasicApiType } from '../../interfaces/BasicApi';
-
-interface LogType {
-	vname: string,
-	price: number,
-	ename: string,
-	date: string,
-}
+import LogType from '../../interfaces/LogType';
 
 interface GetLogsType extends BasicApiType {
 	logList: LogType[],
@@ -25,7 +19,7 @@ export const getLogs = async (page: number, token: string) => {
 		response = await res.json();
 		return response;
 	} catch (err) {
-		response = { success: false, logList: [{ vname: '', price: 0, ename: '', date: '' }], totalSold: 0, totalCollected: 0, error: err };
+		response = { success: false, logList: [{ vname: '', price: 0, ename: '', date: '', _id: '', uemail: '', paid: 0 }], totalSold: 0, totalCollected: 0, error: err };
 		return response;
 	}
 }
