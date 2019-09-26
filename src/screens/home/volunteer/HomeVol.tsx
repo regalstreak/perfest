@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, Text, View, FlatList, Button, TouchableOpacity } from 'react-native';
 
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -17,6 +17,9 @@ import EventType from '../../../library/interfaces/EventType';
 import FeatherIcon from 'react-native-vector-icons/dist/Feather';
 import { colors } from '../../../library/res/colors';
 import { getExcelLogs } from '../../..//library/networking/API/userAPI';
+import PButton from '../../../library/components/PButton';
+import LogType from '../../../library/interfaces/LogType';
+import { getLogs } from '../../../library/networking/API/userAPI';
 
 
 interface IHomeVolProps {
@@ -43,13 +46,17 @@ const HomeVol = (props: IHomeVolProps) => {
 
     const token = useSelector((state: AppState) => (state.auth.token));
     const userType = useSelector((state: AppState) => (state.auth.userType));
-    let logsData = useSelector((state: AppState) => (state.logs.logList));
+    let logs = useSelector((state: AppState) => (state.logs.logList));
     let totalSold = useSelector((state: AppState) => (state.logs.totalSold));
     let totalCollected = useSelector((state: AppState) => (state.logs.totalCollected));
     let totalBalance = useSelector((state: AppState) => (state.logs.totalBalance));
     let eventData: ShortEventType[];
     let allPendingRequests = useSelector((state: any) => (state.offline.outbox));
     const events = useSelector((state: AppState) => (state.events.eventList));
+    const [page, setPage] = useState(2);
+    let [logsData, setLogsData] = useState<LogType[] | null>(null);
+    let [additionalLogs, setAdditionalLogs] = useState<LogType[] | null>(null);
+    const [disableButton, setDisableButton] = useState(false);
 
     if (events) {
         eventData = events.map((event: EventType) => {
@@ -66,6 +73,13 @@ const HomeVol = (props: IHomeVolProps) => {
         eventData = [{ name: 'Loading...', meta: { _id: '', cost_CSI: { cost_1: 0 }, cost_nonCSI: { cost_1: 0 } } }];
     }
 
+    useEffect(() => {
+        if (logs && additionalLogs) {
+            setLogsData([...logs, ...additionalLogs]);
+        } else if (logs) {
+            setLogsData(logs);
+        }
+    }, [logs, additionalLogs])
 
     let autoRetryTickets: any[] = allPendingRequests.filter((request: any) => {
         return request.type === ADD_TICKET
@@ -105,6 +119,31 @@ const HomeVol = (props: IHomeVolProps) => {
         dispatch(getLatestLogs(token));
         dispatch(getLatestEvents());
     }, [dispatch, token])
+
+    let viewMoreButton;
+    if (userType === 'admin') {
+        viewMoreButton = (<PButton
+            style={styles.logsContainer}
+            text={'View More'}
+            width={wp(86)}
+            disable={disableButton}
+            onPress={async () => {
+                setDisableButton(true);
+                let pageNo = page;
+                let res = await getLogs(page, token);
+                if (res.success && res.logList && additionalLogs) {
+                    setAdditionalLogs([...additionalLogs, ...res.logList]);
+                } else if (res.success && res.logList) {
+                    setAdditionalLogs(res.logList);
+                } else {
+                    // Handle Error
+                }
+                console.log(pageNo);
+                setPage(pageNo + 1);
+                setDisableButton(false);
+            }}
+        />)
+    }
 
     return (
         <ScrollView style={styles.container}>
@@ -185,7 +224,9 @@ const HomeVol = (props: IHomeVolProps) => {
             </Text>
                 <TouchableOpacity
                     onPress={() => {
+                        setAdditionalLogs(null);
                         refreshLogs(token, dispatch);
+                        setPage(2);
                     }}
                     style={styles.refreshButton}
                 >
@@ -211,7 +252,7 @@ const HomeVol = (props: IHomeVolProps) => {
                             return (
                                 <View style={styles.textViews}>
                                     <PLogs
-                                    index={totalSold - index}
+                                        index={totalSold - index}
                                         id={item._id}
                                         issuer={item.vname}
                                         event={item.ename}
@@ -232,6 +273,8 @@ const HomeVol = (props: IHomeVolProps) => {
                     keyExtractor={(item, index) => index.toString()}
                 />
             </View>
+
+            {viewMoreButton}
 
         </ScrollView>
     )
