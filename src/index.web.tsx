@@ -12,6 +12,7 @@ import rootReducer from './store/rootReducer';
 import * as serviceWorker from './serviceWorker';
 import asyncDispatchMiddleware from './store/asyncDispatchMiddleware';
 import ReactGA from 'react-ga';
+import * as Sentry from '@sentry/browser';
 
 const Feather_ttf = require('react-native-vector-icons/Fonts/Feather.ttf')
 
@@ -25,6 +26,8 @@ const store = createStore(
         applyMiddleware(asyncDispatchMiddleware)
     ),
 );
+
+Sentry.init({ dsn: "https://a7416fb4a4c64344916c2fe0dc06bf01@sentry.io/1761810" });
 
 ReactDOM.render(
     <BrowserRouter>

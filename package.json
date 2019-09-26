@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@redux-offline/redux-offline": "^2.5.2",
+    "@sentry/browser": "^5.6.3",
     "jwt-decode": "^2.2.0",
     "modal-enhanced-react-native-web": "^0.2.0",
     "qrcode.react": "^0.9.3",
