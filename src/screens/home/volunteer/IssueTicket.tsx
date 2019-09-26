@@ -225,8 +225,9 @@ export default (props: IIssueTicketProps) => {
                     style={styles.issueTicketTextViews}
                     placeholder="Paid"
                     type='numeric'
-                    onChangeText={(text: number) => {
-                        setPaid(text);
+                    onChangeText={(text: string) => {
+                        let paidNum = parseInt(text);
+                        setPaid(paidNum);
                     }}
                 />
                 <View style={{ width: wp(34) }}>
