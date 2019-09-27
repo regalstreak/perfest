@@ -1,13 +1,32 @@
 import constants from '../constants';
 import { BasicApiType } from '../../interfaces/BasicApi';
 
-export const issueTicket = async (email: string, event_id: string, price: number, paid: number, participantNo: number, token: string) => {
+interface CollegeType {
+	name: string,
+	year: string,
+	branch: string
+}
+
+interface IssueTicketType {
+	name: string;
+	phone: number;
+	email: string;
+	event_id: string;
+	price: number;
+	paid: number;
+	participantNo: number;
+	college: CollegeType;
+	csi_member: boolean;
+	token: any;
+}
+
+export const issueTicket = async (payload: IssueTicketType) => {
 	let response: BasicApiType;
 	try {
 		let res = await fetch(constants.BASE_URL + '/ticket/issue', {
 			method: 'POST',
 			headers: constants.defaultHeaders,
-			body: JSON.stringify({ email, event_id, price, paid, participantNo, token })
+			body: JSON.stringify(payload)
 		})
 		response = await res.json();
 		return response;

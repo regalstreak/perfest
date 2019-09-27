@@ -11,6 +11,7 @@ import { tryIssueTicket } from '../../../store/actions/actions';
 import Modal from 'modal-enhanced-react-native-web'
 import { textStyles } from '../../../library/res/styles';
 import PError from '../../../library/components/PError';
+import { issueTicket } from '../../../library/networking/API/ticketAPI';
 
 
 interface IIssueTicketProps {
@@ -45,8 +46,11 @@ export default (props: IIssueTicketProps) => {
     const [participantNo, setParticipantNo] = useState(1);
     const [eventName, setEventName] = useState('');
 
-    const [modalVisible, setModalVisible] = useState<boolean>(false)
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false);
     const [fillAllErrorVisible, setFillAllErrorVisible] = useState<boolean>(false)
+    const [success, setSuccess] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>('');
 
     let eventData: ShortEventType[];
 
@@ -73,6 +77,7 @@ export default (props: IIssueTicketProps) => {
 
     const onIssueTicketClicked = async () => {
 
+        setModalVisible(false);
 
         if (validateTicketIssue(
             name, college.name,
@@ -87,8 +92,33 @@ export default (props: IIssueTicketProps) => {
 
             console.log(payload);
 
-            dispatch(tryIssueTicket(payload));
-            setModalVisible(false);
+            // dispatch(tryIssueTicket(payload));
+            let res = await issueTicket(payload);
+            if (res.success) {
+                console.log('suc');
+                setSuccess(true);
+            } else {
+                // Handle failure
+                console.log(res.error);
+                setSuccess(false);
+                let errorMessage: any = res.error;
+                if (typeof errorMessage === 'string') {
+                    setErrorMessage(errorMessage);
+                } else {
+                    if (res.error) {
+                        if (res.error.toString() === 'TypeError: Failed to fetch') {
+                            dispatch(tryIssueTicket(payload));
+                            setErrorMessage('No Network. Will retry to send automatically');
+                        } else {
+                            setErrorMessage(JSON.stringify(res.error));
+                        }
+                    } else {
+                        setErrorMessage('An error occured. Please try again');
+                    }
+                }
+            }
+            console.log(success);
+            setErrorModalVisible(true);
 
             // clear everything            
             // setName('');
@@ -323,8 +353,29 @@ export default (props: IIssueTicketProps) => {
                         />
                     </View>
                 </View>
-
             </Modal>
+
+            <Modal
+                isVisible={errorModalVisible}
+                onBackdropPress={() => { setErrorModalVisible(false) }}
+            >
+                <View style={styles.modal}>
+                    <Text style={textStyles.subHeaderText}>
+                        Success: {success.toString()}
+                    </Text>
+
+                    <Text>Error: {errorMessage}</Text>
+
+                    <View style={styles.modalButtons}>
+                        <PButton style={styles.modalButton}
+                            text='Done'
+                            onPress={() => { setErrorModalVisible(false) }}
+                        />
+                    </View>
+
+                </View>
+            </Modal>
+
         </KeyboardAvoidingView>
 
 
