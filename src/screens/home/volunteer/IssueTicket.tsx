@@ -110,7 +110,11 @@ export default (props: IIssueTicketProps) => {
                             dispatch(tryIssueTicket(payload));
                             setErrorMessage('No Network. Will retry to send automatically');
                         } else {
-                            setErrorMessage(JSON.stringify(res.error));
+                            if (JSON.stringify(res.error).includes('duplicate key error')) {
+                                setErrorMessage('The phone number is already taken. Please try another phone number');
+                            } else {
+                                setErrorMessage(JSON.stringify(res.error));
+                            }
                         }
                     } else {
                         setErrorMessage('An error occured. Please try again');
