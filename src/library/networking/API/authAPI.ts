@@ -48,8 +48,8 @@ export const sendResetMail = async (email: string) => {
 		response = await res.json();
 		return response;
 	} catch (err) {
-		response = { success: false };
-		return response
+		response = { success: false, error: err };
+		return response;
 	}
 }
 
@@ -64,7 +64,7 @@ export const resetPassword = async (userStr: string, password: string) => {
 		response = await res.json();
 		return response;
 	} catch (err) {
-		response = { success: false };
+		response = { success: false, error: err };
 		return response;
 	}
 }

@@ -16,14 +16,29 @@ interface IResetPasswordProps extends INavigation {
 export default (props: IResetPasswordProps) => {
 
     const [email, setEmail] = useState<string>('');
+    const [error, setError] = useState<string>('');
+    const [disableButton, setDisableButton] = useState<boolean>(false);
 
     const clickedResetPassword = () => {
         sendResetMail(email).then((res) => {
-            if(res.success){
+            if (res.success) {
                 props.navigation.navigate('Login');
+                return;
+            } else if (res.error) {
+                console.log(res.error);
+                if (res.error.toString() === 'TypeError: Failed to fetch') {
+                    setError('Please check your internet connection');
+                } else {
+                    setError(res.error.toString());
+                }
+            } else {
+                setError('An error occured. Please try again');
             }
+            setDisableButton(false);
         }).catch(err => {
             console.log(err);
+            setError(err.toString());
+            setDisableButton(false);
         })
     }
 
@@ -52,11 +67,14 @@ export default (props: IResetPasswordProps) => {
                 </TouchableOpacity>
             </View>
 
-
+            <Text style={styles.errorText}>{error}</Text>
             <PButton
                 style={styles.signupViews}
                 text={'Reset Password'}
+                disable={disableButton}
                 onPress={() => {
+                    setError('');
+                    setDisableButton(true);
                     clickedResetPassword();
                 }}
             />
@@ -88,5 +106,9 @@ const styles = StyleSheet.create({
     forgotSignupText: {
         fontSize: wp(3),
         color: colors.perfestPrimary
+    },
+    errorText: {
+        fontSize: wp(3),
+        color: 'red',
     }
 })
