@@ -9,27 +9,42 @@ import { resetPassword } from '../../library/networking/API/authAPI';
 interface IChangePasswordLinkProps extends INavigation {
 
 }
+
 export default (props: IChangePasswordLinkProps) => {
 
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [error, setError] = useState<string>('');
+    const [disableButton, setDisableButton] = useState<boolean>(false);
 
     const clickedChangePassword = () => {
         if (password === confirmPassword) {
             resetPassword(props.navigation.getParam('changePasswordString'), password)
                 .then((res: any) => {
-                    console.log(res);
                     if (res.message === 'Password was reset') {
                         props.navigation.navigate('Login');
+                        return;
+                    } else if (res.error) {
+                        console.log(res.error);
+                        if (res.error.toString() === 'TypeError: Failed to fetch') {
+                            setError('Please check your internet connection');
+                        } else {
+                            setError(res.error.toString());
+                        }
                     } else {
-                        console.log('change password error');
+                        setError('An error occured. Please try again');
                     }
+                    setDisableButton(false);
                 })
                 .catch(err => {
                     console.log(err);
+                    setError(err.toString());
+                    setDisableButton(false);
                 })
         } else {
             console.log('Please check your passwords again');
+            setError('Please check your passwords again');
+            setDisableButton(false);
         }
     }
 
@@ -54,10 +69,14 @@ export default (props: IChangePasswordLinkProps) => {
                 password
             />
 
+            <Text style={styles.errorText}>{error}</Text>
             <PButton
                 style={styles.changePasswordLinkViews}
                 text={'Change Password'}
+                disable={disableButton}
                 onPress={() => {
+                    setError('');
+                    setDisableButton(true);
                     clickedChangePassword();
                 }}
             />
@@ -80,4 +99,8 @@ const styles = StyleSheet.create({
     changePasswordLinkViews: {
         margin: wp(2.6),
     },
+    errorText: {
+        fontSize: wp(3),
+        color: 'red',
+    }
 })
