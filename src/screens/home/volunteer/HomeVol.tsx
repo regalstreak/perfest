@@ -91,9 +91,13 @@ const HomeVol = (props: IHomeVolProps) => {
             price: data.payload.price,
             participantNo: data.payload.participantNo,
             token: data.payload.token,
-            paid: data.payload.paid
+            paid: data.payload.paid,
+            phone: data.payload.phone,
+            csi_member: data.payload.csi_member,
+            college: data.payload.college
         }
     });
+
     let failedTickets: PendingTicketsType[] = useSelector((state: AppState) => (state.ticket.pendingTickets));
 
     let downloadLogs: any;
@@ -158,65 +162,99 @@ const HomeVol = (props: IHomeVolProps) => {
                 <Text style={styles.totalText}>Balance: <Text style={{ fontWeight: '500' }}>{totalBalance}</Text>₹</Text>
             </View>
 
-            <Text style={textStyles.subHeaderText}>Pending Tickets</Text>
-            <View style={styles.logsContainer}>
-                <Text>Auto-Retrying</Text>
-                <FlatList
-                    data={autoRetryTickets}
-                    renderItem={({ item }) => {
-                        let eventName: string = '';
-                        let event = eventData.find(event => {
-                            return event.meta._id === item.event_id
-                        });
-                        if (event) eventName = event.name;
-                        return (
-                            <View style={styles.textViews}>
-                                <Text>{'Ticket for ' + item.email + ' of event ' + eventName + ' failed'}</Text>
-                            </View>
-                        )
-                    }}
-                    keyExtractor={(item, index) => index.toString()}
-                />
-            </View>
-            <View style={styles.logsContainer}>
-                <Text>Failed Tickets</Text>
-                <FlatList
-                    data={failedTickets}
-                    renderItem={({ item }) => {
-                        console.log(item);
-                        // eslint-disable-next-line
-                        let currentEventName: string = '';
-                        let event = eventData.find(event => {
-                            return event.meta._id === item.event_id
-                        });
-                        if (event) currentEventName = event.name;
-                        return (
-                            <View style={styles.textViews}>
-                                <Text>{'Ticket for ' + item.email + ' of event ' + event + ' failed'}</Text>
-                                <Button title="Retry" onPress={() => {
-                                    let payload = {
-                                        name: item.name,
-                                        phone: item.phone,
-                                        email: item.email,
-                                        event_id: item.event_id,
-                                        price: item.price,
-                                        paid: item.paid,
-                                        participantNo: item.participantNo,
-                                        college: item.college,
-                                        csi_member: item.csi_member,
-                                        token: item.token
-                                    }
+            {autoRetryTickets.length > 0 ?
+                <View>
+                    <Text style={textStyles.subHeaderText}>Auto-Retrying tickets</Text>
+                    <View style={styles.logsContainer}>
+                        <FlatList
+                            data={autoRetryTickets}
+                            renderItem={({ item, index }) => {
+                                let eventName: string = '';
+                                let event = eventData.find(event => {
+                                    return event.meta._id === item.event_id
+                                });
+                                if (event) eventName = event.name;
+                                return (
+                                    <View style={styles.textViews}>
+                                        {/* <Text>{'Ticket for ' + item.email + ' of event ' + eventName + ' failed'}</Text> */}
 
-                                    dispatch(tryIssueTicket(payload));
-                                    props.removeFailedTicket(item);
-                                }} />
-                                <Button title="Delete" onPress={() => { props.removeFailedTicket(item) }} />
-                            </View>
-                        )
-                    }}
-                    keyExtractor={(item, index) => index.toString()}
-                />
-            </View>
+                                        <PLogs
+                                            issuer={item.email}
+                                            buyer={item.phone.toString()}
+                                            index={autoRetryTickets.length - index}
+                                            event={eventName}
+                                            price={item.paid}
+                                            userType={userType}
+                                            token={token}
+                                            refreshLogs={refreshLogs}
+                                            date={item.college.name}
+                                            time={item.participantNo.toString()}
+                                        />
+
+                                    </View>
+                                )
+                            }}
+                            keyExtractor={(item, index) => index.toString()}
+                        />
+                    </View>
+                </View>
+                : null}
+
+            {failedTickets.length > 0 ?
+
+                <View>
+                    <Text style={textStyles.subHeaderText}>Failed Tickets</Text>
+                    <View style={styles.logsContainer}>
+                        <FlatList
+                            data={failedTickets}
+                            renderItem={({ item, index }) => {
+                                // eslint-disable-next-line
+                                let currentEventName: string = '';
+                                let event = eventData.find(event => {
+                                    return event.meta._id === item.event_id
+                                });
+                                if (event) currentEventName = event.name;
+                                return (
+                                    <View style={styles.textViews}>
+                                        {/* <Text>{'Ticket for ' + item.email + ' of event ' + event + ' failed'}</Text> */}
+                                        <PLogs
+                                            issuer={item.email}
+                                            buyer={item.phone.toString()}
+                                            index={failedTickets.length - index}
+                                            event={currentEventName}
+                                            price={item.paid}
+                                            userType={userType}
+                                            token={token}
+                                            refreshLogs={refreshLogs}
+                                            date={item.college.name}
+                                            time={item.participantNo.toString()}
+                                            notDeletable
+                                        />
+                                        <Button title="Retry" onPress={() => {
+                                            let payload = {
+                                                name: item.name,
+                                                phone: item.phone,
+                                                email: item.email,
+                                                event_id: item.event_id,
+                                                price: item.price,
+                                                paid: item.paid,
+                                                participantNo: item.participantNo,
+                                                college: item.college,
+                                                csi_member: item.csi_member,
+                                                token: item.token
+                                            }
+
+                                            dispatch(tryIssueTicket(payload));
+                                            props.removeFailedTicket(item);
+                                        }} />
+                                        <Button title="Delete" onPress={() => { props.removeFailedTicket(item) }} />
+                                    </View>
+                                )
+                            }}
+                            keyExtractor={(item, index) => index.toString()}
+                        />
+                    </View>
+                </View> : null}
 
             <View style={styles.logHeader}>
                 <Text style={styles.subHeaderText}>
@@ -263,6 +301,7 @@ const HomeVol = (props: IHomeVolProps) => {
                                         userType={userType}
                                         token={token}
                                         refreshLogs={refreshLogs}
+                                        notDeletable
                                     />
                                 </View>
                             )
