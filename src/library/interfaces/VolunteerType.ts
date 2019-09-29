@@ -14,5 +14,6 @@ export interface VolunteerType {
 	sold: {
 		ticket: string[];
 		amountCollected: number;
-	}
+	};
+	adminBalance: number;
 }

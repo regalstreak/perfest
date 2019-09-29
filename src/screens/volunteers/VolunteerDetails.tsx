@@ -9,7 +9,9 @@ import { connect } from 'react-redux';
 import { AppState } from '../../store/rootReducer';
 import PSearchDropdown from '../../library/components/PSearchDropdown';
 import { VolunteerType } from '../../library/interfaces/VolunteerType';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp, widthPercentageToDP } from 'react-native-responsive-screen';
+import PTextInput from '../../library/components/PTextInput';
+import { updateAdminBalance } from '../../library/networking/API/userAPI';
 
 interface IVolunteerDetailsProps extends INavigation {
     token: string;
@@ -24,6 +26,7 @@ const onSubmit = async (eventId: string, volunteerId: string, token: string) => 
     let res = await assignEvent(eventId, volunteerId, token);
     if (res.success) {
         console.log('successfully assigned event');
+        
     } else {
         console.log(res.error);
     }
@@ -33,10 +36,14 @@ const VolunteerDetails = (props: IVolunteerDetailsProps) => {
     const volId = props.navigation.getParam('volunteerId');
     const [eventData, setEventData] = useState<EventType[]>([{ name: 'Loading...', meta: { _id: '' } }]);
     const [selectedEventId, setSelectedEventId] = useState<string>('');
-    const [vol, setVolunteer] = useState<VolunteerType>({ _id: '', name: '', contact: { email: '', phone: '' }, college: { name: '', department: '', year: '' }, events: [''], sold: { ticket: [''], amountCollected: 0 } });
+    const [vol, setVolunteer] = useState<VolunteerType>({ _id: '', name: '', contact: { email: '', phone: '' }, college: { name: '', department: '', year: '' }, events: [''], sold: { ticket: [''], amountCollected: 0 }, adminBalance: 0 });
+
+    const [adminBalanceVol, setAdminBalanceVol] = useState<string>('');
+
     /* eslint-disable @typescript-eslint/no-unused-vars */
     const [assignedEvents, setAssignedEvents] = useState<any[]>([]);
     let { token } = props;
+
     useEffect(() => {
         let isMounted = true;
         getAllEventsDropdown()
@@ -74,6 +81,7 @@ const VolunteerDetails = (props: IVolunteerDetailsProps) => {
                         let { volunteer } = res;
                         if (isMounted) {
                             setVolunteer(volunteer);
+                            setAdminBalanceVol(res.volunteer.adminBalance.toString())
                         }
                     } else {
                         console.log(res.error);
@@ -108,21 +116,18 @@ const VolunteerDetails = (props: IVolunteerDetailsProps) => {
     }, [vol.name, eventData, vol.events]);
 
 
-    let volPhone = <Text>''</Text>;
-    if (vol.contact.phone) {
-        volPhone = <Text>Phone No.: {vol.contact.phone}</Text>;
-    }
     return (
         <View style={styles.container}>
             <View style={styles.main}>
                 <Text>Name: {vol.name}</Text>
                 <Text>Email: {vol.contact.email}</Text>
-                {volPhone}
-                <Text>College Name: {vol.college.name}</Text>
+                <Text>Phone: {vol.contact.phone}</Text>
+                {/* <Text>College Name: {vol.college.name}</Text>
                 <Text>Department: {vol.college.department}</Text>
-                <Text>Year: {vol.college.year}</Text>
+                <Text>Year: {vol.college.year}</Text> */}
                 <Text>Tickets Sold: {vol.sold.ticket.length}</Text>
                 <Text>Amount Collected: {vol.sold.amountCollected}</Text>
+                <Text>Admin Balance: {vol.adminBalance}</Text>
                 <Text>Events Assigned: {
                     assignedEvents.map((event, index) => {
                         if (index === assignedEvents.length - 1) {
@@ -134,24 +139,62 @@ const VolunteerDetails = (props: IVolunteerDetailsProps) => {
                 }</Text>
 
                 <KeyboardAvoidingView>
-                    <PSearchDropdown
-                        style={styles.volDetailViews}
-                        placeholder='Events'
-                        data={eventData}
-                        onChangeSelection={(text: string) => {
-                            let event = eventData.find(event => {
-                                return event.name === text
-                            });
-                            if (event) {
-                                setSelectedEventId(event.meta._id);
-                            }
-                        }}
-                    />
-                    <PButton
-                        style={styles.volDetailViews}
-                        text='Assign'
-                        onPress={() => onSubmit(selectedEventId, volId, token)}
-                    />
+
+
+                    <View style={{ marginVertical: 60 }}>
+                        <PTextInput
+                            style={styles.volTextViews}
+                            placeholder='Admin Balance'
+                            default={adminBalanceVol}
+                            value={adminBalanceVol}
+                            type='numeric'
+                            onChangeText={(text: string) => {
+                                setAdminBalanceVol(text);
+                            }}
+                        />
+
+                        <PButton text='Update Admin Balance'
+                            width={widthPercentageToDP(86)}
+                            onPress={() => {
+                                updateAdminBalance(token, parseInt(adminBalanceVol), volId)
+                                getVolunteerDetails(volId, token)
+                                    .then(res => {
+                                        console.log(res);
+                                        if (res.success) {
+                                            let { volunteer } = res;
+                                            setVolunteer(volunteer);
+                                        } else {
+                                            console.log(res.error);
+                                        }
+                                    })
+                                    .catch(console.log)
+                            }}
+                        />
+
+                    </View>
+
+                    <View>
+
+                        <PSearchDropdown
+                            style={styles.volTextViews}
+                            placeholder='Events'
+                            data={eventData}
+                            onChangeSelection={(text: string) => {
+                                let event = eventData.find(event => {
+                                    return event.name === text
+                                });
+                                if (event) {
+                                    setSelectedEventId(event.meta._id);
+                                }
+                            }}
+                        />
+                        <PButton
+                            width={widthPercentageToDP(86)}
+                            text='Assign'
+                            onPress={() => onSubmit(selectedEventId, volId, token)}
+                        />
+                    </View>
+
                 </KeyboardAvoidingView>
             </View>
             <PBottomNav navigation={props.navigation} index={2} />
@@ -178,5 +221,8 @@ const styles = StyleSheet.create({
     },
     volDetailViews: {
         marginTop: hp(5)
+    },
+    volTextViews: {
+        marginVertical: hp(2)
     }
 })
