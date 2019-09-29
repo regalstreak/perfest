@@ -7,7 +7,7 @@ import PButton from '../../../library/components/PButton';
 import { useSelector, useDispatch } from 'react-redux';
 import EventType from '../../../library/interfaces/EventType';
 import { validateTicketIssue } from '../../../library/utils/utils';
-import { tryIssueTicket } from '../../../store/actions/actions';
+import { tryIssueTicket, getLatestLogs } from '../../../store/actions/actions';
 import Modal from 'modal-enhanced-react-native-web'
 import { textStyles } from '../../../library/res/styles';
 import PError from '../../../library/components/PError';
@@ -97,6 +97,7 @@ export default (props: IIssueTicketProps) => {
             if (res.success) {
                 console.log('suc');
                 setSuccess(true);
+                dispatch(getLatestLogs(token));
             } else {
                 // Handle failure
                 console.log(res.error);
@@ -367,8 +368,11 @@ export default (props: IIssueTicketProps) => {
                     <Text style={textStyles.subHeaderText}>
                         Success: {success.toString()}
                     </Text>
+                    {errorMessage ?
 
-                    <Text>Error: {errorMessage}</Text>
+                        <Text>Error: {errorMessage}</Text>
+                        : null
+                    }
 
                     <View style={styles.modalButtons}>
                         <PButton style={styles.modalButton}

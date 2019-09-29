@@ -10,17 +10,18 @@ import PButton from './PButton';
 import { textStyles } from '../res/styles';
 
 interface IPLogsProps {
-    id: string;
+    id?: string;
     index: number;
-    issuer: string;
+    issuer?: string;
     event: string;
     price: string | number;
     buyer: string;
-    date: string | undefined;
-    time: string | undefined;
+    date?: string | undefined;
+    time?: string | undefined;
     userType: string | undefined;
     token: string;
-    refreshLogs: (token: string, dispatch: any) => void;
+    refreshLogs?: (token: string, dispatch: any) => void;
+    notDeletable?: boolean;
 }
 
 export default (props: IPLogsProps) => {
@@ -30,16 +31,18 @@ export default (props: IPLogsProps) => {
     const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false);
 
     let deleteIcon, deleteTicketFunction: () => void;
-    if (token && userType === 'admin') {
+    if (token && userType === 'admin' && !props.notDeletable) {
 
         deleteTicketFunction = async () => {
-            let res = await deleteTicket(id, token);
-            if (res.success) {
-                props.refreshLogs(token, dispatch);
-                setIsDeleteModal(false);
-            } else {
-                //Handle error
-                setIsDeleteModal(false);
+            if (id) {
+                let res = await deleteTicket(id, token);
+                if (res.success && props.refreshLogs) {
+                    props.refreshLogs(token, dispatch);
+                    setIsDeleteModal(false);
+                } else {
+                    //Handle error
+                    setIsDeleteModal(false);
+                }
             }
         }
 
