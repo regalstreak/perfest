@@ -200,6 +200,7 @@ const HomeVol = (props: IHomeVolProps) => {
                                             refreshLogs={refreshLogs}
                                             date={item.college.name}
                                             time={item.participantNo.toString()}
+                                            notDeletable
                                         />
 
                                     </View>
@@ -312,7 +313,6 @@ const HomeVol = (props: IHomeVolProps) => {
                                         userType={userType}
                                         token={token}
                                         refreshLogs={refreshLogs}
-                                        notDeletable
                                     />
                                 </View>
                             )
