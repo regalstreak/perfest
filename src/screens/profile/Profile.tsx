@@ -43,8 +43,8 @@ const EditProfile = () => {
     }, [token])
 
     return (
-        <View>
-            <Text>Edit profile</Text>
+        <View style={{marginVertical: 20}}>
+            <Text style={{marginVertical: 20}}>Edit profile</Text>
             <PEditableTextInput
                 width={wp(60)}
                 style={styles.profileTextViews}
@@ -64,22 +64,6 @@ const EditProfile = () => {
             <PEditableTextInput
                 width={wp(60)}
                 style={styles.profileTextViews}
-                placeholder='Email'
-                value={email}
-                onChangeText={(text: string) => {
-                    setEmail(text);
-                }}
-                onSave={() => {
-                    updateUserProfile(token, { email }).then(res => {
-                        console.log(res);
-                    }).catch(err => {
-                        console.log(err);
-                    })
-                }}
-            />
-            <PEditableTextInput
-                width={wp(60)}
-                style={styles.profileTextViews}
                 placeholder='Phone'
                 value={phone}
                 onChangeText={(text: string) => {
@@ -93,6 +77,9 @@ const EditProfile = () => {
                     })
                 }}
             />
+            <Text style={styles.editableText}>
+                Email: <Text style={styles.editableTextEmail}>{email}</Text>
+            </Text>
         </View>
     )
 }
@@ -214,6 +201,14 @@ const styles = StyleSheet.create({
 
     },
     profileTextViews: {
-        marginVertical: hp(3)
-    }
+        marginBottom: hp(3)
+    },
+    editableText: {
+        fontSize: hp(2.7),
+        fontWeight: '500'
+    },
+    editableTextEmail: {
+        fontSize: hp(2.7),
+        fontWeight: '400'
+    },
 })
