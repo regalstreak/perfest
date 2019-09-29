@@ -38,11 +38,11 @@ export const getExcelLogs = async (token: string) => {
 		a.href = url;
 		a.download = "filename.xlsx";
 		document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
-		a.click();    
+		a.click();
 		a.remove();
 	} catch (err) {
 		console.log(err);
-		response = {success: false, error: err};
+		response = { success: false, error: err };
 	}
 }
 
@@ -275,6 +275,25 @@ export const updateUserProfile = async (token: string, data: object) => {
 			method: 'POST',
 			headers: constants.defaultHeaders,
 			body: JSON.stringify({ token, data })
+		})
+		response = await res.json();
+		return response;
+	} catch (err) {
+		response = {
+			success: false
+		}
+		return response;
+	}
+}
+
+export const updateAdminBalance = async (token: string, newBalance: number, volunteerId: string) => {
+	let response: any;
+
+	try {
+		let res = await fetch(constants.BASE_URL + '/volunteer/updateAdminBalance', {
+			method: 'POST',
+			headers: constants.defaultHeaders,
+			body: JSON.stringify({ token, newBalance, volunteerId })
 		})
 		response = await res.json();
 		return response;

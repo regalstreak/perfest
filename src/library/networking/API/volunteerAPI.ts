@@ -33,7 +33,11 @@ export const getVolunteerDetails = async (volunteerId: string, token: string) =>
 		response = await res.json();
 		return response;
 	} catch (err) {
-		response = { success: false, volunteer: { _id: '', name: '', contact: { email: '', phone: '' }, college: { name: '', department: '', year: '' }, events: [''], sold: { ticket: [''], amountCollected: 0 } }, error: err };
+		response = {
+			success: false, volunteer: {
+				_id: '', name: '', contact: { email: '', phone: '' }, college: { name: '', department: '', year: '' }, events: [''], sold: { ticket: [''], amountCollected: 0 }, adminBalance: 0
+			}, error: err
+		};
 	};
 	return response;
 }

@@ -194,14 +194,25 @@ export default (props: IIssueTicketProps) => {
                 }}
             />
 
-            <PTextInput
-                width={wp(86)}
-                style={styles.issueTicketTextViews}
-                placeholder="College"
-                onChangeText={(text: string) => {
-                    setCollege({ name: text, year: '', branch: '' });
-                }}
-            />
+            <View style={styles.issueTicket2Column}>
+                <PTextInput
+                    width={wp(41)}
+                    style={[styles.issueTicketTextViews, { marginRight: wp(2) }]}
+                    placeholder="College"
+                    onChangeText={(text: string) => {
+                        setCollege({ name: text, year: '', branch: '' });
+                    }}
+                />
+                <PTextInput
+                    width={wp(41)}
+                    style={[styles.issueTicketTextViews, { marginLeft: wp(2) }]}
+                    placeholder="Year"
+                    type='numeric'
+                    onChangeText={(text: string) => {
+                        setCollege({ name: college.name, year: text, branch: '' });
+                    }}
+                />
+            </View>
 
             <PSearchDropdown
                 width={wp(86)}
@@ -396,6 +407,9 @@ const styles = StyleSheet.create({
     },
     issueTicketTextViews: {
         marginVertical: wp(2.6),
+    },
+    issueTicket2Column: {
+        flexDirection: 'row',
     },
     issueTicketButton: {
         alignSelf: 'flex-start',

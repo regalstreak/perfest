@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import PTextInput from '../../library/components/PTextInput';
 import PMainListItem from '../../library/components/PMainListItem';
 import PButton from '../../library/components/PButton';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { getUserVolList, UserTypeMin } from '../../library/networking/API/userAPI';
 import { getAllEventsDropdown } from '../../library/networking/API/eventAPI';
 import { textStyles } from '../../library/res/styles';
@@ -14,12 +14,34 @@ import { textStyles } from '../../library/res/styles';
 interface IVolunteersProps extends INavigation {
 }
 
+
+const searchVolunteers = (volunteers: UserTypeMin[], searchVol: string): UserTypeMin[] => {
+    return volunteers.filter(item => {
+        if (item.name) {
+            return item.name.toLowerCase().indexOf(searchVol.toLowerCase()) > -1;
+        } else if (item.email) {
+            return item.email.toLowerCase().indexOf(searchVol.toLowerCase()) > -1;
+        } else {
+            console.log('lmaorip search is bugged');
+            return null;
+        }
+    })
+}
+
 const Volunteers = (props: IVolunteersProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [searchVol, setSearchVol] = useState<string>('');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [events, setEvents] = useState<any>('');
-    const [volunteers, setVolunteers] = useState<UserTypeMin[]>();
+    const [volunteers, setVolunteers] = useState<UserTypeMin[]>(
+        [
+            {
+                _id: '1',
+                name: 'Volunteer',
+                email: 'volunteer@perfest.co',
+            }
+        ]
+    );
+
+    const [searchVolList, setSearchVolList] = useState<UserTypeMin[]>();
 
     const userType = useSelector((state: any) => state.auth.userType);
     const token = useSelector((state: any) => state.auth.token);
@@ -32,6 +54,7 @@ const Volunteers = (props: IVolunteersProps) => {
                     if (res.success) {
                         if (isMounted) {
                             setVolunteers(res.list);
+                            setSearchVolList(res.list);
                         }
                     } else {
                         console.log(res.error);
@@ -58,7 +81,6 @@ const Volunteers = (props: IVolunteersProps) => {
                             }
                         }
                     });
-                    console.log(newEventData);
                     if (isMounted) {
                         setEvents(newEventData);
                     }
@@ -71,35 +93,42 @@ const Volunteers = (props: IVolunteersProps) => {
             isMounted = false;
         }
     }, []);
+
+
+
+
     if (userType === 'admin') {
         return (
             <View style={styles.container}>
-                <Text style={textStyles.headerText}>Volunteers</Text>
-                <View style={styles.main}>
+                <ScrollView >
+                    <Text style={textStyles.headerText}>Volunteers</Text>
+                    <View style={styles.main}>
 
-                    <PTextInput
-                        style={{ marginVertical: 16 }}
-                        placeholder='Search'
-                        onChangeText={(text: string) => {
-                            setSearchVol(text)
-                        }}
-                    />
-                    <ScrollView >
-                        {volunteers ?
-                            volunteers.map((item: { _id: string, name: string }, index: number) => (
+                        <PTextInput
+                            width={wp(86)}
+                            style={{ marginVertical: 16 }}
+                            placeholder='Search'
+                            onChangeText={(text: string) => {
+                                setSearchVolList(searchVolunteers(volunteers, text));
+                            }}
+                        />
+
+                        {searchVolList ?
+                            searchVolList.map((item: UserTypeMin, index: number) => (
                                 <PMainListItem
                                     type='volunteer'
                                     navigId={item._id}
                                     key={index}
                                     navigation={props.navigation}
-                                    title={item.name}
+                                    title={item.name ? item.name : item.email}
                                 />
                             )) : <View></View>
                         }
-                    </ScrollView>
-                </View>
+                    </View>
+                </ScrollView>
 
                 <PButton
+                    width={wp(50)}
                     style={styles.addButtonContainer}
                     text='Add Volunteer'
                     onPress={() => {
