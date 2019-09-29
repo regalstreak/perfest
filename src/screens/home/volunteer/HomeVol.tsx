@@ -16,10 +16,11 @@ import IssueTicket from './IssueTicket';
 import EventType from '../../../library/interfaces/EventType';
 import FeatherIcon from 'react-native-vector-icons/dist/Feather';
 import { colors } from '../../../library/res/colors';
-import { getExcelLogs } from '../../..//library/networking/API/userAPI';
+import { getExcelLogs, getUserDetails } from '../../..//library/networking/API/userAPI';
 import PButton from '../../../library/components/PButton';
 import LogType from '../../../library/interfaces/LogType';
 import { getLogs } from '../../../library/networking/API/userAPI';
+import LogRocket from 'logrocket';
 
 
 interface IHomeVolProps {
@@ -80,6 +81,16 @@ const HomeVol = (props: IHomeVolProps) => {
             setLogsData(logs);
         }
     }, [logs, additionalLogs])
+
+    useEffect(() => {
+        getUserDetails(token).then((res) => {
+            LogRocket.identify(res.user._id, {
+                name: res.user.name,
+                email: res.user.contact.email,
+                userType: userType
+            });
+        })
+    }, [token, userType])
 
     let autoRetryTickets: any[] = allPendingRequests.filter((request: any) => {
         return request.type === ADD_TICKET

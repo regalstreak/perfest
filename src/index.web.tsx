@@ -13,6 +13,8 @@ import * as serviceWorker from './serviceWorker';
 import asyncDispatchMiddleware from './store/asyncDispatchMiddleware';
 import ReactGA from 'react-ga';
 import * as Sentry from '@sentry/browser';
+import LogRocket from 'logrocket';
+// import setupLogRocketReact from 'logrocket-react';
 
 const Feather_ttf = require('react-native-vector-icons/Fonts/Feather.ttf')
 
@@ -28,6 +30,9 @@ const store = createStore(
 );
 
 Sentry.init({ dsn: "https://a7416fb4a4c64344916c2fe0dc06bf01@sentry.io/1761810" });
+
+LogRocket.init('1mapcv/perfest');
+// setupLogRocketReact(LogRocket);
 
 ReactDOM.render(
     <BrowserRouter>

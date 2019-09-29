@@ -5,7 +5,10 @@
   "dependencies": {
     "@redux-offline/redux-offline": "^2.5.2",
     "@sentry/browser": "^5.6.3",
+    "@types/logrocket-react": "^3.0.0",
     "jwt-decode": "^2.2.0",
+    "logrocket": "^1.0.3",
+    "logrocket-react": "^3.0.1",
     "modal-enhanced-react-native-web": "^0.2.0",
     "qrcode.react": "^0.9.3",
     "react": "^16.9.0",
