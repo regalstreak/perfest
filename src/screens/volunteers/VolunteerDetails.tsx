@@ -12,6 +12,7 @@ import { VolunteerType } from '../../library/interfaces/VolunteerType';
 import { heightPercentageToDP as hp, widthPercentageToDP } from 'react-native-responsive-screen';
 import PTextInput from '../../library/components/PTextInput';
 import { updateAdminBalance } from '../../library/networking/API/userAPI';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 interface IVolunteerDetailsProps extends INavigation {
     token: string;
@@ -22,14 +23,54 @@ interface EventType {
     meta: any;
 }
 
-const onSubmit = async (eventId: string, volunteerId: string, token: string) => {
+const onSubmit = async (setAssignError: any, setDisableAssignButton: any, eventId: string, volunteerId: string, token: string) => {
+    setAssignError('');
+    setDisableAssignButton(true);
     let res = await assignEvent(eventId, volunteerId, token);
     if (res.success) {
         console.log('successfully assigned event');
-        
     } else {
-        console.log(res.error);
+        if (res.error) {
+            if (res.error.toString() === 'TypeError: Failed to fetch') {
+                setAssignError('Please check your internet connection');
+            } else {
+                setAssignError('An error occured. Please try again');
+            }
+        } else {
+            setAssignError('An error occured. Please try again');
+        }
     }
+    setDisableAssignButton(false);
+}
+
+const onBalanceSubmit = (setBalanceError: any, setDisableBalanceButton: any, setVolunteer: any, token: string, adminBalanceVol: string, volId: string) => {
+    setBalanceError('');
+    setDisableBalanceButton(true);
+    updateAdminBalance(token, parseInt(adminBalanceVol), volId);
+    getVolunteerDetails(volId, token)
+        .then(res => {
+            console.log(res);
+            if (res.success) {
+                let { volunteer } = res;
+                setVolunteer(volunteer);
+            } else {
+                if (res.error) {
+                    if (res.error.toString() === 'TypeError: Failed to fetch') {
+                        setBalanceError('Please check your internet connection');
+                    } else {
+                        setBalanceError('An error occured. Please try again');
+                    }
+                } else {
+                    setBalanceError('An error occured. Please try again');
+                }
+            }
+            setDisableBalanceButton(false);
+        })
+        .catch(err => {
+            console.log(err);
+            setBalanceError('An error occured. Please try again');
+            setDisableBalanceButton(false);
+        });
 }
 
 const VolunteerDetails = (props: IVolunteerDetailsProps) => {
@@ -39,6 +80,11 @@ const VolunteerDetails = (props: IVolunteerDetailsProps) => {
     const [vol, setVolunteer] = useState<VolunteerType>({ _id: '', name: '', contact: { email: '', phone: '' }, college: { name: '', department: '', year: '' }, events: [''], sold: { ticket: [''], amountCollected: 0 }, adminBalance: 0 });
 
     const [adminBalanceVol, setAdminBalanceVol] = useState<string>('');
+
+    const [balanceError, setBalanceError] = useState<string>('');
+    const [disableBalanceButton, setDisableBalanceButton] = useState<boolean>(false);
+    const [assignError, setAssignError] = useState<string>('');
+    const [disableAssignButton, setDisableAssignButton] = useState<boolean>(false);
 
     /* eslint-disable @typescript-eslint/no-unused-vars */
     const [assignedEvents, setAssignedEvents] = useState<any[]>([]);
@@ -97,7 +143,7 @@ const VolunteerDetails = (props: IVolunteerDetailsProps) => {
     useEffect(() => {
         let isMounted = true;
         let eventsAssigned: any[] = [];
-        if (vol.name) {
+        if (vol.contact.email) {
             vol.events.map(eventId => {
                 let event = eventData.find(oneEvent => {
                     return oneEvent.meta._id === eventId
@@ -113,7 +159,7 @@ const VolunteerDetails = (props: IVolunteerDetailsProps) => {
         return () => {
             isMounted = false;
         }
-    }, [vol.name, eventData, vol.events]);
+    }, [vol.contact.email, eventData, vol.events]);
 
 
     return (
@@ -152,22 +198,16 @@ const VolunteerDetails = (props: IVolunteerDetailsProps) => {
                                 setAdminBalanceVol(text);
                             }}
                         />
-
+                        <Text style={styles.errorText}>{balanceError}</Text>
                         <PButton text='Update Admin Balance'
                             width={widthPercentageToDP(86)}
+                            disable={disableBalanceButton}
                             onPress={() => {
-                                updateAdminBalance(token, parseInt(adminBalanceVol), volId)
-                                getVolunteerDetails(volId, token)
-                                    .then(res => {
-                                        console.log(res);
-                                        if (res.success) {
-                                            let { volunteer } = res;
-                                            setVolunteer(volunteer);
-                                        } else {
-                                            console.log(res.error);
-                                        }
-                                    })
-                                    .catch(console.log)
+                                if (!adminBalanceVol) {
+                                    setBalanceError('Please enter a value');
+                                    return;
+                                }
+                                onBalanceSubmit(setBalanceError, setDisableBalanceButton, setVolunteer, token, adminBalanceVol, volId);
                             }}
                         />
 
@@ -188,10 +228,12 @@ const VolunteerDetails = (props: IVolunteerDetailsProps) => {
                                 }
                             }}
                         />
+                        <Text style={styles.errorText}>{assignError}</Text>
                         <PButton
                             width={widthPercentageToDP(86)}
                             text='Assign'
-                            onPress={() => onSubmit(selectedEventId, volId, token)}
+                            disable={disableAssignButton}
+                            onPress={async () => await onSubmit(setAssignError, setDisableAssignButton, selectedEventId, volId, token)}
                         />
                     </View>
 
@@ -224,5 +266,9 @@ const styles = StyleSheet.create({
     },
     volTextViews: {
         marginVertical: hp(2)
+    },
+    errorText: {
+        fontSize: wp(3),
+        color: 'red',
     }
 })
