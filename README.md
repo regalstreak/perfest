@@ -1,6 +1,13 @@
 ## Perfest frontend
 **Proudly built with** [**react-native-web**](https://github.com/necolas/react-native-web) and powered by [**typescript**](https://www.typescriptlang.org/)
 
+### Perfest
+* Perfest is an online ticketing and event portal which was used at the D. Y. Patil University, Mumbai tech fest
+* It uses QR codes for ticketing. No more paper management and printing hassels.
+* Perfest provides robust logging, data management and analytics. It is fully integrated with Sentry 
+* It greatly reduces time and efforts for ticketing. We recieved over 5K users in a week which is more than what we would have if we had done manual ticketing
+
+
 "React Native for Web" makes it possible to run [React
 Native][react-native-url] components and APIs on the web using React DOM. Check
 out the live demo of the [React Native examples][examples-url] running on the
